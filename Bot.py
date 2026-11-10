@@ -11,8 +11,8 @@ import os
 # НАСТРОЙКИ
 # ==========================================
 BOT_TOKEN = '9147236041:AAEcJCKj0XLpZhWKVh0dPV1Qs7_lf37KLhw'
-ADMIN_ID = 8664148534
-WEBAPP_URL = 'https://твой-сайт-на-render.com' # Сюда вставишь ссылку, которую даст Render после загрузки
+ADMIN_ID = 8664148534 # ОБЯЗАТЕЛЬНО ВСТАВЬ СВОЙ TELEGRAM ID
+WEBAPP_URL = 'https://braincosmo.onrender.com/' # Сюда вставишь ссылку, которую даст Render после загрузки
 
 bot = telebot.TeleBot(BOT_TOKEN)
 app = Flask(__name__, static_folder='images')
@@ -227,9 +227,6 @@ def create_promo(message):
 # ЗАПУСК
 # ==========================================
 if __name__ == '__main__':
-    # Запускаем бота в главном потоке (он будет работать вечно)
-    print("Бот запущен и работает 24/7...")
-    bot.infinity_polling()
     threading.Thread(target=bot.infinity_polling, daemon=True).start()
     port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port)
