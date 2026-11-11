@@ -162,7 +162,7 @@ nav{
 .chance-btn.active{background:var(--grad);border-color:transparent;box-shadow:0 0 20px var(--primary-glow),inset 0 1px 0 rgba(255,255,255,.35)}
 .chance-btn:disabled{opacity:.5}
 
-/* КРУГЛАЯ РУЛЕТКА - ФИКС ЦВЕТОВ */
+/* КРУГЛАЯ РУЛЕТКА */
 .circle-roulette-wrapper{
   position:relative;width:190px;height:190px;margin:6px 0;padding:12px;flex-shrink:0;border-radius:50%;display:flex;justify-content:center;align-items:center;border:4px solid transparent;
   background:radial-gradient(circle,#0b0716 60%,#1a1230) padding-box,conic-gradient(from 0deg,var(--accent),var(--primary),var(--pink),var(--gold),var(--accent)) border-box;
@@ -177,9 +177,7 @@ nav{
 .circle-roulette{
   width:100%;height:100%;border-radius:50%;position:relative;overflow:hidden;
   border:2px solid rgba(0,0,0,.8);
-  /* Убираем жесткий внутренний shadow, чтобы цвета не смешивались */
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.1);
-  /* Делаем четкий стоп без смешивания */
   background-clip: padding-box;
 }
 .roulette-center{
@@ -590,34 +588,34 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
     </div>
 
     <script>
-        const API_URL = ''; 
+        const API_URL = 'https://braincosmo.onrender.com'; 
         let TG_USER_ID = null;
 
         const IMAGES = {
-            freecase: 'Яркий сундук Freecase с героями.png', 
-            noobinicase: 'Неоновый кейс NoobiniCase.png',
-            coin: 'Золотая монета с мозгом.png',
-            garama: 'Garamadundung.webp',
-            dragon: 'Dragon_Cannelloni.webp',
-            headless: 'Horseman.webp',
-            noobini: 'New_Noobini_Pizzanini.webp',
-            los67: 'Los_67.webp',
-            tirilikalika: 'Tirilikalika_Tirilikalako.webp',
-            skibidi: 'Default_Skibidi_Toilet.webp',
-            garamacase: 'Неоновый сундук GaramaCase.png',
-            rico: 'Rico_Dinero.webp',
-            rosey: 'Rosey_and_Teddy.webp',
-            hydra: 'Hydra_Dragon_Cannelloni.webp',
-            meowl: 'Meowl.webp',
-            ogcase: '6e887037-85ec-428e-882e-e2dcbf05945a.png',
-            strawberry: 'Strawberry_Elephant.webp',
-            allincase: '66b8c75c-d4a1-48cd-8f31-553283001d29.png',
-            moneycase: 'fdsfsdfdsfdsfds.png',
-            money_man: 'Money_Money_Man.webp',
-            money_puggy: 'Money_Money_Puggy.webp',
-            los_puggies: 'LosPuggies2.webp',
-            cash_or_card: 'Cash_or_Card_New.webp',
-            tagcase: '4b9ba297-3c2d-4134-a21c-5e4951047e7b.png'
+            freecase: 'images/Яркий сундук Freecase с героями.png', 
+            noobinicase: 'images/Неоновый кейс NoobiniCase.png',
+            coin: 'images/Золотая монета с мозгом.png',
+            garama: 'images/Garamadundung.webp',
+            dragon: 'images/Dragon_Cannelloni.webp',
+            headless: 'images/Horseman.webp',
+            noobini: 'images/New_Noobini_Pizzanini.webp',
+            los67: 'images/Los_67.webp',
+            tirilikalika: 'images/Tirilikalika_Tirilikalako.webp',
+            skibidi: 'images/Default_Skibidi_Toilet.webp',
+            garamacase: 'images/Неоновый сундук GaramaCase.png',
+            rico: 'images/Rico_Dinero.webp',
+            rosey: 'images/Rosey_and_Teddy.webp',
+            hydra: 'images/Hydra_Dragon_Cannelloni.webp',
+            meowl: 'images/Meowl.webp',
+            ogcase: 'images/6e887037-85ec-428e-882e-e2dcbf05945a.png',
+            strawberry: 'images/Strawberry_Elephant.webp',
+            allincase: 'images/66b8c75c-d4a1-48cd-8f31-553283001d29.png',
+            moneycase: 'images/fdsfsdfdsfdsfds.png',
+            money_man: 'images/Money_Money_Man.webp',
+            money_puggy: 'images/Money_Money_Puggy.webp',
+            los_puggies: 'images/LosPuggies2.webp',
+            cash_or_card: 'images/Cash_or_Card_New.webp',
+            tagcase: 'images/4b9ba297-3c2d-4134-a21c-5e4951047e7b.png'
         };
 
         document.getElementById('header-coin-img').src = IMAGES.coin;
@@ -996,7 +994,6 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
 
         let currentWinChance = 0;
 
-        // Рисуем только зеленый и красный при выборе
         function drawUpgraderRoulette() {
             if (!state.upgrader.myItem || !state.upgrader.targetItem) return;
             const myVal = state.upgrader.myItem.value;
@@ -1038,7 +1035,6 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
             const wrapper = document.getElementById('up-roulette-wrapper');
             const bg = document.getElementById('up-roulette-bg');
 
-            // Генерируем желтую зону ТОЛЬКО при клике
             const hasYellow = Math.random() < 0.15;
             const yellowPercent = hasYellow ? 2 : 0;
             
@@ -1047,7 +1043,6 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
                 const greenDeg = (currentWinChance / 100) * 360;
                 const yellowDeg = (yellowPercent / 100) * 360;
                 
-                // Перерисовываем колесо с желтым сектором
                 bg.style.background = `conic-gradient(
                     from 0deg,
                     var(--green) 0deg ${greenDeg}deg, 
@@ -1058,7 +1053,6 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
                 wrapper.classList.remove('yellow-active');
             }
 
-            // Определяем результат
             const roll = Math.random() * 100;
             let result = 'lose';
             let targetPercentage = 0;
@@ -1226,7 +1220,7 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
         function submitDeposit() {
             const nick = document.getElementById('deposit-nick').value.trim();
             if (!nick) { showToast('Введите ник!', 'error'); return; }
-            state.deposits.push({ nick: nick, status: 'pending', id: Date.now() });
+            state.deposits.push({ nick: nick, status: 'pending', id: Date.now(), user_id: TG_USER_ID });
             saveState(); closeModal('deposit-modal'); showToast('Заявка создана!', 'success');
         }
 
@@ -1249,7 +1243,59 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
             document.getElementById('admin-' + tabId).classList.add('active'); btn.classList.add('active');
         }
 
-        function renderAdminPanel() {
+        async function renderAdminPanel() {
+            // 1. Запрашиваем заявки с сервера Python
+            try {
+                const res = await fetch(`${API_URL}/api/get_all_requests`);
+                const data = await res.json();
+                
+                // 2. Рендерим Пополнения
+                const depList = document.getElementById('admin-deposit-list');
+                depList.innerHTML = data.deposits.length ? '' : '<p style="color: var(--text-muted); text-align: center; font-size:12px;">Нет заявок</p>';
+                
+                data.deposits.forEach((dep) => {
+                    const el = document.createElement('div');
+                    el.className = 'request-item';
+                    el.innerHTML = `
+                        <div><b>Ник:</b> ${dep.nick}</div>
+                        <div><b>ID:</b> ${dep.user_id}</div>
+                        <div><b>Статус:</b> <span style="color:var(--accent)">${dep.status}</span></div>
+                        <div class="actions">
+                            ${dep.status === 'pending' ? `<button class="btn-accept" onclick="acceptDepositGlobal(${dep.id})">Принять</button>` : ''}
+                            ${dep.status === 'accepted' ? `<button class="btn-accept" onclick="giveCoinsGlobal(${dep.id}, ${dep.user_id})">Начислить</button>` : ''}
+                            ${dep.status !== 'rejected' && dep.status !== 'completed' ? `<button class="btn-reject" onclick="rejectDepositGlobal(${dep.id})">Отклонить</button>` : ''}
+                        </div>
+                    `;
+                    depList.appendChild(el);
+                });
+
+                // 3. Рендерим Выводы
+                const wdList = document.getElementById('admin-withdraw2-list');
+                wdList.innerHTML = data.withdrawals.length ? '' : '<p style="color: var(--text-muted); text-align: center; font-size:12px;">Нет заявок</p>';
+                
+                data.withdrawals.forEach((wd) => {
+                    const el = document.createElement('div');
+                    el.className = 'request-item';
+                    const itemsNames = wd.items.map(i => i.name).join(', ');
+                    el.innerHTML = `
+                        <div><b>Ник:</b> ${wd.nick}</div>
+                        <div><b>ID:</b> ${wd.user_id}</div>
+                        <div><b>Предметы:</b> ${itemsNames}</div>
+                        <div><b>Статус:</b> <span style="color:var(--accent)">${wd.status}</span></div>
+                        <div class="actions">
+                            ${wd.status === 'pending' ? `<button class="btn-accept" onclick="acceptWithdrawGlobal(${wd.id})">Принять</button>` : ''}
+                            ${wd.status === 'accepted' ? `<button class="btn-accept" onclick="completeWithdrawGlobal(${wd.id})">Завершить</button>` : ''}
+                            ${wd.status !== 'rejected' && wd.status !== 'completed' ? `<button class="btn-reject" onclick="rejectWithdrawGlobal(${wd.id})">Отклонить</button>` : ''}
+                        </div>
+                    `;
+                    wdList.appendChild(el);
+                });
+
+            } catch (e) {
+                console.error("Ошибка загрузки админки", e);
+            }
+
+            // Рендер разрешенных предметов (остается локально)
             const allowedGrid = document.getElementById('admin-allowed-grid');
             allowedGrid.innerHTML = '';
             Object.values(ITEMS_DB).filter(i => i.type === 'brainrot').forEach(item => {
@@ -1264,72 +1310,33 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
                 };
                 allowedGrid.appendChild(el);
             });
-
-            const depList = document.getElementById('admin-deposit-list');
-            depList.innerHTML = state.deposits.length ? '' : '<p style="color: var(--text-muted); text-align: center; font-size:12px;">Нет заявок</p>';
-            state.deposits.forEach((dep, index) => {
-                const el = document.createElement('div');
-                el.className = 'request-item';
-                el.innerHTML = `
-                    <div><b>Ник:</b> ${dep.nick}</div>
-                    <div><b>Статус:</b> <span style="color:var(--accent)">${dep.status}</span></div>
-                    <div class="actions">
-                        ${dep.status === 'pending' ? `<button class="btn-accept" onclick="acceptDeposit(${index})">Принять</button>` : ''}
-                        ${dep.status === 'accepted' ? `<button class="btn-accept" onclick="giveCoins(${index})">Начислить</button>` : ''}
-                        ${dep.status !== 'rejected' && dep.status !== 'completed' ? `<button class="btn-reject" onclick="rejectDeposit(${index})">Отклонить</button>` : ''}
-                    </div>
-                `;
-                depList.appendChild(el);
-            });
-
-            const wdList = document.getElementById('admin-withdraw2-list');
-            wdList.innerHTML = state.withdrawals.length ? '' : '<p style="color: var(--text-muted); text-align: center; font-size:12px;">Нет заявок</p>';
-            state.withdrawals.forEach((wd, index) => {
-                const el = document.createElement('div');
-                el.className = 'request-item';
-                const itemsNames = wd.items.map(i => i.name).join(', ');
-                el.innerHTML = `
-                    <div><b>Ник:</b> ${wd.nick}</div>
-                    <div><b>Предметы:</b> ${itemsNames}</div>
-                    <div><b>Статус:</b> <span style="color:var(--accent)">${wd.status}</span></div>
-                    <div class="actions">
-                        ${wd.status === 'pending' ? `<button class="btn-accept" onclick="acceptWithdraw(${index})">Принять</button>` : ''}
-                        ${wd.status === 'accepted' ? `<button class="btn-accept" onclick="completeWithdraw(${index})">Завершить</button>` : ''}
-                        ${wd.status !== 'rejected' && wd.status !== 'completed' ? `<button class="btn-reject" onclick="rejectWithdraw(${index})">Отклонить</button>` : ''}
-                    </div>
-                `;
-                wdList.appendChild(el);
-            });
-
-            const promoList = document.getElementById('admin-promo-list');
-            promoList.innerHTML = '';
-            state.promos.forEach(p => {
-                promoList.innerHTML += `<div class="request-item" style="display:flex; justify-content:space-between; align-items:center; padding: 8px;"><b style="color:var(--gold); font-size: 14px;">${p.code}</b> <span>${p.coins} <img src="${IMAGES.coin}" style="width:10px;height:10px;display:inline;"></span> <span style="color:var(--text-muted); font-size:11px;">Ост: ${p.uses}</span></div>`;
-            });
         }
 
-        function acceptDeposit(index) { state.deposits[index].status = 'accepted'; saveState(); renderAdminPanel(); showToast('Принято!', 'success'); }
-        
-        function giveCoins(index) {
+        async function acceptDepositGlobal(dep_id) {
+            await fetch(`${API_URL}/api/admin_accept_deposit`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ dep_id }) });
+            renderAdminPanel();
+        }
+        async function giveCoinsGlobal(dep_id, user_id) {
             const amount = prompt('Сколько монет начислить?', '100');
-            if (amount && !isNaN(amount) && parseInt(amount) > 0) {
-                const coinsAmount = parseInt(amount);
-                state.deposits[index].status = 'completed';
-                state.coins += coinsAmount; 
-                updateCoinDisplay();
-                showToast(`Начислено ${coinsAmount} монет.`, 'success'); 
-                saveState(); 
-                renderAdminPanel();
-            }
+            if (!amount || isNaN(amount)) return;
+            await fetch(`${API_URL}/api/admin_give_coins`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ dep_id, user_id, amount: parseInt(amount) }) });
+            renderAdminPanel();
         }
-        
-        function rejectDeposit(index) { state.deposits[index].status = 'rejected'; saveState(); renderAdminPanel(); showToast('Отклонено.', 'error'); }
-        function acceptWithdraw(index) { state.withdrawals[index].status = 'accepted'; saveState(); renderAdminPanel(); }
-        function completeWithdraw(index) { state.withdrawals[index].status = 'completed'; saveState(); renderAdminPanel(); showToast('Вывод завершен!', 'success'); }
-        function rejectWithdraw(index) {
-            state.withdrawals[index].status = 'rejected';
-            state.withdrawals[index].items.forEach(item => state.inventory.push(item));
-            saveState(); renderAdminPanel(); renderInventory(); showToast('Отклонено.', 'error');
+        async function rejectDepositGlobal(dep_id) {
+            await fetch(`${API_URL}/api/admin_reject_deposit`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ dep_id }) });
+            renderAdminPanel();
+        }
+        async function acceptWithdrawGlobal(wd_id) {
+            await fetch(`${API_URL}/api/admin_accept_withdraw`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ wd_id }) });
+            renderAdminPanel();
+        }
+        async function completeWithdrawGlobal(wd_id) {
+            await fetch(`${API_URL}/api/admin_complete_withdraw`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ wd_id }) });
+            renderAdminPanel();
+        }
+        async function rejectWithdrawGlobal(wd_id) {
+            await fetch(`${API_URL}/api/admin_reject_withdraw`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ wd_id }) });
+            renderAdminPanel();
         }
 
         function createPromoCode() {

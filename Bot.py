@@ -1,4 +1,4 @@
-=import telebot
+import telebot
 from telebot import types
 import sqlite3
 import json
@@ -12,7 +12,7 @@ import os
 # ==========================================
 BOT_TOKEN = '9147236041:AAEcJCKj0XLpZhWKVh0dPV1Qs7_lf37KLhw'
 ADMIN_ID = 8664148534 # Твой Telegram ID
-WEBAPP_URL = 'https://braincosmo.onrender.com/' # Ссылка на Render
+WEBAPP_URL = 'WEBAPP_URL = 'https://braincosmo.onrender.com'
 
 bot = telebot.TeleBot(BOT_TOKEN)
 app = Flask(__name__, static_folder='images')
@@ -22,7 +22,6 @@ CORS(app)
 # БАЗА ДАННЫХ
 # ==========================================
 def init_db():
-    # Добавлен timeout=20, чтобы избежать ошибки "database is locked"
     conn = sqlite3.connect('brainrot.db', check_same_thread=False, timeout=20)
     cursor = conn.cursor()
     cursor.execute('''CREATE TABLE IF NOT EXISTS users (
@@ -127,14 +126,94 @@ def api_withdraw():
     return jsonify({'success': True})
 
 # ==========================================
+# API ДЛЯ АДМИНКИ (Глобальные заявки)
+# ==========================================
+@app.route('/api/get_all_requests', methods=['GET'])
+def get_all_requests():
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    # Получаем пополнения
+    cursor.execute("SELECT id, user_id, nick, status FROM deposits ORDER BY id DESC")
+    deposits = [{'id': r[0], 'user_id': r[1], 'nick': r[2], 'status': r[3]} for r in cursor.fetchall()]
+    
+    # Получаем выводы
+    cursor.execute("SELECT id, user_id, nick, items, status FROM withdrawals ORDER BY id DESC")
+    withdrawals = []
+    for r in cursor.fetchall():
+        withdrawals.append({
+            'id': r[0], 'user_id': r[1], 'nick': r[2], 
+            'items': json.loads(r[3]), 'status': r[4]
+        })
+        
+    conn.close()
+    return jsonify({'deposits': deposits, 'withdrawals': withdrawals})
+
+@app.route('/api/admin_accept_deposit', methods=['POST'])
+def admin_accept_deposit():
+    dep_id = request.json.get('dep_id')
+    conn = get_db(); cursor = conn.cursor()
+    cursor.execute("UPDATE deposits SET status = 'accepted' WHERE id = ?", (dep_id,))
+    conn.commit(); conn.close()
+    return jsonify({'success': True})
+
+@app.route('/api/admin_give_coins', methods=['POST'])
+def admin_give_coins():
+    data = request.json
+    conn = get_db(); cursor = conn.cursor()
+    cursor.execute("UPDATE users SET coins = coins + ? WHERE user_id = ?", (data['amount'], data['user_id']))
+    cursor.execute("UPDATE deposits SET status = 'completed' WHERE id = ?", (data['dep_id'],))
+    conn.commit(); conn.close()
+    
+    bot.send_message(ADMIN_ID, f"✅ Начислено {data['amount']} монет пользователю {data['user_id']}.")
+    bot.send_message(data['user_id'], f"✅ Вам начислено {data['amount']} монет!")
+    return jsonify({'success': True})
+
+@app.route('/api/admin_reject_deposit', methods=['POST'])
+def admin_reject_deposit():
+    dep_id = request.json.get('dep_id')
+    conn = get_db(); cursor = conn.cursor()
+    cursor.execute("UPDATE deposits SET status = 'rejected' WHERE id = ?", (dep_id,))
+    conn.commit(); conn.close()
+    return jsonify({'success': True})
+
+@app.route('/api/admin_accept_withdraw', methods=['POST'])
+def admin_accept_withdraw():
+    wd_id = request.json.get('wd_id')
+    conn = get_db(); cursor = conn.cursor()
+    cursor.execute("UPDATE withdrawals SET status = 'accepted' WHERE id = ?", (wd_id,))
+    conn.commit(); conn.close()
+    return jsonify({'success': True})
+
+@app.route('/api/admin_complete_withdraw', methods=['POST'])
+def admin_complete_withdraw():
+    wd_id = request.json.get('wd_id')
+    conn = get_db(); cursor = conn.cursor()
+    cursor.execute("UPDATE withdrawals SET status = 'completed' WHERE id = ?", (wd_id,))
+    conn.commit(); conn.close()
+    return jsonify({'success': True})
+
+@app.route('/api/admin_reject_withdraw', methods=['POST'])
+def admin_reject_withdraw():
+    wd_id = request.json.get('wd_id')
+    conn = get_db(); cursor = conn.cursor()
+    cursor.execute("UPDATE withdrawals SET status = 'rejected' WHERE id = ?", (wd_id,))
+    conn.commit(); conn.close()
+    return jsonify({'success': True})
+
+# ==========================================
 # БОТ
 # ==========================================
 @bot.message_handler(commands=['start'])
 def start(message):
     markup = types.InlineKeyboardMarkup(row_width=1)
-    markup.add(types.InlineKeyboardButton("🎮 Играть", web_app=types.WebAppInfo(url=WEBAPP_URL)))
     markup.add(types.InlineKeyboardButton("🎁 Ввести промокод", callback_data="enter_promo"))
-    bot.send_message(message.chat.id, "👋 Добро пожаловать в Brainrot Ultra!", reply_markup=markup)
+    
+    text = (
+        "👋 Добро пожаловать в Brainrot Ultra!\n\n"
+        "👇 **Чтобы играть, нажми на голубую кнопку «Играть» внизу экрана** (слева от поля ввода сообщения)."
+    )
+    bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode='Markdown')
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
@@ -228,8 +307,6 @@ def create_promo(message):
 # ЗАПУСК
 # ==========================================
 if __name__ == '__main__':
-    # Запускаем бота в отдельном потоке
     threading.Thread(target=bot.infinity_polling, daemon=True).start()
-    # Запускаем Flask сервер (Render сам подставит нужный порт)
     port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port)
