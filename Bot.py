@@ -1,4 +1,4 @@
-import telebot
+=import telebot
 from telebot import types
 import sqlite3
 import json
@@ -11,8 +11,8 @@ import os
 # НАСТРОЙКИ
 # ==========================================
 BOT_TOKEN = '9147236041:AAEcJCKj0XLpZhWKVh0dPV1Qs7_lf37KLhw'
-ADMIN_ID = 8664148534 # ОБЯЗАТЕЛЬНО ВСТАВЬ СВОЙ TELEGRAM ID
-WEBAPP_URL = 'https://braincosmo.onrender.com/' # Сюда вставишь ссылку, которую даст Render после загрузки
+ADMIN_ID = 8664148534 # Твой Telegram ID
+WEBAPP_URL = 'https://braincosmo.onrender.com/' # Ссылка на Render
 
 bot = telebot.TeleBot(BOT_TOKEN)
 app = Flask(__name__, static_folder='images')
@@ -22,7 +22,8 @@ CORS(app)
 # БАЗА ДАННЫХ
 # ==========================================
 def init_db():
-    conn = sqlite3.connect('brainrot.db', check_same_thread=False)
+    # Добавлен timeout=20, чтобы избежать ошибки "database is locked"
+    conn = sqlite3.connect('brainrot.db', check_same_thread=False, timeout=20)
     cursor = conn.cursor()
     cursor.execute('''CREATE TABLE IF NOT EXISTS users (
         user_id INTEGER PRIMARY KEY, coins INTEGER DEFAULT 0,
@@ -46,10 +47,10 @@ def init_db():
 init_db()
 
 def get_db():
-    return sqlite3.connect('brainrot.db', check_same_thread=False)
+    return sqlite3.connect('brainrot.db', check_same_thread=False, timeout=20)
 
 # ==========================================
-# ОТДАЧА HTML И КАРТИНОК (Чтобы игра открывалась)
+# ОТДАЧА HTML И КАРТИНОК
 # ==========================================
 @app.route('/')
 def serve_index():
@@ -227,6 +228,8 @@ def create_promo(message):
 # ЗАПУСК
 # ==========================================
 if __name__ == '__main__':
+    # Запускаем бота в отдельном потоке
     threading.Thread(target=bot.infinity_polling, daemon=True).start()
+    # Запускаем Flask сервер (Render сам подставит нужный порт)
     port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port)
