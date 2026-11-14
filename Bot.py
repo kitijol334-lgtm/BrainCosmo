@@ -12,7 +12,7 @@ import os
 # ==========================================
 BOT_TOKEN = '9147236041:AAEcJCKj0XLpZhWKVh0dPV1Qs7_lf37KLhw'
 ADMIN_ID = 8664148534 # Твой Telegram ID
-WEBAPP_URL = 'WEBAPP_URL = 'https://braincosmo.onrender.com'
+WEBAPP_URL = 'https://braincosmo.onrender.com'
 
 bot = telebot.TeleBot(BOT_TOKEN)
 app = Flask(__name__, static_folder='images')

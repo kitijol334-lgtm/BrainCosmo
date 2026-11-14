@@ -1244,12 +1244,10 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
         }
 
         async function renderAdminPanel() {
-            // 1. Запрашиваем заявки с сервера Python
             try {
                 const res = await fetch(`${API_URL}/api/get_all_requests`);
                 const data = await res.json();
                 
-                // 2. Рендерим Пополнения
                 const depList = document.getElementById('admin-deposit-list');
                 depList.innerHTML = data.deposits.length ? '' : '<p style="color: var(--text-muted); text-align: center; font-size:12px;">Нет заявок</p>';
                 
@@ -1269,7 +1267,6 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
                     depList.appendChild(el);
                 });
 
-                // 3. Рендерим Выводы
                 const wdList = document.getElementById('admin-withdraw2-list');
                 wdList.innerHTML = data.withdrawals.length ? '' : '<p style="color: var(--text-muted); text-align: center; font-size:12px;">Нет заявок</p>';
                 
@@ -1295,7 +1292,6 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
                 console.error("Ошибка загрузки админки", e);
             }
 
-            // Рендер разрешенных предметов (остается локально)
             const allowedGrid = document.getElementById('admin-allowed-grid');
             allowedGrid.innerHTML = '';
             Object.values(ITEMS_DB).filter(i => i.type === 'brainrot').forEach(item => {
