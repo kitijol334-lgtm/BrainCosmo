@@ -49,8 +49,12 @@ def get_db():
     return sqlite3.connect('brainrot.db', check_same_thread=False, timeout=20)
 
 # ==========================================
-# ОТДАЧА HTML И КАРТИНОК
+# ОТДАЧА HTML И КАРТИНОК + ПИНГ
 # ==========================================
+@app.route('/ping')
+def ping():
+    return "OK", 200
+
 @app.route('/')
 def serve_index():
     return send_file('index.html')
