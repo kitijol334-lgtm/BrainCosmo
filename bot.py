@@ -106,7 +106,6 @@ def api_deposit():
     conn.commit()
     conn.close()
     
-    # Бот НЕ пишет админу, заявка просто падает в HTML-админку
     return jsonify({'success': True})
 
 @app.route('/api/withdraw', methods=['POST'])
@@ -141,6 +140,21 @@ def get_all_requests():
         
     conn.close()
     return jsonify({'deposits': deposits, 'withdrawals': withdrawals})
+
+@app.route('/api/admin_create_promo', methods=['POST'])
+def admin_create_promo():
+    data = request.json
+    code = data.get('code')
+    uses = data.get('uses')
+    coins = data.get('coins')
+    
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("INSERT OR REPLACE INTO promos (code, uses, coins) VALUES (?, ?, ?)", (code, uses, coins))
+    conn.commit()
+    conn.close()
+    
+    return jsonify({'success': True})
 
 @app.route('/api/admin_accept_deposit', methods=['POST'])
 def admin_accept_deposit():
@@ -242,7 +256,7 @@ def start(message):
     markup.add(types.InlineKeyboardButton("🎁 Ввести промокод", callback_data="enter_promo"))
     
     text = (
-        "👋 Добро пожаловать в Brainrot Ultra!\n\n"
+        "👋 Добро пожаловать в Brainrot Cosmo!\n\n"
         "👇 **Чтобы играть, нажми на голубую кнопку «Играть» внизу экрана** (слева от поля ввода сообщения)."
     )
     bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode='Markdown')
