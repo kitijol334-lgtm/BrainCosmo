@@ -284,10 +284,11 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
 .action-btn:disabled{background:rgba(255,255,255,.05);color:#5d5778;box-shadow:none;border:1px solid var(--glass-border)}
 .action-btn:disabled::after{display:none}
 
-/* АДМИНКА */
-.admin-tabs{display:flex;gap:6px;margin-bottom:14px;padding-bottom:4px;overflow-x:auto;scrollbar-width:none}
+/* АДМИНКА (ФИКС ВЫСОТЫ) */
+.admin-tabs{display:flex;gap:6px;margin-bottom:14px;padding-bottom:4px;overflow-x:auto;scrollbar-width:none; flex-shrink: 0;}
 .admin-tab{padding:9px 13px;border-radius:12px;white-space:nowrap;font-size:11px;font-weight:800;color:var(--text-muted);background:rgba(255,255,255,.04);border:1px solid var(--glass-border);transition:.25s}
 .admin-tab.active{color:#06040d;background:var(--accent);border-color:var(--accent);box-shadow:0 0 16px var(--accent-glow)}
+.admin-content-wrapper { flex: 1; overflow-y: auto; min-height: 0; }
 .admin-content{display:none;animation:fadeIn .3s ease}
 .admin-content.active{display:block}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -560,7 +561,7 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
 
     <!-- АДМИН ПАНЕЛЬ -->
     <div class="modal-overlay" id="admin-panel-modal">
-        <div class="modal-content" style="max-width: 95%;">
+        <div class="modal-content" style="max-width: 95%; height: 90vh; display: flex; flex-direction: column;">
             <div class="modal-header">
                 <div class="modal-title">Админ Панель</div>
                 <button class="close-btn" onclick="closeModal('admin-panel-modal')">×</button>
@@ -571,18 +572,21 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
                 <button class="admin-tab" onclick="switchAdminTab('withdraw2', this)">Вывод 2</button>
                 <button class="admin-tab" onclick="switchAdminTab('promo', this)">Промокод</button>
             </div>
-            <div id="admin-withdraw1" class="admin-content active">
-                <p style="margin-bottom: 8px; font-size: 12px; color: var(--text-muted);">Разрешенные предметы:</p>
-                <div class="inventory-grid" id="admin-allowed-grid"></div>
-            </div>
-            <div id="admin-deposit" class="admin-content"><div id="admin-deposit-list"></div></div>
-            <div id="admin-withdraw2" class="admin-content"><div id="admin-withdraw2-list"></div></div>
-            <div id="admin-promo" class="admin-content">
-                <input type="text" id="promo-code-input" placeholder="Код">
-                <input type="number" id="promo-uses-input" placeholder="Кол-во активаций">
-                <input type="number" id="promo-coins-input" placeholder="Монет за активацию">
-                <button class="action-btn" style="align-self: center;" onclick="createPromoCode()">Создать</button>
-                <div id="admin-promo-list" style="margin-top: 10px;"></div>
+            
+            <div class="admin-content-wrapper">
+                <div id="admin-withdraw1" class="admin-content active">
+                    <p style="margin-bottom: 8px; font-size: 12px; color: var(--text-muted);">Разрешенные предметы:</p>
+                    <div class="inventory-grid" id="admin-allowed-grid"></div>
+                </div>
+                <div id="admin-deposit" class="admin-content"><div id="admin-deposit-list"></div></div>
+                <div id="admin-withdraw2" class="admin-content"><div id="admin-withdraw2-list"></div></div>
+                <div id="admin-promo" class="admin-content">
+                    <input type="text" id="promo-code-input" placeholder="Код">
+                    <input type="number" id="promo-uses-input" placeholder="Кол-во активаций">
+                    <input type="number" id="promo-coins-input" placeholder="Монет за активацию">
+                    <button class="action-btn" style="align-self: center;" onclick="createPromoCode()">Создать</button>
+                    <div id="admin-promo-list" style="margin-top: 10px;"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -1220,8 +1224,19 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
         function submitDeposit() {
             const nick = document.getElementById('deposit-nick').value.trim();
             if (!nick) { showToast('Введите ник!', 'error'); return; }
-            state.deposits.push({ nick: nick, status: 'pending', id: Date.now(), user_id: TG_USER_ID });
-            saveState(); closeModal('deposit-modal'); showToast('Заявка создана!', 'success');
+            
+            fetch(`${API_URL}/api/deposit`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: TG_USER_ID || 0, nick: nick })
+            }).then(() => {
+                closeModal('deposit-modal'); 
+                showToast('Заявка создана!', 'success');
+            }).catch(e => {
+                console.error("Ошибка отправки депозита", e);
+                state.deposits.push({ nick: nick, status: 'pending', id: Date.now(), user_id: TG_USER_ID });
+                saveState(); closeModal('deposit-modal'); showToast('Заявка создана (локально)!', 'success');
+            });
         }
 
         function openAdminModal() {
