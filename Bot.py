@@ -12,7 +12,7 @@ import os
 # ==========================================
 BOT_TOKEN = '9147236041:AAEcJCKj0XLpZhWKVh0dPV1Qs7_lf37KLhw'
 ADMIN_ID = 8664148534 # Твой Telegram ID
-WEBAPP_URL = 'https://braincosmo.onrender.com'
+WEBAPP_URL = 'https://braincosmo111.onrender.com' # Твоя ссылка
 
 bot = telebot.TeleBot(BOT_TOKEN)
 app = Flask(__name__, static_folder='images')
@@ -133,11 +133,9 @@ def get_all_requests():
     conn = get_db()
     cursor = conn.cursor()
     
-    # Получаем пополнения
     cursor.execute("SELECT id, user_id, nick, status FROM deposits ORDER BY id DESC")
     deposits = [{'id': r[0], 'user_id': r[1], 'nick': r[2], 'status': r[3]} for r in cursor.fetchall()]
     
-    # Получаем выводы
     cursor.execute("SELECT id, user_id, nick, items, status FROM withdrawals ORDER BY id DESC")
     withdrawals = []
     for r in cursor.fetchall():
@@ -165,8 +163,12 @@ def admin_give_coins():
     cursor.execute("UPDATE deposits SET status = 'completed' WHERE id = ?", (data['dep_id'],))
     conn.commit(); conn.close()
     
-    bot.send_message(ADMIN_ID, f"✅ Начислено {data['amount']} монет пользователю {data['user_id']}.")
-    bot.send_message(data['user_id'], f"✅ Вам начислено {data['amount']} монет!")
+    try:
+        bot.send_message(ADMIN_ID, f"✅ Начислено {data['amount']} монет пользователю {data['user_id']}.")
+        bot.send_message(data['user_id'], f"✅ Вам начислено {data['amount']} монет!")
+    except Exception as e:
+        print(f"Не удалось отправить сообщение: {e}")
+        
     return jsonify({'success': True})
 
 @app.route('/api/admin_reject_deposit', methods=['POST'])
