@@ -106,10 +106,7 @@ def api_deposit():
     conn.commit()
     conn.close()
     
-    markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton("✅ Принять", callback_data=f"dep_acc_{dep_id}"),
-               types.InlineKeyboardButton("❌ Отклонить", callback_data=f"dep_rej_{dep_id}"))
-    bot.send_message(ADMIN_ID, f"💰 **Пополнение!**\nID: `{data['user_id']}`\nНик: `{data['nick']}`", reply_markup=markup, parse_mode='Markdown')
+    # Бот НЕ пишет админу, заявка просто падает в HTML-админку
     return jsonify({'success': True})
 
 @app.route('/api/withdraw', methods=['POST'])
@@ -121,12 +118,6 @@ def api_withdraw():
     wd_id = cursor.lastrowid
     conn.commit()
     conn.close()
-    
-    markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton("✅ Принять", callback_data=f"wd_acc_{wd_id}"),
-               types.InlineKeyboardButton("❌ Отклонить", callback_data=f"wd_rej_{wd_id}"))
-    items_names = ", ".join([i['name'] for i in data['items']])
-    bot.send_message(ADMIN_ID, f"📦 **Вывод!**\nID: `{data['user_id']}`\nНик: `{data['nick']}`\nПредметы: {items_names}", reply_markup=markup, parse_mode='Markdown')
     return jsonify({'success': True})
 
 # ==========================================
@@ -155,8 +146,17 @@ def get_all_requests():
 def admin_accept_deposit():
     dep_id = request.json.get('dep_id')
     conn = get_db(); cursor = conn.cursor()
+    cursor.execute("SELECT user_id FROM deposits WHERE id = ?", (dep_id,))
+    res = cursor.fetchone()
     cursor.execute("UPDATE deposits SET status = 'accepted' WHERE id = ?", (dep_id,))
     conn.commit(); conn.close()
+    
+    if res:
+        try:
+            bot.send_message(res[0], "✅ Ваша заявка на пополнение **принята**!\nУ вас есть 3 минуты, чтобы зайти в игру и получить монеты.", parse_mode='Markdown')
+        except Exception as e:
+            print(f"Ошибка отправки сообщения игроку: {e}")
+            
     return jsonify({'success': True})
 
 @app.route('/api/admin_give_coins', methods=['POST'])
@@ -168,10 +168,9 @@ def admin_give_coins():
     conn.commit(); conn.close()
     
     try:
-        bot.send_message(ADMIN_ID, f"✅ Начислено {data['amount']} монет пользователю {data['user_id']}.")
         bot.send_message(data['user_id'], f"✅ Вам начислено {data['amount']} монет!")
     except Exception as e:
-        print(f"Не удалось отправить сообщение: {e}")
+        print(f"Ошибка отправки сообщения игроку: {e}")
         
     return jsonify({'success': True})
 
@@ -179,8 +178,17 @@ def admin_give_coins():
 def admin_reject_deposit():
     dep_id = request.json.get('dep_id')
     conn = get_db(); cursor = conn.cursor()
+    cursor.execute("SELECT user_id FROM deposits WHERE id = ?", (dep_id,))
+    res = cursor.fetchone()
     cursor.execute("UPDATE deposits SET status = 'rejected' WHERE id = ?", (dep_id,))
     conn.commit(); conn.close()
+    
+    if res:
+        try:
+            bot.send_message(res[0], "❌ Ваша заявка на пополнение отклонена.")
+        except Exception as e:
+            print(f"Ошибка отправки сообщения игроку: {e}")
+            
     return jsonify({'success': True})
 
 @app.route('/api/admin_accept_withdraw', methods=['POST'])
@@ -195,16 +203,34 @@ def admin_accept_withdraw():
 def admin_complete_withdraw():
     wd_id = request.json.get('wd_id')
     conn = get_db(); cursor = conn.cursor()
+    cursor.execute("SELECT user_id FROM withdrawals WHERE id = ?", (wd_id,))
+    res = cursor.fetchone()
     cursor.execute("UPDATE withdrawals SET status = 'completed' WHERE id = ?", (wd_id,))
     conn.commit(); conn.close()
+    
+    if res:
+        try:
+            bot.send_message(res[0], "✅ Ваш вывод успешно выполнен!")
+        except Exception as e:
+            print(f"Ошибка отправки сообщения игроку: {e}")
+            
     return jsonify({'success': True})
 
 @app.route('/api/admin_reject_withdraw', methods=['POST'])
 def admin_reject_withdraw():
     wd_id = request.json.get('wd_id')
     conn = get_db(); cursor = conn.cursor()
+    cursor.execute("SELECT user_id FROM withdrawals WHERE id = ?", (wd_id,))
+    res = cursor.fetchone()
     cursor.execute("UPDATE withdrawals SET status = 'rejected' WHERE id = ?", (wd_id,))
     conn.commit(); conn.close()
+    
+    if res:
+        try:
+            bot.send_message(res[0], "❌ Ваша заявка на вывод отклонена.")
+        except Exception as e:
+            print(f"Ошибка отправки сообщения игроку: {e}")
+            
     return jsonify({'success': True})
 
 # ==========================================
@@ -227,52 +253,6 @@ def callback_inline(call):
         bot.answer_callback_query(call.id)
         msg = bot.send_message(call.message.chat.id, "Введите промокод (или 'отмена'):")
         bot.register_next_step_handler(msg, process_promo)
-    elif call.data.startswith("dep_"):
-        action, dep_id = call.data.split("_")[1], call.data.split("_")[2]
-        conn = get_db()
-        cursor = conn.cursor()
-        cursor.execute("SELECT user_id, nick FROM deposits WHERE id = ?", (dep_id,))
-        dep = cursor.fetchone()
-        if action == "acc":
-            bot.edit_message_text(f"💰 Заявка `{dep_id}` ПРИНЯТА. Напишите сумму:", call.message.chat.id, call.message.message_id)
-            bot.register_next_step_handler_by_chat_id(call.message.chat.id, give_coins, dep[0], dep_id)
-        else:
-            cursor.execute("UPDATE deposits SET status = 'rejected' WHERE id = ?", (dep_id,))
-            conn.commit()
-            bot.edit_message_text(f"❌ Заявка `{dep_id}` ОТКЛОНЕНА.", call.message.chat.id, call.message.message_id)
-            bot.send_message(dep[0], "❌ Ваша заявка на пополнение отклонена.")
-        conn.close()
-    elif call.data.startswith("wd_"):
-        action, wd_id = call.data.split("_")[1], call.data.split("_")[2]
-        conn = get_db()
-        cursor = conn.cursor()
-        cursor.execute("SELECT user_id, nick FROM withdrawals WHERE id = ?", (wd_id,))
-        wd = cursor.fetchone()
-        if action == "acc":
-            cursor.execute("UPDATE withdrawals SET status = 'completed' WHERE id = ?", (wd_id,))
-            conn.commit()
-            bot.edit_message_text(f"✅ Заявка `{wd_id}` ВЫПОЛНЕНА.", call.message.chat.id, call.message.message_id)
-            bot.send_message(wd[0], "✅ Ваш вывод успешно выполнен!")
-        else:
-            cursor.execute("UPDATE withdrawals SET status = 'rejected' WHERE id = ?", (wd_id,))
-            conn.commit()
-            bot.edit_message_text(f"❌ Заявка `{wd_id}` ОТКЛОНЕНА.", call.message.chat.id, call.message.message_id)
-            bot.send_message(wd[0], "❌ Ваша заявка на вывод отклонена.")
-        conn.close()
-
-def give_coins(user_id, dep_id, message):
-    try:
-        amount = int(message.text)
-        conn = get_db()
-        cursor = conn.cursor()
-        cursor.execute("UPDATE users SET coins = coins + ? WHERE user_id = ?", (amount, user_id))
-        cursor.execute("UPDATE deposits SET status = 'completed' WHERE id = ?", (dep_id,))
-        conn.commit()
-        conn.close()
-        bot.send_message(message.chat.id, f"✅ Начислено {amount} монет.")
-        bot.send_message(user_id, f"✅ Пополнение одобрено! Начислено {amount} монет.")
-    except:
-        bot.send_message(message.chat.id, "Ошибка. Введите число.")
 
 def process_promo(message):
     if message.text.lower() == 'отмена': return
