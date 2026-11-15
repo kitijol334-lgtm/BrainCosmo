@@ -25,35 +25,42 @@ CORS(app)
 # ==========================================
 def get_db():
     if not DATABASE_URL:
-        print("❌ КРИТИЧЕСКАЯ ОШИБКА: Переменная DATABASE_URL не найдена! Данные не будут сохраняться.")
-        # Аварийный выход, чтобы ты заметил ошибку в логах
+        print("❌ КРИТИЧЕСКАЯ ОШИБКА: Переменная DATABASE_URL не найдена!")
         raise Exception("DATABASE_URL is missing")
     
-    # Render иногда выдает ссылку начиная с postgres://, psycopg2 требует postgresql://
     url = DATABASE_URL.replace('postgres://', 'postgresql://')
     return psycopg2.connect(url)
 
 def init_db():
     conn = get_db()
     cursor = conn.cursor()
-    # Создаем таблицы
+    # Пользователи
     cursor.execute('''CREATE TABLE IF NOT EXISTS users (
         user_id BIGINT PRIMARY KEY, coins BIGINT DEFAULT 0,
         inventory TEXT DEFAULT '[]', last_free_case BIGINT DEFAULT 0,
         last_tag_case BIGINT DEFAULT 0
     )''')
+    # Заявки
     cursor.execute('''CREATE TABLE IF NOT EXISTS deposits (
         id SERIAL PRIMARY KEY, user_id BIGINT, nick TEXT, status TEXT DEFAULT 'pending'
     )''')
     cursor.execute('''CREATE TABLE IF NOT EXISTS withdrawals (
         id SERIAL PRIMARY KEY, user_id BIGINT, nick TEXT, items TEXT, status TEXT DEFAULT 'pending'
     )''')
+    # Промокоды
     cursor.execute('''CREATE TABLE IF NOT EXISTS promos (
         code TEXT PRIMARY KEY, uses INTEGER, coins INTEGER
     )''')
     cursor.execute('''CREATE TABLE IF NOT EXISTS promo_uses (
         code TEXT, user_id BIGINT, UNIQUE(code, user_id)
     )''')
+    # НОВАЯ ТАБЛИЦА НАСТРОЕК (для админки)
+    cursor.execute('''CREATE TABLE IF NOT EXISTS settings (
+        key TEXT PRIMARY KEY, value TEXT
+    )''')
+    # Инициализация пустого списка разрешенных предметов, если его нет
+    cursor.execute("INSERT INTO settings (key, value) VALUES ('allowedWithdrawals', '[]') ON CONFLICT DO NOTHING")
+    
     conn.commit()
     conn.close()
     print("✅ База данных Postgres успешно инициализирована.")
@@ -137,7 +144,29 @@ def api_withdraw():
     return jsonify({'success': True})
 
 # ==========================================
-# API ДЛЯ АДМИНКИ
+# API ДЛЯ НАСТРОЕК АДМИНКИ
+# ==========================================
+@app.route('/api/get_settings', methods=['GET'])
+def get_settings():
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT value FROM settings WHERE key = 'allowedWithdrawals'")
+    res = cursor.fetchone()
+    conn.close()
+    return jsonify({'allowedWithdrawals': json.loads(res[0]) if res else []})
+
+@app.route('/api/admin_save_settings', methods=['POST'])
+def admin_save_settings():
+    data = request.json
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE settings SET value = %s WHERE key = 'allowedWithdrawals'", (json.dumps(data.get('allowedWithdrawals', [])),))
+    conn.commit()
+    conn.close()
+    return jsonify({'success': True})
+
+# ==========================================
+# API ДЛЯ АДМИНКИ (Заявки)
 # ==========================================
 @app.route('/api/get_all_requests', methods=['GET'])
 def get_all_requests():
@@ -180,8 +209,7 @@ def admin_accept_deposit():
     if res:
         try:
             bot.send_message(res[0], "✅ Ваша заявка на пополнение **принята**!\nУ вас есть 3 минуты, чтобы зайти в игру и **получить монеты**.", parse_mode='Markdown')
-        except Exception as e:
-            print(f"Ошибка: {e}")
+        except Exception as e: print(f"Ошибка: {e}")
     return jsonify({'success': True})
 
 @app.route('/api/admin_give_coins', methods=['POST'])
@@ -194,8 +222,7 @@ def admin_give_coins():
     
     try:
         bot.send_message(data['user_id'], f"✅ Вам начислено {data['amount']} монет!")
-    except Exception as e:
-        print(f"Ошибка: {e}")
+    except Exception as e: print(f"Ошибка: {e}")
     return jsonify({'success': True})
 
 @app.route('/api/admin_reject_deposit', methods=['POST'])
@@ -208,10 +235,8 @@ def admin_reject_deposit():
     conn.commit(); conn.close()
     
     if res:
-        try:
-            bot.send_message(res[0], "❌ Ваша заявка на пополнение отклонена.")
-        except Exception as e:
-            print(f"Ошибка: {e}")
+        try: bot.send_message(res[0], "❌ Ваша заявка на пополнение отклонена.")
+        except Exception as e: print(f"Ошибка: {e}")
     return jsonify({'success': True})
 
 @app.route('/api/admin_accept_withdraw', methods=['POST'])
@@ -226,8 +251,7 @@ def admin_accept_withdraw():
     if res:
         try:
             bot.send_message(res[0], "✅ Ваша заявка на вывод **принята**!\nУ вас есть 3 минуты, чтобы зайти в игру и **отдать брейнрота**.", parse_mode='Markdown')
-        except Exception as e:
-            print(f"Ошибка: {e}")
+        except Exception as e: print(f"Ошибка: {e}")
     return jsonify({'success': True})
 
 @app.route('/api/admin_complete_withdraw', methods=['POST'])
@@ -240,10 +264,8 @@ def admin_complete_withdraw():
     conn.commit(); conn.close()
     
     if res:
-        try:
-            bot.send_message(res[0], "✅ Ваш вывод успешно выполнен!")
-        except Exception as e:
-            print(f"Ошибка: {e}")
+        try: bot.send_message(res[0], "✅ Ваш вывод успешно выполнен!")
+        except Exception as e: print(f"Ошибка: {e}")
     return jsonify({'success': True})
 
 @app.route('/api/admin_reject_withdraw', methods=['POST'])
@@ -256,10 +278,8 @@ def admin_reject_withdraw():
     conn.commit(); conn.close()
     
     if res:
-        try:
-            bot.send_message(res[0], "❌ Ваша заявка на вывод отклонена.")
-        except Exception as e:
-            print(f"Ошибка: {e}")
+        try: bot.send_message(res[0], "❌ Ваша заявка на вывод отклонена.")
+        except Exception as e: print(f"Ошибка: {e}")
     return jsonify({'success': True})
 
 @app.route('/api/admin_clear_coins', methods=['POST'])
@@ -267,10 +287,8 @@ def admin_clear_coins():
     data = request.json
     user_id = data.get('user_id')
     conn = get_db(); cursor = conn.cursor()
-    if user_id == 'all':
-        cursor.execute("UPDATE users SET coins = 0")
-    else:
-        cursor.execute("UPDATE users SET coins = 0 WHERE user_id = %s", (user_id,))
+    if user_id == 'all': cursor.execute("UPDATE users SET coins = 0")
+    else: cursor.execute("UPDATE users SET coins = 0 WHERE user_id = %s", (user_id,))
     conn.commit(); conn.close()
     return jsonify({'success': True})
 
@@ -279,10 +297,8 @@ def admin_clear_inventory():
     data = request.json
     user_id = data.get('user_id')
     conn = get_db(); cursor = conn.cursor()
-    if user_id == 'all':
-        cursor.execute("UPDATE users SET inventory = '[]'")
-    else:
-        cursor.execute("UPDATE users SET inventory = '[]' WHERE user_id = %s", (user_id,))
+    if user_id == 'all': cursor.execute("UPDATE users SET inventory = '[]'")
+    else: cursor.execute("UPDATE users SET inventory = '[]' WHERE user_id = %s", (user_id,))
     conn.commit(); conn.close()
     return jsonify({'success': True})
 
@@ -314,8 +330,7 @@ def process_promo(message):
     elif promo[0] <= 0: bot.send_message(message.chat.id, "❌ Код закончился!")
     else:
         cursor.execute("SELECT * FROM promo_uses WHERE code = %s AND user_id = %s", (code, user_id))
-        if cursor.fetchone(): 
-            bot.send_message(message.chat.id, "❌ Вы уже вводили его!")
+        if cursor.fetchone(): bot.send_message(message.chat.id, "❌ Вы уже вводили его!")
         else:
             cursor.execute("UPDATE promos SET uses = uses - 1 WHERE code = %s", (code,))
             cursor.execute("INSERT INTO promo_uses (code, user_id) VALUES (%s, %s)", (code, user_id))
