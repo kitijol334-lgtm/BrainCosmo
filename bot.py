@@ -219,7 +219,7 @@ def admin_accept_withdraw():
     
     if res:
         try:
-            bot.send_message(res[0], "✅ Ваша заявка на вывод **принята**!\nУ вас есть 3 минуты, чтобы зайти в игру и забрать своего брейнрота.", parse_mode='Markdown')
+            bot.send_message(res[0], "✅ Ваша заявка на вывод **принята**!\nУ вас есть 3 минуты, чтобы зайти в игру и отдать брейнрота.", parse_mode='Markdown')
         except Exception as e:
             print(f"Ошибка отправки сообщения игроку: {e}")
             
