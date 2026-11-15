@@ -209,8 +209,20 @@ def admin_reject_deposit():
 def admin_accept_withdraw():
     wd_id = request.json.get('wd_id')
     conn = get_db(); cursor = conn.cursor()
+    
+    # Получаем ID игрока, чтобы отправить ему сообщение
+    cursor.execute("SELECT user_id FROM withdrawals WHERE id = ?", (wd_id,))
+    res = cursor.fetchone()
+    
     cursor.execute("UPDATE withdrawals SET status = 'accepted' WHERE id = ?", (wd_id,))
     conn.commit(); conn.close()
+    
+    if res:
+        try:
+            bot.send_message(res[0], "✅ Ваша заявка на вывод **принята**!\nУ вас есть 3 минуты, чтобы зайти в игру и забрать своего брейнрота.", parse_mode='Markdown')
+        except Exception as e:
+            print(f"Ошибка отправки сообщения игроку: {e}")
+            
     return jsonify({'success': True})
 
 @app.route('/api/admin_complete_withdraw', methods=['POST'])
