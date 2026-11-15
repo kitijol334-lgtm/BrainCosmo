@@ -714,7 +714,7 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
         };
 
         function loadState() {
-            const saved = localStorage.getItem('brainrot_state_v18');
+            const saved = localStorage.getItem('brainrot_state_v19');
             if (saved) {
                 state = JSON.parse(saved);
                 if(state.upgrader.myItem) state.upgrader.myItem = state.inventory.find(i => i.uid === state.upgrader.myItem.uid) || null;
@@ -723,7 +723,7 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
         }
 
         function saveState() { 
-            localStorage.setItem('brainrot_state_v18', JSON.stringify(state)); 
+            localStorage.setItem('brainrot_state_v19', JSON.stringify(state)); 
             
             // Отправляем данные на сервер при каждом сохранении
             if (tg && tg.initDataUnsafe?.user) {
@@ -734,7 +734,8 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
                         user_id: tg.initDataUnsafe.user.id,
                         coins: state.coins,
                         inventory: state.inventory,
-                        last_free_case: state.lastFreeCase
+                        last_free_case: state.lastFreeCase,
+                        last_tag_case: state.lastTagCase // <--- ДОБАВЛЕНО
                     })
                 }).catch(e => console.error(e));
             }
@@ -878,7 +879,7 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
             const track = document.getElementById('case-track');
             
             if (currentCaseId === 'free') state.lastFreeCase = Date.now();
-            else if (currentCaseId === 'tag') state.lastTagCase = Date.now();
+            else if (currentCaseId === 'tag') state.lastTagCase = Date.now(); // <-- Сохраняем кулдаун TagCase
             else { state.coins -= c.price; updateCoinDisplay(); }
 
             const targetElement = track.children[45];
@@ -1424,10 +1425,9 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
                 const res = await fetch(`${API_URL}/api/state?user_id=${user_id}`);
                 const data = await res.json();
                 
-                // Берем с сервера ТОЛЬКО баланс и кулдаун
                 state.coins = data.coins;
                 state.lastFreeCase = data.last_free_case;
-                // Инвентарь оставляем локальным, чтобы не сбросить то, что ты выбил
+                state.lastTagCase = data.last_tag_case; // <--- ДОБАВЛЕНО
                 
                 updateCoinDisplay();
                 renderInventory();
@@ -1439,7 +1439,6 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
 
         window.onload = () => { 
             if (tg && tg.initDataUnsafe?.user) {
-                // Если мы в Telegram, принудительно грузим всё с сервера
                 const user_id = tg.initDataUnsafe.user.id;
                 fetch(`${API_URL}/api/state?user_id=${user_id}`)
                     .then(res => res.json())
@@ -1447,16 +1446,16 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
                         state.coins = data.coins;
                         state.inventory = data.inventory;
                         state.lastFreeCase = data.last_free_case;
+                        state.lastTagCase = data.last_tag_case; // <--- ДОБАВЛЕНО
                         
                         updateCoinDisplay();
                         renderInventory();
                     })
                     .catch(e => {
                         console.error("Ошибка загрузки с сервера, грузим локально", e);
-                        loadState(); // Если сервер недоступен, грузим кэш
+                        loadState();
                     });
             } else {
-                // Если открыто в браузере, грузим локально
                 loadState();
             }
         };
