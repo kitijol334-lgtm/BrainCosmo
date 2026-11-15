@@ -324,6 +324,7 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
         <div class="balance">
             <img id="header-coin-img" src="" alt="coin">
             <span id="coin-display">0</span>
+            <button onclick="syncBalance()" style="background:none;border:none;color:var(--accent);font-size:16px;cursor:pointer;margin-left:4px;">🔄</button>
             <button class="add-coin-btn" onclick="openDepositModal()">+</button>
         </div>
     </header>
@@ -1396,7 +1397,32 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
             }
         }
 
-        window.onload = () => { loadState(); };
+        async function syncBalance() {
+            if (!tg || !tg.initDataUnsafe?.user) {
+                showToast('Обновление доступно только в Telegram!', 'error');
+                return;
+            }
+            const user_id = tg.initDataUnsafe.user.id;
+            
+            try {
+                const res = await fetch(`${API_URL}/api/state?user_id=${user_id}`);
+                const data = await res.json();
+                
+                state.coins = data.coins;
+                state.inventory = data.inventory;
+                
+                updateCoinDisplay();
+                renderInventory();
+                showToast('Баланс и инвентарь обновлены!', 'success');
+            } catch (e) {
+                showToast('Ошибка обновления!', 'error');
+            }
+        }
+
+        window.onload = () => { 
+            loadState(); 
+            setTimeout(syncBalance, 500); 
+        };
     </script>
 </body>
 </html>
