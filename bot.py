@@ -167,7 +167,7 @@ def admin_accept_deposit():
     
     if res:
         try:
-            bot.send_message(res[0], "✅ Ваша заявка на пополнение **принята**!\nУ вас есть 3 минуты, чтобы зайти в игру и получить монеты.", parse_mode='Markdown')
+            bot.send_message(res[0], "✅ Ваша заявка на пополнение **принята**!\nУ вас есть 3 минуты, чтобы зайти в игру и **отдать брейнрота**.", parse_mode='Markdown')
         except Exception as e:
             print(f"Ошибка отправки сообщения игроку: {e}")
             
@@ -219,7 +219,7 @@ def admin_accept_withdraw():
     
     if res:
         try:
-            bot.send_message(res[0], "✅ Ваша заявка на вывод **принята**!\nУ вас есть 3 минуты, чтобы зайти в игру и отдать брейнрота.", parse_mode='Markdown')
+            bot.send_message(res[0], "✅ Ваша заявка на вывод **принята**!\nУ вас есть 3 минуты, чтобы зайти в игру и **получить брейнрота**.", parse_mode='Markdown')
         except Exception as e:
             print(f"Ошибка отправки сообщения игроку: {e}")
             
