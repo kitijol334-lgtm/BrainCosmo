@@ -26,7 +26,8 @@ def init_db():
     cursor = conn.cursor()
     cursor.execute('''CREATE TABLE IF NOT EXISTS users (
         user_id INTEGER PRIMARY KEY, coins INTEGER DEFAULT 0,
-        inventory TEXT DEFAULT '[]', last_free_case INTEGER DEFAULT 0
+        inventory TEXT DEFAULT '[]', last_free_case INTEGER DEFAULT 0,
+        last_tag_case INTEGER DEFAULT 0
     )''')
     cursor.execute('''CREATE TABLE IF NOT EXISTS deposits (
         id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, nick TEXT, status TEXT DEFAULT 'pending'
@@ -73,16 +74,21 @@ def get_state():
     
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT coins, inventory, last_free_case FROM users WHERE user_id = ?", (user_id,))
+    cursor.execute("SELECT coins, inventory, last_free_case, last_tag_case FROM users WHERE user_id = ?", (user_id,))
     user = cursor.fetchone()
     
     if not user:
         cursor.execute("INSERT INTO users (user_id) VALUES (?)", (user_id,))
         conn.commit()
-        user = (0, '[]', 0)
+        user = (0, '[]', 0, 0)
         
     conn.close()
-    return jsonify({'coins': user[0], 'inventory': json.loads(user[1]), 'last_free_case': user[2]})
+    return jsonify({
+        'coins': user[0], 
+        'inventory': json.loads(user[1]), 
+        'last_free_case': user[2],
+        'last_tag_case': user[3] # <-- ДОБАВЛЕНО
+    })
 
 @app.route('/api/save', methods=['POST'])
 def save_state():
@@ -90,8 +96,12 @@ def save_state():
     user_id = data.get('user_id')
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("UPDATE users SET coins = ?, inventory = ?, last_free_case = ? WHERE user_id = ?", 
-                   (data.get('coins'), json.dumps(data.get('inventory', [])), data.get('last_free_case', 0), user_id))
+    cursor.execute("UPDATE users SET coins = ?, inventory = ?, last_free_case = ?, last_tag_case = ? WHERE user_id = ?", 
+                   (data.get('coins'), 
+                    json.dumps(data.get('inventory', [])), 
+                    data.get('last_free_case', 0), 
+                    data.get('last_tag_case', 0), # <-- ДОБАВЛЕНО
+                    user_id))
     conn.commit()
     conn.close()
     return jsonify({'success': True})
