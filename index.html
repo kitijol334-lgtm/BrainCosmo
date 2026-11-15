@@ -1424,11 +1424,10 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
                 const res = await fetch(`${API_URL}/api/state?user_id=${user_id}`);
                 const data = await res.json();
                 
-                // Берем с сервера ТОЛЬКО баланс и кулдауны
+                // Берем с сервера ТОЛЬКО баланс и кулдаун
                 state.coins = data.coins;
                 state.lastFreeCase = data.last_free_case;
-                // Инвентарь оставляем локальным (чтобы не сбросить то, что ты выбил)
-                // state.inventory = data.inventory;  <-- ЭТУ СТРОКУ УДАЛЯЕМ
+                // Инвентарь оставляем локальным, чтобы не сбросить то, что ты выбил
                 
                 updateCoinDisplay();
                 renderInventory();
@@ -1439,8 +1438,27 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
         }
 
         window.onload = () => { 
-            loadState(); 
-            setTimeout(syncBalance, 500); 
+            if (tg && tg.initDataUnsafe?.user) {
+                // Если мы в Telegram, принудительно грузим всё с сервера
+                const user_id = tg.initDataUnsafe.user.id;
+                fetch(`${API_URL}/api/state?user_id=${user_id}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        state.coins = data.coins;
+                        state.inventory = data.inventory;
+                        state.lastFreeCase = data.last_free_case;
+                        
+                        updateCoinDisplay();
+                        renderInventory();
+                    })
+                    .catch(e => {
+                        console.error("Ошибка загрузки с сервера, грузим локально", e);
+                        loadState(); // Если сервер недоступен, грузим кэш
+                    });
+            } else {
+                // Если открыто в браузере, грузим локально
+                loadState();
+            }
         };
     </script>
 </body>
