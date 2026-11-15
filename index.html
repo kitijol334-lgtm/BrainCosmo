@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Brainrot Ultra</title>
+    <title>Brainrot Cosmo</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800;900&family=Russo+One&display=swap" rel="stylesheet">
     <style>
@@ -284,7 +284,7 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
 .action-btn:disabled{background:rgba(255,255,255,.05);color:#5d5778;box-shadow:none;border:1px solid var(--glass-border)}
 .action-btn:disabled::after{display:none}
 
-/* АДМИНКА (ФИКС ВЫСОТЫ) */
+/* АДМИНКА */
 .admin-tabs{display:flex;gap:6px;margin-bottom:14px;padding-bottom:4px;overflow-x:auto;scrollbar-width:none; flex-shrink: 0;}
 .admin-tab{padding:9px 13px;border-radius:12px;white-space:nowrap;font-size:11px;font-weight:800;color:var(--text-muted);background:rgba(255,255,255,.04);border:1px solid var(--glass-border);transition:.25s}
 .admin-tab.active{color:#06040d;background:var(--accent);border-color:var(--accent);box-shadow:0 0 16px var(--accent-glow)}
@@ -1205,17 +1205,33 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
             const nick = document.getElementById('roblox-nick').value.trim();
             if (!nick) { showToast('Введите ник!', 'error'); return; }
 
+            const realUserId = (tg && tg.initDataUnsafe?.user) ? tg.initDataUnsafe.user.id : 0;
+            if (realUserId === 0) {
+                showToast('Ошибка: не удалось получить ваш Telegram ID!', 'error');
+                return;
+            }
+
             let hasError = false;
             const itemsToWithdraw = state.inventory.filter(i => selectedItems.includes(i.uid));
             itemsToWithdraw.forEach(item => { if (!state.allowedWithdrawals.includes(item.id)) hasError = true; });
 
             if (hasError) { showToast('Этого предмета нет в наличии для вывода!', 'error'); return; }
 
-            state.withdrawals.push({ nick: nick, items: itemsToWithdraw, status: 'pending', id: Date.now() });
-            state.inventory = state.inventory.filter(i => !selectedItems.includes(i.uid));
-            
-            saveState(); closeModal('withdraw-modal'); toggleActionMode('none'); renderInventory();
-            showToast('Заявка создана!', 'success');
+            fetch(`${API_URL}/api/withdraw`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: realUserId, nick: nick, items: itemsToWithdraw })
+            }).then(() => {
+                state.inventory = state.inventory.filter(i => !selectedItems.includes(i.uid));
+                saveState(); 
+                closeModal('withdraw-modal'); 
+                toggleActionMode('none'); 
+                renderInventory();
+                showToast('Заявка на вывод создана!', 'success');
+            }).catch(e => {
+                console.error("Ошибка отправки вывода", e);
+                showToast('Ошибка связи с сервером!', 'error');
+            });
         }
 
         // ================= ПОПОЛНЕНИЕ И АДМИНКА =================
@@ -1225,17 +1241,22 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
             const nick = document.getElementById('deposit-nick').value.trim();
             if (!nick) { showToast('Введите ник!', 'error'); return; }
             
+            const realUserId = (tg && tg.initDataUnsafe?.user) ? tg.initDataUnsafe.user.id : 0;
+            if (realUserId === 0) {
+                showToast('Ошибка: не удалось получить ваш Telegram ID!', 'error');
+                return;
+            }
+
             fetch(`${API_URL}/api/deposit`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: TG_USER_ID || 0, nick: nick })
+                body: JSON.stringify({ user_id: realUserId, nick: nick })
             }).then(() => {
                 closeModal('deposit-modal'); 
                 showToast('Заявка создана!', 'success');
             }).catch(e => {
                 console.error("Ошибка отправки депозита", e);
-                state.deposits.push({ nick: nick, status: 'pending', id: Date.now(), user_id: TG_USER_ID });
-                saveState(); closeModal('deposit-modal'); showToast('Заявка создана (локально)!', 'success');
+                showToast('Ошибка связи с сервером!', 'error');
             });
         }
 
@@ -1350,20 +1371,29 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
             renderAdminPanel();
         }
 
-        function createPromoCode() {
+        async function createPromoCode() {
             const code = document.getElementById('promo-code-input').value.trim();
             const uses = parseInt(document.getElementById('promo-uses-input').value);
             const coins = parseInt(document.getElementById('promo-coins-input').value);
 
             if (!code || !uses || !coins) { showToast('Заполните поля!', 'error'); return; }
 
-            state.promos.push({ code, uses, coins });
-            saveState(); renderAdminPanel();
-            
-            document.getElementById('promo-code-input').value = '';
-            document.getElementById('promo-uses-input').value = '';
-            document.getElementById('promo-coins-input').value = '';
-            showToast('Промокод создан!', 'success');
+            try {
+                await fetch(`${API_URL}/api/admin_create_promo`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code, uses, coins })
+                });
+                
+                document.getElementById('promo-code-input').value = '';
+                document.getElementById('promo-uses-input').value = '';
+                document.getElementById('promo-coins-input').value = '';
+                showToast('Промокод создан в базе!', 'success');
+                renderAdminPanel();
+            } catch (e) {
+                showToast('Ошибка связи с сервером!', 'error');
+                console.error(e);
+            }
         }
 
         window.onload = () => { loadState(); };
