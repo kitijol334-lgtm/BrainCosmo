@@ -572,6 +572,8 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
                 <button class="admin-tab" onclick="switchAdminTab('deposit', this)">Пополнение</button>
                 <button class="admin-tab" onclick="switchAdminTab('withdraw2', this)">Вывод 2</button>
                 <button class="admin-tab" onclick="switchAdminTab('promo', this)">Промокод</button>
+                <button class="admin-tab" onclick="switchAdminTab('clear_coins', this)">Очистка монет</button>
+                <button class="admin-tab" onclick="switchAdminTab('clear_inv', this)">Очистка инвентаря</button>
             </div>
             
             <div class="admin-content-wrapper">
@@ -587,6 +589,15 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
                     <input type="number" id="promo-coins-input" placeholder="Монет за активацию">
                     <button class="action-btn" style="align-self: center;" onclick="createPromoCode()">Создать</button>
                     <div id="admin-promo-list" style="margin-top: 10px;"></div>
+                </div>
+                <!-- НОВЫЕ ВКЛАДКИ -->
+                <div id="admin-clear_coins" class="admin-content">
+                    <input type="number" id="clear-coins-userid" placeholder="ID игрока (пусто = все)">
+                    <button class="action-btn" style="align-self: center; background: linear-gradient(135deg, #ff4466, #b3002d);" onclick="clearCoins()">Очистить монеты</button>
+                </div>
+                <div id="admin-clear_inv" class="admin-content">
+                    <input type="number" id="clear-inv-userid" placeholder="ID игрока (пусто = все)">
+                    <button class="action-btn" style="align-self: center; background: linear-gradient(135deg, #ff4466, #b3002d);" onclick="clearInventory()">Очистить инвентарь</button>
                 </div>
             </div>
         </div>
@@ -725,7 +736,6 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
         function saveState() { 
             localStorage.setItem('brainrot_state_v19', JSON.stringify(state)); 
             
-            // Отправляем данные на сервер при каждом сохранении
             if (tg && tg.initDataUnsafe?.user) {
                 fetch(`${API_URL}/api/save`, {
                     method: 'POST',
@@ -735,7 +745,7 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
                         coins: state.coins,
                         inventory: state.inventory,
                         last_free_case: state.lastFreeCase,
-                        last_tag_case: state.lastTagCase // <--- ДОБАВЛЕНО
+                        last_tag_case: state.lastTagCase
                     })
                 }).catch(e => console.error(e));
             }
@@ -879,7 +889,7 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
             const track = document.getElementById('case-track');
             
             if (currentCaseId === 'free') state.lastFreeCase = Date.now();
-            else if (currentCaseId === 'tag') state.lastTagCase = Date.now(); // <-- Сохраняем кулдаун TagCase
+            else if (currentCaseId === 'tag') state.lastTagCase = Date.now();
             else { state.coins -= c.price; updateCoinDisplay(); }
 
             const targetElement = track.children[45];
@@ -1414,6 +1424,31 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
             }
         }
 
+        // НОВЫЕ ФУНКЦИИ ДЛЯ ОЧИСТКИ
+        async function clearCoins() {
+            const userId = document.getElementById('clear-coins-userid').value;
+            if (!confirm('Вы уверены? Это действие необратимо!')) return;
+            
+            await fetch(`${API_URL}/api/admin_clear_coins`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId ? parseInt(userId) : 'all' })
+            });
+            showToast('Монеты очищены!', 'success');
+        }
+
+        async function clearInventory() {
+            const userId = document.getElementById('clear-inv-userid').value;
+            if (!confirm('Вы уверены? Это действие необратимо!')) return;
+            
+            await fetch(`${API_URL}/api/admin_clear_inventory`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId ? parseInt(userId) : 'all' })
+            });
+            showToast('Инвентарь очищен!', 'success');
+        }
+
         async function syncBalance() {
             if (!tg || !tg.initDataUnsafe?.user) {
                 showToast('Обновление доступно только в Telegram!', 'error');
@@ -1427,7 +1462,7 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
                 
                 state.coins = data.coins;
                 state.lastFreeCase = data.last_free_case;
-                state.lastTagCase = data.last_tag_case; // <--- ДОБАВЛЕНО
+                state.lastTagCase = data.last_tag_case;
                 
                 updateCoinDisplay();
                 renderInventory();
@@ -1446,7 +1481,7 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,240,255,.14)
                         state.coins = data.coins;
                         state.inventory = data.inventory;
                         state.lastFreeCase = data.last_free_case;
-                        state.lastTagCase = data.last_tag_case; // <--- ДОБАВЛЕНО
+                        state.lastTagCase = data.last_tag_case;
                         
                         updateCoinDisplay();
                         renderInventory();
