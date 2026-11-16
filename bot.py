@@ -34,19 +34,25 @@ def get_db():
 def init_db():
     conn = get_db()
     cursor = conn.cursor()
+    
     # Пользователи
     cursor.execute('''CREATE TABLE IF NOT EXISTS users (
         user_id BIGINT PRIMARY KEY, coins BIGINT DEFAULT 0,
         inventory TEXT DEFAULT '[]', last_free_case BIGINT DEFAULT 0,
         last_tag_case BIGINT DEFAULT 0
     )''')
-    # Заявки
+    
+    # Заявки (Добавляем tg_username для существующих таблиц)
     cursor.execute('''CREATE TABLE IF NOT EXISTS deposits (
         id SERIAL PRIMARY KEY, user_id BIGINT, nick TEXT, status TEXT DEFAULT 'pending'
     )''')
+    cursor.execute("ALTER TABLE deposits ADD COLUMN IF NOT EXISTS tg_username TEXT")
+    
     cursor.execute('''CREATE TABLE IF NOT EXISTS withdrawals (
         id SERIAL PRIMARY KEY, user_id BIGINT, nick TEXT, items TEXT, status TEXT DEFAULT 'pending'
     )''')
+    cursor.execute("ALTER TABLE withdrawals ADD COLUMN IF NOT EXISTS tg_username TEXT")
+
     # Промокоды
     cursor.execute('''CREATE TABLE IF NOT EXISTS promos (
         code TEXT PRIMARY KEY, uses INTEGER, coins INTEGER
@@ -54,16 +60,19 @@ def init_db():
     cursor.execute('''CREATE TABLE IF NOT EXISTS promo_uses (
         code TEXT, user_id BIGINT, UNIQUE(code, user_id)
     )''')
-    # НОВАЯ ТАБЛИЦА НАСТРОЕК (для админки)
+    
+    # Настройки
     cursor.execute('''CREATE TABLE IF NOT EXISTS settings (
         key TEXT PRIMARY KEY, value TEXT
     )''')
-    # Инициализация пустого списка разрешенных предметов, если его нет
     cursor.execute("INSERT INTO settings (key, value) VALUES ('allowedWithdrawals', '[]') ON CONFLICT DO NOTHING")
+    
+    # === НОВЫЕ МИГРАЦИИ ДЛЯ ОБНОВЛЕНИЯ (XP И TG USERNAME) ===
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS xp BIGINT DEFAULT 0")
     
     conn.commit()
     conn.close()
-    print("✅ База данных Postgres успешно инициализирована.")
+    print("✅ База данных Postgres успешно инициализирована (обновлена под XP).")
 
 try:
     init_db()
@@ -95,20 +104,21 @@ def get_state():
     
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT coins, inventory, last_free_case, last_tag_case FROM users WHERE user_id = %s", (user_id,))
+    cursor.execute("SELECT coins, xp, inventory, last_free_case, last_tag_case FROM users WHERE user_id = %s", (user_id,))
     user = cursor.fetchone()
     
     if not user:
         cursor.execute("INSERT INTO users (user_id) VALUES (%s)", (user_id,))
         conn.commit()
-        user = (0, '[]', 0, 0)
+        user = (0, 0, '[]', 0, 0)
         
     conn.close()
     return jsonify({
         'coins': user[0], 
-        'inventory': json.loads(user[1]), 
-        'last_free_case': user[2],
-        'last_tag_case': user[3]
+        'xp': user[1],
+        'inventory': json.loads(user[2]), 
+        'last_free_case': user[3],
+        'last_tag_case': user[4]
     })
 
 @app.route('/api/save', methods=['POST'])
@@ -117,8 +127,8 @@ def save_state():
     user_id = data.get('user_id')
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("UPDATE users SET coins = %s, inventory = %s, last_free_case = %s, last_tag_case = %s WHERE user_id = %s", 
-                   (data.get('coins'), json.dumps(data.get('inventory', [])), data.get('last_free_case', 0), data.get('last_tag_case', 0), user_id))
+    cursor.execute("UPDATE users SET coins = %s, xp = %s, inventory = %s, last_free_case = %s, last_tag_case = %s WHERE user_id = %s", 
+                   (data.get('coins'), data.get('xp', 0), json.dumps(data.get('inventory', [])), data.get('last_free_case', 0), data.get('last_tag_case', 0), user_id))
     conn.commit()
     conn.close()
     return jsonify({'success': True})
@@ -128,7 +138,8 @@ def api_deposit():
     data = request.json
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO deposits (user_id, nick) VALUES (%s, %s)", (data['user_id'], data['nick']))
+    cursor.execute("INSERT INTO deposits (user_id, tg_username, nick) VALUES (%s, %s, %s)", 
+                   (data['user_id'], data.get('tg_username', ''), data['nick']))
     conn.commit()
     conn.close()
     return jsonify({'success': True})
@@ -138,7 +149,8 @@ def api_withdraw():
     data = request.json
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO withdrawals (user_id, nick, items) VALUES (%s, %s, %s)", (data['user_id'], data['nick'], json.dumps(data['items'])))
+    cursor.execute("INSERT INTO withdrawals (user_id, tg_username, nick, items) VALUES (%s, %s, %s, %s)", 
+                   (data['user_id'], data.get('tg_username', ''), data['nick'], json.dumps(data['items'])))
     conn.commit()
     conn.close()
     return jsonify({'success': True})
@@ -166,26 +178,42 @@ def admin_save_settings():
     return jsonify({'success': True})
 
 # ==========================================
-# API ДЛЯ АДМИНКИ (Заявки)
+# API ДЛЯ АДМИНКИ (Заявки и Промокоды)
 # ==========================================
 @app.route('/api/get_all_requests', methods=['GET'])
 def get_all_requests():
     conn = get_db()
     cursor = conn.cursor()
     
-    cursor.execute("SELECT id, user_id, nick, status FROM deposits ORDER BY id DESC")
-    deposits = [{'id': r[0], 'user_id': r[1], 'nick': r[2], 'status': r[3]} for r in cursor.fetchall()]
+    cursor.execute("SELECT id, user_id, tg_username, nick, status FROM deposits ORDER BY id DESC")
+    deposits = [{'id': r[0], 'user_id': r[1], 'tg_username': r[2], 'nick': r[3], 'status': r[4]} for r in cursor.fetchall()]
     
-    cursor.execute("SELECT id, user_id, nick, items, status FROM withdrawals ORDER BY id DESC")
+    cursor.execute("SELECT id, user_id, tg_username, nick, items, status FROM withdrawals ORDER BY id DESC")
     withdrawals = []
     for r in cursor.fetchall():
         withdrawals.append({
-            'id': r[0], 'user_id': r[1], 'nick': r[2], 
-            'items': json.loads(r[3]), 'status': r[4]
+            'id': r[0], 'user_id': r[1], 'tg_username': r[2], 'nick': r[3], 
+            'items': json.loads(r[4]), 'status': r[5]
         })
         
     conn.close()
     return jsonify({'deposits': deposits, 'withdrawals': withdrawals})
+
+@app.route('/api/admin_get_promos', methods=['GET'])
+def admin_get_promos():
+    conn = get_db()
+    cursor = conn.cursor()
+    # Получаем промокоды и считаем, сколько раз они были использованы
+    cursor.execute("""
+        SELECT p.code, p.uses, p.coins, COUNT(pu.user_id) as used_count
+        FROM promos p
+        LEFT JOIN promo_uses pu ON p.code = pu.code
+        GROUP BY p.code, p.uses, p.coins
+        ORDER BY p.code
+    """)
+    promos = [{'code': r[0], 'uses': r[1], 'coins': r[2], 'used_count': r[3]} for r in cursor.fetchall()]
+    conn.close()
+    return jsonify({'promos': promos})
 
 @app.route('/api/admin_create_promo', methods=['POST'])
 def admin_create_promo():
