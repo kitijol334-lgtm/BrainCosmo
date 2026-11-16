@@ -64,6 +64,29 @@ header{
 }
 .add-coin-btn:active{transform:scale(.8) rotate(90deg)}
 
+/* НОВАЯ ВАЛЮТА XP */
+.xp-balance {
+  display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:30px;
+  font-family:'Unbounded','Russo One',sans-serif;font-weight:700;font-size:14px;
+  border:1px solid transparent;
+  background:linear-gradient(#0d0919,#0d0919) padding-box,linear-gradient(120deg,var(--accent),var(--primary)) border-box;
+  box-shadow:0 0 15px rgba(41,240,255,.18),inset 0 0 10px rgba(0,0,0,.8);
+}
+.xp-balance img{width:18px;height:18px;object-fit:contain;filter:drop-shadow(0 0 5px var(--accent))}
+
+/* КНОПКА ПАССА */
+.pass-btn-float {
+  position: fixed; bottom: 80px; right: 15px; z-index: 90;
+  width: 65px; height: 65px; border-radius: 50%; border: 2px solid var(--gold);
+  background: radial-gradient(circle, #2a1f4d, #0b0716);
+  box-shadow: 0 0 20px rgba(255, 207, 74, 0.5), inset 0 0 10px rgba(0,0,0,0.8);
+  display: flex; justify-content: center; align-items: center; cursor: pointer;
+  transition: 0.3s; animation: pulseGold 2s infinite alternate;
+}
+.pass-btn-float:active { transform: scale(0.9); }
+.pass-btn-float img { width: 80%; height: 80%; object-fit: contain; filter: drop-shadow(0 0 5px gold); }
+@keyframes pulseGold { 0% { box-shadow: 0 0 10px rgba(255,207,74,0.3); } 100% { box-shadow: 0 0 25px rgba(255,207,74,0.8); } }
+
 main{flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column}
 .tab-content{position:absolute;inset:0;display:none;flex-direction:column;padding:10px;animation:slideUp .45s cubic-bezier(.16,1,.3,1);overflow:hidden}
 .tab-content.active{display:flex}
@@ -81,7 +104,7 @@ nav{
   backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);
   border-top:1px solid var(--glass-border);border-radius:20px 20px 0 0;
 }
-.nav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;width:60px;padding:4px 0;color:var(--text-muted);font-size:9px;font-weight:800;background:none;border:none;cursor:pointer;position:relative;transition:.3s}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;width:20%;padding:4px 0;color:var(--text-muted);font-size:9px;font-weight:800;background:none;border:none;cursor:pointer;position:relative;transition:.3s}
 .nav-btn svg{width:20px;height:20px;fill:currentColor;transition:.35s cubic-bezier(.16,1,.3,1)}
 .nav-btn.active{color:#fff}
 .nav-btn.active svg{fill:var(--accent);filter:drop-shadow(0 0 6px var(--accent-glow));transform:translateY(-2px) scale(1.1)}
@@ -160,15 +183,15 @@ nav{
 .chance-btn.active{background:var(--grad);border-color:transparent;}
 .chance-btn:disabled{opacity:.5}
 
-/* КРУГЛАЯ РУЛЕТКА */
+/* УЛУЧШЕННАЯ КРУГЛАЯ РУЛЕТКА */
 .circle-roulette-wrapper{
   position:relative;width:160px;height:160px;margin:4px 0;padding:10px;flex-shrink:0;border-radius:50%;display:flex;justify-content:center;align-items:center;border:4px solid transparent;
   background:radial-gradient(circle,#0b0716 60%,#1a1230) padding-box,conic-gradient(from 0deg,var(--accent),var(--primary),var(--pink),var(--gold),var(--accent)) border-box;
   box-shadow:0 0 30px rgba(155,92,255,.35),inset 0 0 20px #000;
+  transition: box-shadow 0.3s;
 }
-.circle-roulette-wrapper.spinning{animation:shake .1s infinite}
-.circle-roulette-wrapper.yellow-active { box-shadow: 0 0 30px rgba(255, 234, 0, 0.6), inset 0 0 20px #000; }
-@keyframes shake{0%{transform:translate(0,0)}25%{transform:translate(1px,1px) rotate(.4deg)}50%{transform:translate(-1px,-1px) rotate(-.4deg)}75%{transform:translate(1px,-1px) rotate(.4deg)}100%{transform:translate(-1px,1px)}}
+.circle-roulette-wrapper.spinning { box-shadow: 0 0 50px rgba(155,92,255,.8), inset 0 0 20px #000; }
+.circle-roulette-wrapper.yellow-active { box-shadow: 0 0 50px rgba(255, 234, 0, 0.8), inset 0 0 20px #000; }
 
 .circle-roulette{
   width:100%;height:100%;border-radius:50%;position:relative;overflow:hidden;
@@ -182,7 +205,7 @@ nav{
 .roulette-center-sub{margin-top:2px;font-size:8px;font-weight:800;color:var(--text-muted);text-transform:uppercase}
 .roulette-arrow{
   position:absolute;top:50%;left:50%;width:4px;height:50%;margin-left:-2px;margin-top:-50%;z-index:20;transform-origin:bottom center;
-  background:linear-gradient(to top,transparent,#fff);transition:transform 5s cubic-bezier(.1,.8,.1,1);
+  background:linear-gradient(to top,transparent,#fff);transition:transform 5s cubic-bezier(.15,.85,.15,1);
 }
 .roulette-arrow::after{content:'';position:absolute;top:-5px;left:-5px;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:10px solid #fff;}
 
@@ -201,6 +224,17 @@ nav{
   box-shadow:0 0 15px rgba(61,255,160,.4);
 }
 .inv-item.selected::after{content:'✓';position:absolute;top:4px;right:4px;width:14px;height:14px;border-radius:50%;background:var(--green);color:#04110b;font-size:9px;font-weight:900;line-height:14px;text-align:center;}
+
+/* КОЛОР ДАЙС */
+.dice-layout { display:flex; flex-direction:column; align-items:center; flex:1; gap:15px; width:100%; max-width:400px; margin:0 auto; overflow-y:auto; padding-bottom:10px; }
+.dice-container { display:flex; gap:10px; justify-content:center; margin: 10px 0; }
+.dice { width: 50px; height: 50px; border-radius: 12px; background: #222; border: 2px solid #555; display: flex; justify-content: center; align-items: center; font-size: 24px; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); }
+.dice.rolling { animation: dice-shake 0.3s infinite; }
+@keyframes dice-shake { 0% { transform: rotate(0deg) scale(1); } 25% { transform: rotate(15deg) scale(1.1); } 50% { transform: rotate(-15deg) scale(0.9); } 75% { transform: rotate(10deg) scale(1.05); } 100% { transform: rotate(0deg) scale(1); } }
+.color-picker { display: flex; gap: 8px; justify-content: center; width: 100%; flex-wrap: wrap; }
+.color-btn { width: 45px; height: 45px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: 0.2s; }
+.color-btn.active { border-color: #fff; transform: scale(1.1); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+.rules-text { font-size: 11px; color: var(--text-muted); text-align: center; line-height: 1.5; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px; width: 100%; }
 
 /* ПРОФИЛЬ */
 .profile-card{
@@ -230,6 +264,16 @@ nav{
 .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .modal-title{font-family:'Unbounded','Russo One',sans-serif;font-weight:700;font-size:14px}
 .close-btn{width:26px;height:26px;display:flex;justify-content:center;align-items:center;border-radius:50%;background:rgba(255,255,255,.07);color:var(--text-muted);font-size:18px;cursor:pointer;border:none}
+
+/* ПАСС МОДАЛКА */
+.pass-modal-content {
+  background: linear-gradient(180deg, #1a1238, #08050f) padding-box, linear-gradient(145deg, var(--gold), var(--primary)) border-box;
+}
+.pass-close-btn {
+  position: absolute; top: 10px; left: 10px; width: 30px; height: 30px; border-radius: 50%;
+  background: rgba(255,255,255,0.1); color: #fff; border: none; font-size: 18px; cursor: pointer; z-index: 10;
+}
+.pass-placeholder { text-align: center; font-size: 18px; font-family: 'Unbounded', sans-serif; color: var(--gold); margin: 40px 0; text-shadow: 0 0 10px gold; }
 
 /* РУЛЕТКА КЕЙСОВ */
 .roulette-container{
@@ -273,6 +317,7 @@ input:focus{border-color:var(--accent);}
 .request-item .actions button{flex:1;padding:8px;border:none;border-radius:8px;color:#fff;font-size:11px;font-weight:900;}
 .btn-accept{background:#00b359;}
 .btn-reject{background:#cc0000;}
+.copy-btn { background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: var(--accent); padding: 2px 6px; border-radius: 6px; font-size: 10px; cursor: pointer; margin-left: 5px; }
 
 /* УВЕДОМЛЕНИЯ */
 #toast{
@@ -298,6 +343,10 @@ input:focus{border-color:var(--accent);}
             <button onclick="syncBalance()" style="background:none;border:none;color:var(--accent);font-size:14px;cursor:pointer;margin-left:2px;">🔄</button>
             <button class="add-coin-btn" onclick="openDepositModal()">+</button>
         </div>
+        <div class="xp-balance">
+            <img id="header-xp-img" src="" alt="xp">
+            <span id="xp-display">0</span>
+        </div>
     </header>
 
     <main>
@@ -308,6 +357,7 @@ input:focus{border-color:var(--accent);}
                 <button class="case-tab active" onclick="switchCaseTab('free', this)">Бесплатные</button>
                 <button class="case-tab" onclick="switchCaseTab('cheap', this)">Дешевые</button>
                 <button class="case-tab" onclick="switchCaseTab('allin', this)">All-In</button>
+                <button class="case-tab" onclick="switchCaseTab('normal', this)">Нормальные</button>
                 <button class="case-tab" onclick="switchCaseTab('best', this)">Лучшие</button>
             </div>
 
@@ -338,6 +388,10 @@ input:focus{border-color:var(--accent);}
                         <img id="img-case-garama" src="" alt="GaramaCase">
                         <div class="case-price"><img class="coin-icon-img" src=""> 50</div>
                     </div>
+                    <div class="case-card" style="--c:#a020f0" onclick="openCase('gear')">
+                        <img id="img-case-gear" src="" alt="GearCase">
+                        <div class="case-price"><img class="coin-icon-img" src=""> 20</div>
+                    </div>
                 </div>
 
                 <!-- ALL-IN -->
@@ -345,6 +399,14 @@ input:focus{border-color:var(--accent);}
                     <div class="case-card" style="--c:#ff3da6" onclick="openCase('allin')">
                         <img id="img-case-allin" src="" alt="All-in-Case">
                         <div class="case-price"><img class="coin-icon-img" src=""> 35</div>
+                    </div>
+                </div>
+
+                <!-- НОРМАЛЬНЫЕ -->
+                <div id="cat-normal" class="case-category">
+                    <div class="case-card full-width" style="--c:#ff9900" onclick="openCase('admin')">
+                        <img id="img-case-admin" src="" alt="AdminCase">
+                        <div class="case-price"><img class="coin-icon-img" src=""> 90</div>
                     </div>
                 </div>
 
@@ -389,6 +451,36 @@ input:focus{border-color:var(--accent);}
             </div>
         </div>
 
+        <div id="tab-colordice" class="tab-content">
+            <h2>Колор Дайс</h2>
+            <div class="dice-layout">
+                <div class="slot" id="dice-bet-slot" onclick="openSelectInventoryModal('dice_bet')" style="width: 80px; height: 80px;">
+                    <span class="slot-arrow">Ставка</span>
+                </div>
+                <div class="dice-container" id="dice-container">
+                    <div class="dice" id="dice-0">?</div>
+                    <div class="dice" id="dice-1">?</div>
+                    <div class="dice" id="dice-2">?</div>
+                    <div class="dice" id="dice-3">?</div>
+                </div>
+                <div class="color-picker">
+                    <div class="color-btn" style="background: #ff4466;" onclick="selectDiceColor('red', this)"></div>
+                    <div class="color-btn" style="background: #3dffa0;" onclick="selectDiceColor('green', this)"></div>
+                    <div class="color-btn" style="background: #ff9e00;" onclick="selectDiceColor('orange', this)"></div>
+                    <div class="color-btn" style="background: #ffea00;" onclick="selectDiceColor('yellow', this)"></div>
+                    <div class="color-btn" style="background: #29f0ff;" onclick="selectDiceColor('cyan', this)"></div>
+                </div>
+                <button class="action-btn" id="dice-spin-btn" onclick="spinColorDice()" disabled>Крутить</button>
+                <div class="rules-text">
+                    0 попаданий - L<br>
+                    1 попадание - W (Дубликат)<br>
+                    2 попадания - L<br>
+                    3 попадания - L<br>
+                    4 попадания - W (Дубликат)
+                </div>
+            </div>
+        </div>
+
         <div id="tab-inventory" class="tab-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-shrink: 0;">
                 <h2 style="margin: 0; text-align: left; font-size: 15px;">Инвентарь</h2>
@@ -415,6 +507,11 @@ input:focus{border-color:var(--accent);}
         </div>
     </main>
 
+    <!-- КНОПКА ПАССА -->
+    <div class="pass-btn-float" onclick="openPassModal()">
+        <img id="pass-icon-img" src="" alt="Pass">
+    </div>
+
     <nav>
         <button class="nav-btn active" onclick="switchTab('cases', this)">
             <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>
@@ -423,6 +520,10 @@ input:focus{border-color:var(--accent);}
         <button class="nav-btn" onclick="switchTab('upgrader', this)">
             <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
             Апгрейдер
+        </button>
+        <button class="nav-btn" onclick="switchTab('colordice', this)">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+            Дайс
         </button>
         <button class="nav-btn" onclick="switchTab('inventory', this)">
             <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zM6 10h2v2H6zm0 4h8v2H6zm10 0h2v2h-2zm-6-4h8v2h-8z"/></svg>
@@ -435,6 +536,15 @@ input:focus{border-color:var(--accent);}
     </nav>
 
     <div id="toast">Текст</div>
+
+    <!-- МОДАЛКА ПАССА -->
+    <div class="modal-overlay" id="pass-modal">
+        <div class="modal-content pass-modal-content">
+            <button class="pass-close-btn" onclick="closeModal('pass-modal')">×</button>
+            <div class="modal-title" style="text-align: center; margin-bottom: 20px; color: var(--gold);">BRAINROT PASS</div>
+            <div class="pass-placeholder">(в разработке!)</div>
+        </div>
+    </div>
 
     <!-- МОДАЛКА КЕЙСА -->
     <div class="modal-overlay" id="case-modal">
@@ -543,6 +653,7 @@ input:focus{border-color:var(--accent);}
                 <button class="admin-tab" onclick="switchAdminTab('deposit', this)">Пополнение</button>
                 <button class="admin-tab" onclick="switchAdminTab('withdraw2', this)">Вывод 2</button>
                 <button class="admin-tab" onclick="switchAdminTab('promo', this)">Промокод</button>
+                <button class="admin-tab" onclick="switchAdminTab('promo2', this)">Промокоды 2</button>
                 <button class="admin-tab" onclick="switchAdminTab('clear_coins', this)">Очистка монет</button>
                 <button class="admin-tab" onclick="switchAdminTab('clear_inv', this)">Очистка инв.</button>
             </div>
@@ -561,7 +672,9 @@ input:focus{border-color:var(--accent);}
                     <button class="action-btn" style="align-self: center;" onclick="createPromoCode()">Создать</button>
                     <div id="admin-promo-list" style="margin-top: 8px;"></div>
                 </div>
-                <!-- НОВЫЕ ВКЛАДКИ -->
+                <div id="admin-promo2" class="admin-content">
+                    <div id="admin-promo2-list"></div>
+                </div>
                 <div id="admin-clear_coins" class="admin-content">
                     <input type="number" id="clear-coins-userid" placeholder="ID игрока (пусто = все)">
                     <button class="action-btn" style="align-self: center; background: #cc0000;" onclick="clearCoins()">Очистить монеты</button>
@@ -577,11 +690,14 @@ input:focus{border-color:var(--accent);}
     <script>
         const API_URL = 'https://braincosmo111.onrender.com'; 
         let TG_USER_ID = null;
+        let TG_USERNAME = '';
 
         const IMAGES = {
             freecase: 'images/Яркий сундук Freecase с героями.png', 
             noobinicase: 'images/Неоновый кейс NoobiniCase.png',
             coin: 'images/Золотая монета с мозгом.png',
+            xp_icon: 'images/ca556cf9-13d8-4629-8b8e-b12bdab9f181.png',
+            pass_icon: 'images/8d00a905-414f-4438-9c2a-ca194e6f2179.png',
             garama: 'images/Garamadundung.webp',
             dragon: 'images/Dragon_Cannelloni.webp',
             headless: 'images/Horseman.webp',
@@ -602,10 +718,26 @@ input:focus{border-color:var(--accent);}
             money_puggy: 'images/Money_Money_Puggy.webp',
             los_puggies: 'images/LosPuggies2.webp',
             cash_or_card: 'images/Cash_or_Card_New.webp',
-            tagcase: 'images/4b9ba297-3c2d-4134-a21c-5e4951047e7b.png'
+            tagcase: 'images/4b9ba297-3c2d-4134-a21c-5e4951047e7b.png',
+            // Новые кейсы и предметы
+            gearcase: 'images/Неоновый фиолетовый GearCase с перчатками.png',
+            yinyangslap: 'images/YinYangSlap.webp',
+            galaxyslap: 'images/Galaxy_Slap.webp',
+            rainbowslap: 'images/Rainbow_Slap.webp',
+            alienslap: 'images/Alien_Slap.webp',
+            waverider: 'images/noFilter.png',
+            bloodrot: 'images/noFilter (1).png',
+            admincase: 'images/2cc1d8bf-a999-4f07-99f2-04ed94bf1a51.png',
+            caylusaurus: 'images/Caylusaurus.webp',
+            steakini: 'images/Steakini_Fattini.webp',
+            sammyni_f: 'images/Sammyni_Fattini.webp',
+            sammyni_truck: 'images/Sammyni_Truckini.webp',
+            sammyni_spyder: 'images/Sammyni_Spyderini.webp'
         };
 
         document.getElementById('header-coin-img').src = IMAGES.coin;
+        document.getElementById('header-xp-img').src = IMAGES.xp_icon;
+        document.getElementById('pass-icon-img').src = IMAGES.pass_icon;
         document.getElementById('img-case-free').src = IMAGES.freecase;
         document.getElementById('img-case-noobini').src = IMAGES.noobinicase;
         document.getElementById('img-case-garama').src = IMAGES.garamacase;
@@ -613,6 +745,8 @@ input:focus{border-color:var(--accent);}
         document.getElementById('img-case-og').src = IMAGES.ogcase;
         document.getElementById('img-case-money').src = IMAGES.moneycase;
         document.getElementById('img-case-tag').src = IMAGES.tagcase;
+        document.getElementById('img-case-gear').src = IMAGES.gearcase;
+        document.getElementById('img-case-admin').src = IMAGES.admincase;
         document.querySelectorAll('.coin-icon-img').forEach(img => img.src = IMAGES.coin);
 
         const ITEMS_DB = {
@@ -634,7 +768,20 @@ input:focus{border-color:var(--accent);}
             'cash_or_card': { id: 'cash_or_card', name: 'Cash or Card', img: IMAGES.cash_or_card, value: 55, type: 'brainrot', rarity: 'epic' },
             'c5': { id: 'c5', name: '5 Монет', img: IMAGES.coin, value: 5, type: 'coin' },
             'c10': { id: 'c10', name: '10 Монет', img: IMAGES.coin, value: 10, type: 'coin' },
-            'c55': { id: 'c55', name: '55 Монет', img: IMAGES.coin, value: 55, type: 'coin' }
+            'c55': { id: 'c55', name: '55 Монет', img: IMAGES.coin, value: 55, type: 'coin' },
+            // Новые предметы GearCase
+            'yinyangslap': { id: 'yinyangslap', name: 'Yin Yang Slap', img: IMAGES.yinyangslap, value: 14, type: 'brainrot', rarity: 'common' },
+            'galaxyslap': { id: 'galaxyslap', name: 'Galaxy Slap', img: IMAGES.galaxyslap, value: 17, type: 'brainrot', rarity: 'uncommon' },
+            'rainbowslap': { id: 'rainbowslap', name: 'Rainbow Slap', img: IMAGES.rainbowslap, value: 20, type: 'brainrot', rarity: 'rare' },
+            'alienslap': { id: 'alienslap', name: 'Alien Slap', img: IMAGES.alienslap, value: 14, type: 'brainrot', rarity: 'common' },
+            'waverider': { id: 'waverider', name: 'Waverider', img: IMAGES.waverider, value: 40, type: 'brainrot', rarity: 'epic' },
+            'bloodrot': { id: 'bloodrot', name: 'Bloodrot Hammer', img: IMAGES.bloodrot, value: 1200, type: 'brainrot', rarity: 'legendary' },
+            // Новые предметы AdminCase
+            'caylusaurus': { id: 'caylusaurus', name: 'Caylusaurus', img: IMAGES.caylusaurus, value: 120, type: 'brainrot', rarity: 'rare' },
+            'steakini': { id: 'steakini', name: 'Steakini Fattini', img: IMAGES.steakini, value: 90, type: 'brainrot', rarity: 'rare' },
+            'sammyni_f': { id: 'sammyni_f', name: 'Sammyni Fattini', img: IMAGES.sammyni_f, value: 90, type: 'brainrot', rarity: 'rare' },
+            'sammyni_truck': { id: 'sammyni_truck', name: 'Sammyni Truckini', img: IMAGES.sammyni_truck, value: 170, type: 'brainrot', rarity: 'epic' },
+            'sammyni_spyder': { id: 'sammyni_spyder', name: 'Sammyni Spyderini', img: IMAGES.sammyni_spyder, value: 10, type: 'brainrot', rarity: 'common' }
         };
 
         const CASES_DB = {
@@ -644,14 +791,30 @@ input:focus{border-color:var(--accent);}
             'money': { title: 'MoneyCase', price: 25, img: IMAGES.moneycase, drops: [ { id: 'money_man', chance: 60 }, { id: 'money_puggy', chance: 30 }, { id: 'los_puggies', chance: 9.9 }, { id: 'cash_or_card', chance: 0.1 } ] },
             'garama': { title: 'GaramaCase', price: 50, img: IMAGES.garamacase, drops: [ { id: 'los67', chance: 63 }, { id: 'garama', chance: 35 }, { id: 'rico', chance: 2 }, { id: 'rosey', chance: 0.001 }, { id: 'hydra', chance: 0.0001 }, { id: 'meowl', chance: 0.00001 } ] },
             'allin': { title: 'All-in-Case', price: 35, img: IMAGES.allincase, drops: [ { id: 'c5', chance: 99.5 }, { id: 'strawberry', chance: 0.5 } ] },
-            'og': { title: 'OgCase', price: 35000, img: IMAGES.ogcase, drops: [ { id: 'headless', chance: 25 }, { id: 'skibidi', chance: 25 }, { id: 'meowl', chance: 25 }, { id: 'strawberry', chance: 25 } ] }
+            'og': { title: 'OgCase', price: 35000, img: IMAGES.ogcase, drops: [ { id: 'headless', chance: 25 }, { id: 'skibidi', chance: 25 }, { id: 'meowl', chance: 25 }, { id: 'strawberry', chance: 25 } ] },
+            'gear': { title: 'GearCase', price: 20, img: IMAGES.gearcase, drops: [ 
+                { id: 'yinyangslap', chance: 25 }, 
+                { id: 'galaxyslap', chance: 25 }, 
+                { id: 'rainbowslap', chance: 24 }, 
+                { id: 'alienslap', chance: 25 }, 
+                { id: 'waverider', chance: 1 }, 
+                { id: 'bloodrot', chance: 0.0001 } // 0% указано, но ставим минимум для корректной работы
+            ]},
+            'admin': { title: 'AdminCase', price: 90, img: IMAGES.admincase, drops: [ 
+                { id: 'caylusaurus', chance: 15 }, 
+                { id: 'steakini', chance: 20 }, 
+                { id: 'sammyni_f', chance: 10 }, 
+                { id: 'sammyni_truck', chance: 0.0001 }, 
+                { id: 'sammyni_spyder', chance: 54.9999 } 
+            ]}
         };
 
         let state = {
-            coins: 0, inventory: [], isAdmin: false, 
+            coins: 0, xp: 0, inventory: [], isAdmin: false, 
             lastFreeCase: 0, lastTagCase: 0,
             allowedWithdrawals: [], deposits: [], withdrawals: [], promos: [],
-            upgrader: { myItem: null, targetItem: null, isSpinning: false }
+            upgrader: { myItem: null, targetItem: null, isSpinning: false },
+            dice: { betItem: null, selectedColor: null, isSpinning: false }
         };
 
         function loadLocalAdminState() {
@@ -666,6 +829,7 @@ input:focus{border-color:var(--accent);}
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state.coins = parsed.coins || 0;
+                state.xp = parsed.xp || 0;
                 state.inventory = parsed.inventory || [];
                 state.lastFreeCase = parsed.lastFreeCase || 0;
                 state.lastTagCase = parsed.lastTagCase || 0;
@@ -676,6 +840,7 @@ input:focus{border-color:var(--accent);}
         function saveState() { 
             localStorage.setItem('brainrot_state_v20', JSON.stringify({
                 coins: state.coins,
+                xp: state.xp,
                 inventory: state.inventory,
                 lastFreeCase: state.lastFreeCase,
                 lastTagCase: state.lastTagCase
@@ -688,7 +853,9 @@ input:focus{border-color:var(--accent);}
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         user_id: tg.initDataUnsafe.user.id,
+                        tg_username: tg.initDataUnsafe.user.username || '',
                         coins: state.coins,
+                        xp: state.xp,
                         inventory: state.inventory,
                         last_free_case: state.lastFreeCase,
                         last_tag_case: state.lastTagCase
@@ -697,7 +864,6 @@ input:focus{border-color:var(--accent);}
             }
         }
 
-        // --- НОВЫЕ ФУНКЦИИ ДЛЯ НАСТРОЕК АДМИНКИ ---
         async function loadSettings() {
             try {
                 const res = await fetch(`${API_URL}/api/get_settings`);
@@ -722,7 +888,10 @@ input:focus{border-color:var(--accent);}
             setTimeout(() => toast.className = '', 3000);
         }
 
-        function updateCoinDisplay() { document.getElementById('coin-display').innerText = state.coins; }
+        function updateCoinDisplay() { 
+            document.getElementById('coin-display').innerText = state.coins; 
+            document.getElementById('xp-display').innerText = state.xp; 
+        }
 
         function switchTab(tabId, btnElement) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -732,6 +901,7 @@ input:focus{border-color:var(--accent);}
 
             if (tabId === 'inventory') { renderInventory(); toggleActionMode('none'); }
             if (tabId === 'upgrader') updateUpgraderUI();
+            if (tabId === 'colordice') updateDiceUI();
         }
 
         function switchCaseTab(catId, btnElement) {
@@ -743,11 +913,15 @@ input:focus{border-color:var(--accent);}
 
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
+        function openPassModal() { document.getElementById('pass-modal').classList.add('active'); }
+
         const tg = window.Telegram?.WebApp;
         if (tg) {
             tg.expand(); tg.ready();
             if (tg.initDataUnsafe?.user) {
                 const user = tg.initDataUnsafe.user;
+                TG_USER_ID = user.id;
+                TG_USERNAME = user.username || '';
                 document.getElementById('user-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '') + (user.username ? ' (@' + user.username + ')' : '');
                 if (user.photo_url) document.getElementById('user-avatar').innerHTML = `<img src="${user.photo_url}">`;
             }
@@ -825,11 +999,24 @@ input:focus{border-color:var(--accent);}
             window.currentWonItemId = wonItemId;
 
             const visualItems = [];
-            for (let i = 0; i < 49; i++) {
+            // Добавляем рандомные предметы
+            for (let i = 0; i < 45; i++) {
                 visualItems.push(c.drops[Math.floor(Math.random() * c.drops.length)].id);
             }
-            visualItems.splice(45, 0, wonItemId); 
-            visualItems.push(c.drops[0].id); 
+            
+            // ИНТРИГА: Ставим редкий предмет прямо перед выигрышным
+            const rarestItem = c.drops.reduce((prev, current) => (prev.chance < current.chance) ? prev : current).id;
+            if (wonItemId !== rarestItem) {
+                visualItems.push(rarestItem); // Интрига (стрелка почти остановилась)
+            }
+            
+            visualItems.push(wonItemId); // Выигрышный
+            window.targetIndex = visualItems.length - 1;
+
+            // Заполняем остаток
+            for (let i = 0; i < 10; i++) {
+                visualItems.push(c.drops[0].id);
+            }
 
             visualItems.forEach((id) => {
                 const item = ITEMS_DB[id];
@@ -854,12 +1041,16 @@ input:focus{border-color:var(--accent);}
             else if (currentCaseId === 'tag') state.lastTagCase = Date.now();
             else { state.coins -= c.price; updateCoinDisplay(); }
 
-            const targetElement = track.children[45];
+            // Выдаем XP за открытие
+            state.xp += 10;
+            updateCoinDisplay();
+
+            const targetElement = track.children[window.targetIndex];
             const containerWidth = document.querySelector('.roulette-container').offsetWidth;
             const targetOffset = targetElement.offsetLeft + (targetElement.offsetWidth / 2) - (containerWidth / 2);
             
-            const spinTime = Math.random() < 0.5 ? 5 : 10;
-            track.style.transition = `transform ${spinTime}s cubic-bezier(0.15, 0.9, 0.15, 1)`;
+            const spinTime = Math.random() < 0.5 ? 5 : 7;
+            track.style.transition = `transform ${spinTime}s cubic-bezier(0.1, 0.9, 0.1, 1)`;
             track.style.transform = `translateX(-${targetOffset}px)`;
 
             setTimeout(() => {
@@ -934,7 +1125,11 @@ input:focus{border-color:var(--accent);}
         function openSelectInventoryModal(mode) {
             const modal = document.getElementById('select-item-modal');
             const grid = document.getElementById('select-grid');
-            document.getElementById('select-modal-title').innerText = mode === 'up_my' ? 'Свой предмет' : 'Цель';
+            
+            if (mode === 'up_my') document.getElementById('select-modal-title').innerText = 'Свой предмет';
+            else if (mode === 'up_target') document.getElementById('select-modal-title').innerText = 'Цель';
+            else if (mode === 'dice_bet') document.getElementById('select-modal-title').innerText = 'Ставка';
+
             grid.innerHTML = '';
             
             if (mode === 'up_target') {
@@ -945,6 +1140,18 @@ input:focus{border-color:var(--accent);}
                     el.className = 'inv-item';
                     el.innerHTML = `<img src="${item.img}"><div class="inv-name">${item.name}</div><div class="inv-price">${item.value}</div>`;
                     el.onclick = () => { state.upgrader.targetItem = item; closeModal('select-item-modal'); updateUpgraderUI(); };
+                    grid.appendChild(el);
+                });
+            } else if (mode === 'dice_bet') {
+                state.inventory.forEach(item => {
+                    if (item.type !== 'brainrot') return;
+                    const el = document.createElement('div');
+                    el.className = 'inv-item';
+                    el.innerHTML = `<img src="${item.img}"><div class="inv-name">${item.name}</div><div class="inv-price">${item.value}</div>`;
+                    el.onclick = () => {
+                        state.dice.betItem = item;
+                        closeModal('select-item-modal'); updateDiceUI();
+                    };
                     grid.appendChild(el);
                 });
             } else {
@@ -1022,11 +1229,11 @@ input:focus{border-color:var(--accent);}
             if (state.upgrader.isSpinning) return;
             state.upgrader.isSpinning = true;
             document.getElementById('up-spin-btn').disabled = true;
-            document.getElementById('up-roulette-wrapper').classList.add('spinning');
+            const wrapper = document.getElementById('up-roulette-wrapper');
+            wrapper.classList.add('spinning'); // Плавная анимация без тряски
             document.querySelectorAll('.chance-btn').forEach(b => b.disabled = true);
 
             const arrow = document.getElementById('up-arrow');
-            const wrapper = document.getElementById('up-roulette-wrapper');
             const bg = document.getElementById('up-roulette-bg');
 
             const hasYellow = Math.random() < 0.15;
@@ -1062,13 +1269,14 @@ input:focus{border-color:var(--accent);}
                 targetPercentage = roll;
             }
 
+            // Делаем несколько полных оборотов для эффекта
             const targetAngle = (targetPercentage / 100) * 360;
             const totalRotation = (360 * 5) + targetAngle;
 
             arrow.style.transition = 'none'; 
             arrow.style.transform = `rotate(0deg)`;
             
-            const spinTime = Math.random() < 0.5 ? 5 : 10;
+            const spinTime = 5;
 
             setTimeout(() => {
                 arrow.style.transition = `transform ${spinTime}s cubic-bezier(0.1, 0.8, 0.1, 1)`;
@@ -1088,18 +1296,96 @@ input:focus{border-color:var(--accent);}
             state.inventory = state.inventory.filter(i => i.uid !== myItem.uid);
 
             if (result === 'win') {
-                showToast('Успех!', 'success');
+                showToast('Успех! +20 XP', 'success');
+                state.xp += 20;
                 state.inventory.push({ ...targetItem, uid: Date.now() + Math.random().toString(36).substr(2, 9) });
             } else if (result === 'yellow') {
-                showToast('СУПЕР АПГРЕЙД x2!', 'success');
+                showToast('СУПЕР АПГРЕЙД x2! +20 XP', 'success');
+                state.xp += 20;
                 state.inventory.push({ id: 'super', name: 'SUPER ' + targetItem.name, img: targetItem.img, value: targetItem.value * 2, type: 'brainrot', uid: Date.now().toString() });
             } else {
-                showToast('Провал...', 'error');
+                showToast('Провал... +10 XP', 'error');
+                state.xp += 10;
             }
 
+            updateCoinDisplay();
             state.upgrader.myItem = null; state.upgrader.targetItem = null;
             document.querySelectorAll('.chance-btn').forEach(b => { b.disabled = false; b.classList.remove('active'); });
             saveState(); updateUpgraderUI();
+        }
+
+        // ================= КОЛОР ДАЙС =================
+        function updateDiceUI() {
+            const slot = document.getElementById('dice-bet-slot');
+            if (state.dice.betItem) {
+                slot.innerHTML = `<img src="${state.dice.betItem.img}"><div class="item-name">${state.dice.betItem.name}</div><div class="item-price">${state.dice.betItem.value}</div>`;
+                slot.classList.add('selected');
+            } else {
+                slot.innerHTML = `<span class="slot-arrow">Ставка</span>`;
+                slot.classList.remove('selected');
+            }
+            document.getElementById('dice-spin-btn').disabled = !state.dice.betItem || !state.dice.selectedColor || state.dice.isSpinning;
+        }
+
+        function selectDiceColor(color, btn) {
+            state.dice.selectedColor = color;
+            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateDiceUI();
+        }
+
+        function spinColorDice() {
+            if (state.dice.isSpinning) return;
+            state.dice.isSpinning = true;
+            document.getElementById('dice-spin-btn').disabled = true;
+            
+            const diceEls = [0,1,2,3].map(i => document.getElementById(`dice-${i}`));
+            diceEls.forEach(el => { el.className = 'dice rolling'; el.style.background = '#222'; el.innerText = '?'; });
+
+            const colors = ['red', 'green', 'orange', 'yellow', 'cyan'];
+            const colorHex = { red: '#ff4466', green: '#3dffa0', orange: '#ff9e00', yellow: '#ffea00', cyan: '#29f0ff' };
+            const results = [];
+
+            // Определяем результаты заранее
+            for(let i=0; i<4; i++) {
+                results.push(colors[Math.floor(Math.random() * colors.length)]);
+            }
+
+            // Анимация остановки кубиков
+            let stopTimes = [3000, 4500, 6000, 7000];
+            let winCount = 0;
+
+            diceEls.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.remove('rolling');
+                    el.style.background = colorHex[results[index]];
+                    el.innerText = '';
+                    if (results[index] === state.dice.selectedColor) winCount++;
+                }, stopTimes[index]);
+            });
+
+            setTimeout(() => {
+                state.dice.isSpinning = false;
+                processDiceResult(winCount);
+            }, 7200);
+        }
+
+        function processDiceResult(winCount) {
+            const isWin = (winCount === 1 || winCount === 4);
+            if (isWin) {
+                showToast(`Победа! Попаданий: ${winCount}. Брейнрот продублирован!`, 'success');
+                state.inventory.push({ ...state.dice.betItem, uid: Date.now() + Math.random().toString(36).substr(2, 9) });
+            } else {
+                showToast(`Проигрыш... Попаданий: ${winCount}. Ставка потеряна.`, 'error');
+                state.inventory = state.inventory.filter(i => i.uid !== state.dice.betItem.uid);
+            }
+            
+            state.dice.betItem = null;
+            state.dice.selectedColor = null;
+            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+            
+            saveState();
+            updateDiceUI();
         }
 
         // ================= ИНВЕНТАРЬ =================
@@ -1210,7 +1496,7 @@ input:focus{border-color:var(--accent);}
             fetch(`${API_URL}/api/withdraw`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: realUserId, nick: nick, items: itemsToWithdraw })
+                body: JSON.stringify({ user_id: realUserId, tg_username: TG_USERNAME, nick: nick, items: itemsToWithdraw })
             }).then(() => {
                 state.inventory = state.inventory.filter(i => !selectedItems.includes(i.uid));
                 saveState(); 
@@ -1240,7 +1526,7 @@ input:focus{border-color:var(--accent);}
             fetch(`${API_URL}/api/deposit`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: realUserId, nick: nick })
+                body: JSON.stringify({ user_id: realUserId, tg_username: TG_USERNAME, nick: nick })
             }).then(() => {
                 closeModal('deposit-modal'); 
                 showToast('Заявка создана!', 'success');
@@ -1267,6 +1553,8 @@ input:focus{border-color:var(--accent);}
             document.querySelectorAll('.admin-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
             document.getElementById('admin-' + tabId).classList.add('active'); btn.classList.add('active');
+            
+            if (tabId === 'promo2') renderPromo2();
         }
 
         async function renderAdminPanel() {
@@ -1281,8 +1569,8 @@ input:focus{border-color:var(--accent);}
                     const el = document.createElement('div');
                     el.className = 'request-item';
                     el.innerHTML = `
-                        <div><b>Ник:</b> ${dep.nick}</div>
-                        <div><b>ID:</b> ${dep.user_id}</div>
+                        <div><b>Ник:</b> ${dep.nick} <button class="copy-btn" onclick="copyText('${dep.nick}')">Копировать</button></div>
+                        <div><b>TG:</b> @${dep.tg_username || 'нет'} <button class="copy-btn" onclick="copyText('@${dep.tg_username}')">Копировать</button></div>
                         <div><b>Статус:</b> <span style="color:var(--accent)">${dep.status}</span></div>
                         <div class="actions">
                             ${dep.status === 'pending' ? `<button class="btn-accept" onclick="acceptDepositGlobal(${dep.id})">Принять</button>` : ''}
@@ -1301,8 +1589,8 @@ input:focus{border-color:var(--accent);}
                     el.className = 'request-item';
                     const itemsNames = wd.items.map(i => i.name).join(', ');
                     el.innerHTML = `
-                        <div><b>Ник:</b> ${wd.nick}</div>
-                        <div><b>ID:</b> ${wd.user_id}</div>
+                        <div><b>Ник:</b> ${wd.nick} <button class="copy-btn" onclick="copyText('${wd.nick}')">Копировать</button></div>
+                        <div><b>TG:</b> @${wd.tg_username || 'нет'} <button class="copy-btn" onclick="copyText('@${wd.tg_username}')">Копировать</button></div>
                         <div><b>Предметы:</b> ${itemsNames}</div>
                         <div><b>Статус:</b> <span style="color:var(--accent)">${wd.status}</span></div>
                         <div class="actions">
@@ -1329,11 +1617,41 @@ input:focus{border-color:var(--accent);}
                     if (isAllowed) state.allowedWithdrawals = state.allowedWithdrawals.filter(id => id !== item.id);
                     else state.allowedWithdrawals.push(item.id);
                     
-                    saveAdminSettings(); // СОХРАНЯЕМ НА СЕРВЕР
+                    saveAdminSettings(); 
                     renderAdminPanel();
                 };
                 allowedGrid.appendChild(el);
             });
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Скопировано: ' + text, 'success');
+            });
+        }
+
+        async function renderPromo2() {
+            const list = document.getElementById('admin-promo2-list');
+            list.innerHTML = '<p style="color: var(--text-muted); text-align: center; font-size:11px;">Загрузка...</p>';
+            try {
+                const res = await fetch(`${API_URL}/api/admin_get_promos`);
+                const data = await res.json();
+                list.innerHTML = '';
+                if (data.promos.length === 0) {
+                    list.innerHTML = '<p style="color: var(--text-muted); text-align: center; font-size:11px;">Нет промокодов</p>';
+                    return;
+                }
+                data.promos.forEach(p => {
+                    const el = document.createElement('div');
+                    el.className = 'request-item';
+                    el.innerHTML = `<div><b>Код:</b> ${p.code}</div>
+                                    <div><b>Активации:</b> ${p.uses} (Выполнено: ${p.used_count})</div>
+                                    <div style="font-family:'Unbounded'; color:var(--accent); margin-top:5px;">${p.code} ${p.uses}/${p.used_count}</div>`;
+                    list.appendChild(el);
+                });
+            } catch(e) {
+                list.innerHTML = '<p style="color: var(--red); text-align: center; font-size:11px;">Ошибка загрузки</p>';
+            }
         }
 
         async function acceptDepositGlobal(dep_id) {
@@ -1384,11 +1702,9 @@ input:focus{border-color:var(--accent);}
                 renderAdminPanel();
             } catch (e) {
                 showToast('Ошибка связи с сервером!', 'error');
-                console.error(e);
             }
         }
 
-        // НОВЫЕ ФУНКЦИИ ДЛЯ ОЧИСТКИ
         async function clearCoins() {
             const userId = document.getElementById('clear-coins-userid').value;
             if (!confirm('Вы уверены? Это действие необратимо!')) return;
@@ -1425,6 +1741,7 @@ input:focus{border-color:var(--accent);}
                 const data = await res.json();
                 
                 state.coins = data.coins;
+                state.xp = data.xp || 0;
                 state.lastFreeCase = data.last_free_case;
                 state.lastTagCase = data.last_tag_case;
                 
@@ -1438,7 +1755,7 @@ input:focus{border-color:var(--accent);}
 
         window.onload = async () => { 
             loadLocalAdminState();
-            await loadSettings(); // <--- ЗАГРУЖАЕМ НАСТРОЙКИ АДМИНКИ ИЗ БД
+            await loadSettings(); 
             
             if (tg && tg.initDataUnsafe?.user) {
                 const user_id = tg.initDataUnsafe.user.id;
@@ -1446,6 +1763,7 @@ input:focus{border-color:var(--accent);}
                     .then(res => res.json())
                     .then(data => {
                         state.coins = data.coins;
+                        state.xp = data.xp || 0;
                         state.inventory = data.inventory;
                         state.lastFreeCase = data.last_free_case;
                         state.lastTagCase = data.last_tag_case;
