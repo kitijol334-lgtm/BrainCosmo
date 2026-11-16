@@ -600,6 +600,7 @@ input:focus{border-color:var(--accent);}
                 <button class="close-btn" onclick="closeModal('select-item-modal')">×</button>
             </div>
             <div class="inventory-grid" id="select-grid" style="max-height: 50vh; overflow-y: auto;"></div>
+            <div id="select-modal-footer" style="margin-top: 10px;"></div>
         </div>
     </div>
 
@@ -798,7 +799,7 @@ input:focus{border-color:var(--accent);}
                 { id: 'rainbowslap', chance: 24 }, 
                 { id: 'alienslap', chance: 25 }, 
                 { id: 'waverider', chance: 1 }, 
-                { id: 'bloodrot', chance: 0.0001 } // 0% указано, но ставим минимум для корректной работы
+                { id: 'bloodrot', chance: 0.0001 } 
             ]},
             'admin': { title: 'AdminCase', price: 90, img: IMAGES.admincase, drops: [ 
                 { id: 'caylusaurus', chance: 15 }, 
@@ -813,9 +814,13 @@ input:focus{border-color:var(--accent);}
             coins: 0, xp: 0, inventory: [], isAdmin: false, 
             lastFreeCase: 0, lastTagCase: 0,
             allowedWithdrawals: [], deposits: [], withdrawals: [], promos: [],
-            upgrader: { myItem: null, targetItem: null, isSpinning: false },
+            upgrader: { myItems: [], targetItem: null, isSpinning: false },
             dice: { betItem: null, selectedColor: null, isSpinning: false }
         };
+
+        function getTotalMyValue() {
+            return state.upgrader.myItems.reduce((sum, item) => sum + item.value, 0);
+        }
 
         function loadLocalAdminState() {
             if (localStorage.getItem('brainrot_isAdmin') === 'true') {
@@ -999,21 +1004,18 @@ input:focus{border-color:var(--accent);}
             window.currentWonItemId = wonItemId;
 
             const visualItems = [];
-            // Добавляем рандомные предметы
             for (let i = 0; i < 45; i++) {
                 visualItems.push(c.drops[Math.floor(Math.random() * c.drops.length)].id);
             }
             
-            // ИНТРИГА: Ставим редкий предмет прямо перед выигрышным
             const rarestItem = c.drops.reduce((prev, current) => (prev.chance < current.chance) ? prev : current).id;
             if (wonItemId !== rarestItem) {
-                visualItems.push(rarestItem); // Интрига (стрелка почти остановилась)
+                visualItems.push(rarestItem);
             }
             
-            visualItems.push(wonItemId); // Выигрышный
+            visualItems.push(wonItemId);
             window.targetIndex = visualItems.length - 1;
 
-            // Заполняем остаток
             for (let i = 0; i < 10; i++) {
                 visualItems.push(c.drops[0].id);
             }
@@ -1041,7 +1043,6 @@ input:focus{border-color:var(--accent);}
             else if (currentCaseId === 'tag') state.lastTagCase = Date.now();
             else { state.coins -= c.price; updateCoinDisplay(); }
 
-            // Выдаем XP за открытие
             state.xp += 10;
             updateCoinDisplay();
 
@@ -1095,8 +1096,19 @@ input:focus{border-color:var(--accent);}
             const spinBtn = document.getElementById('up-spin-btn');
             const wrapper = document.getElementById('up-roulette-wrapper');
 
-            if (state.upgrader.myItem) {
-                slotMy.innerHTML = `<img src="${state.upgrader.myItem.img}"><div class="item-name">${state.upgrader.myItem.name}</div><div class="item-price">${state.upgrader.myItem.value}</div>`;
+            if (state.upgrader.myItems.length > 0) {
+                if (state.upgrader.myItems.length === 1) {
+                    const item = state.upgrader.myItems[0];
+                    slotMy.innerHTML = `<img src="${item.img}"><div class="item-name">${item.name}</div><div class="item-price">${item.value}</div>`;
+                } else {
+                    const total = getTotalMyValue();
+                    const firstItem = state.upgrader.myItems[0];
+                    slotMy.innerHTML = `<div style="position:relative; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                        <img src="${firstItem.img}" style="max-height:40%;">
+                        <div style="position:absolute; top:0; right:0; background:var(--grad); color:#fff; border-radius:50%; width:18px; height:18px; font-size:10px; display:flex; justify-content:center; align-items:center; font-weight:bold;">+${state.upgrader.myItems.length - 1}</div>
+                        <div class="item-price" style="margin-top:5px;">${total}</div>
+                    </div>`;
+                }
                 slotMy.classList.add('selected');
             } else {
                 slotMy.innerHTML = `<span class="slot-arrow">Выбрать</span>`; slotMy.classList.remove('selected');
@@ -1109,7 +1121,7 @@ input:focus{border-color:var(--accent);}
                 slotTarget.innerHTML = `<span class="slot-arrow">Цель</span>`; slotTarget.classList.remove('selected');
             }
 
-            if (state.upgrader.myItem && state.upgrader.targetItem && !state.upgrader.isSpinning) {
+            if (state.upgrader.myItems.length > 0 && state.upgrader.targetItem && !state.upgrader.isSpinning) {
                 spinBtn.disabled = false; drawUpgraderRoulette();
             } else {
                 spinBtn.disabled = true;
@@ -1125,15 +1137,18 @@ input:focus{border-color:var(--accent);}
         function openSelectInventoryModal(mode) {
             const modal = document.getElementById('select-item-modal');
             const grid = document.getElementById('select-grid');
+            const footer = document.getElementById('select-modal-footer');
             
-            if (mode === 'up_my') document.getElementById('select-modal-title').innerText = 'Свой предмет';
+            if (mode === 'up_my') document.getElementById('select-modal-title').innerText = 'Свои предметы';
             else if (mode === 'up_target') document.getElementById('select-modal-title').innerText = 'Цель';
             else if (mode === 'dice_bet') document.getElementById('select-modal-title').innerText = 'Ставка';
 
             grid.innerHTML = '';
-            
+            footer.innerHTML = '';
+
             if (mode === 'up_target') {
-                const myVal = state.upgrader.myItem ? state.upgrader.myItem.value : 0;
+                footer.innerHTML = `<button class="action-btn" onclick="closeModal('select-item-modal')">Закрыть</button>`;
+                const myVal = getTotalMyValue();
                 Object.values(ITEMS_DB).filter(i => i.type === 'brainrot').forEach(item => {
                     if (item.value <= myVal) return; 
                     const el = document.createElement('div');
@@ -1143,6 +1158,7 @@ input:focus{border-color:var(--accent);}
                     grid.appendChild(el);
                 });
             } else if (mode === 'dice_bet') {
+                footer.innerHTML = `<button class="action-btn" onclick="closeModal('select-item-modal')">Закрыть</button>`;
                 state.inventory.forEach(item => {
                     if (item.type !== 'brainrot') return;
                     const el = document.createElement('div');
@@ -1154,16 +1170,25 @@ input:focus{border-color:var(--accent);}
                     };
                     grid.appendChild(el);
                 });
-            } else {
+            } else if (mode === 'up_my') {
+                footer.innerHTML = `<button class="action-btn" onclick="closeModal('select-item-modal'); updateUpgraderUI();">Готово</button>`;
                 state.inventory.forEach(item => {
                     if (item.type !== 'brainrot') return;
                     const el = document.createElement('div');
-                    el.className = 'inv-item';
+                    const isSelected = state.upgrader.myItems.some(i => i.uid === item.uid);
+                    el.className = 'inv-item' + (isSelected ? ' selected' : '');
                     el.innerHTML = `<img src="${item.img}"><div class="inv-name">${item.name}</div><div class="inv-price">${item.value}</div>`;
                     el.onclick = () => {
-                        state.upgrader.myItem = item;
-                        if (state.upgrader.targetItem && state.upgrader.targetItem.value <= item.value) state.upgrader.targetItem = null;
-                        closeModal('select-item-modal'); updateUpgraderUI();
+                        if (state.upgrader.myItems.some(i => i.uid === item.uid)) {
+                            state.upgrader.myItems = state.upgrader.myItems.filter(i => i.uid !== item.uid);
+                            el.classList.remove('selected');
+                        } else {
+                            state.upgrader.myItems.push(item);
+                            el.classList.add('selected');
+                        }
+                        if (state.upgrader.targetItem && state.upgrader.targetItem.value <= getTotalMyValue()) {
+                            state.upgrader.targetItem = null;
+                        }
                     };
                     grid.appendChild(el);
                 });
@@ -1172,18 +1197,19 @@ input:focus{border-color:var(--accent);}
         }
 
         function openTargetModal() {
-            if (!state.upgrader.myItem) { showToast('Сначала свой предмет!', 'error'); return; }
+            if (state.upgrader.myItems.length === 0) { showToast('Сначала выберите свои предметы!', 'error'); return; }
             openSelectInventoryModal('up_target');
         }
 
         function setTargetChance(chance, event) {
-            if (!state.upgrader.myItem) { showToast('Сначала свой предмет!', 'error'); return; }
-            const targetValue = state.upgrader.myItem.value / (chance / 100);
+            if (state.upgrader.myItems.length === 0) { showToast('Сначала выберите свои предметы!', 'error'); return; }
+            const myVal = getTotalMyValue();
+            const targetValue = myVal / (chance / 100);
             let bestMatch = null; let minDiff = Infinity;
             
             Object.values(ITEMS_DB).filter(i => i.type === 'brainrot').forEach(item => {
                 const diff = Math.abs(item.value - targetValue);
-                if (diff < minDiff && item.value > state.upgrader.myItem.value) { minDiff = diff; bestMatch = item; }
+                if (diff < minDiff && item.value > myVal) { minDiff = diff; bestMatch = item; }
             });
 
             if (bestMatch) {
@@ -1196,8 +1222,8 @@ input:focus{border-color:var(--accent);}
         let currentWinChance = 0;
 
         function drawUpgraderRoulette() {
-            if (!state.upgrader.myItem || !state.upgrader.targetItem) return;
-            const myVal = state.upgrader.myItem.value;
+            if (state.upgrader.myItems.length === 0 || !state.upgrader.targetItem) return;
+            const myVal = getTotalMyValue();
             const targetVal = state.upgrader.targetItem.value;
             
             currentWinChance = (myVal / targetVal) * 100;
@@ -1230,7 +1256,7 @@ input:focus{border-color:var(--accent);}
             state.upgrader.isSpinning = true;
             document.getElementById('up-spin-btn').disabled = true;
             const wrapper = document.getElementById('up-roulette-wrapper');
-            wrapper.classList.add('spinning'); // Плавная анимация без тряски
+            wrapper.classList.add('spinning'); 
             document.querySelectorAll('.chance-btn').forEach(b => b.disabled = true);
 
             const arrow = document.getElementById('up-arrow');
@@ -1269,7 +1295,6 @@ input:focus{border-color:var(--accent);}
                 targetPercentage = roll;
             }
 
-            // Делаем несколько полных оборотов для эффекта
             const targetAngle = (targetPercentage / 100) * 360;
             const totalRotation = (360 * 5) + targetAngle;
 
@@ -1292,8 +1317,11 @@ input:focus{border-color:var(--accent);}
 
         function processUpgradeResult(result) {
             state.upgrader.isSpinning = false;
-            const myItem = state.upgrader.myItem; const targetItem = state.upgrader.targetItem;
-            state.inventory = state.inventory.filter(i => i.uid !== myItem.uid);
+            const myItems = state.upgrader.myItems; 
+            const targetItem = state.upgrader.targetItem;
+            
+            const myUids = myItems.map(i => i.uid);
+            state.inventory = state.inventory.filter(i => !myUids.includes(i.uid));
 
             if (result === 'win') {
                 showToast('Успех! +20 XP', 'success');
@@ -1309,7 +1337,8 @@ input:focus{border-color:var(--accent);}
             }
 
             updateCoinDisplay();
-            state.upgrader.myItem = null; state.upgrader.targetItem = null;
+            state.upgrader.myItems = []; 
+            state.upgrader.targetItem = null;
             document.querySelectorAll('.chance-btn').forEach(b => { b.disabled = false; b.classList.remove('active'); });
             saveState(); updateUpgraderUI();
         }
@@ -1346,12 +1375,10 @@ input:focus{border-color:var(--accent);}
             const colorHex = { red: '#ff4466', green: '#3dffa0', orange: '#ff9e00', yellow: '#ffea00', cyan: '#29f0ff' };
             const results = [];
 
-            // Определяем результаты заранее
             for(let i=0; i<4; i++) {
                 results.push(colors[Math.floor(Math.random() * colors.length)]);
             }
 
-            // Анимация остановки кубиков
             let stopTimes = [3000, 4500, 6000, 7000];
             let winCount = 0;
 
