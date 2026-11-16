@@ -42,13 +42,14 @@ body::after{
 }
 @keyframes aurora{from{transform:translate3d(-4%,-3%,0) rotate(0)}to{transform:translate3d(4%,3%,0) rotate(8deg)}}
 
-header,main,nav{width:100%;max-width:480px;flex-shrink:0;position:relative;z-index:1}
+header, main{width:100%;max-width:480px;flex-shrink:0;position:relative;z-index:1}
 
 header{
   height:50px;padding:0 10px;display:flex;justify-content:space-between;align-items:center;z-index:100;
   background:linear-gradient(180deg,rgba(20,14,40,.85),rgba(20,14,40,.35));
   backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);
   border-bottom:1px solid var(--glass-border);
+  position: sticky; top: 0;
 }
 .balance{
   display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:30px;
@@ -76,7 +77,7 @@ header{
 
 /* КНОПКА ПАССА */
 .pass-btn-float {
-  position: fixed; bottom: 80px; right: 15px; z-index: 90;
+  position: fixed; bottom: 20px; right: 15px; z-index: 90;
   width: 65px; height: 65px; border-radius: 50%; border: 2px solid var(--gold);
   background: radial-gradient(circle, #2a1f4d, #0b0716);
   box-shadow: 0 0 20px rgba(255, 207, 74, 0.5), inset 0 0 10px rgba(0,0,0,0.8);
@@ -87,28 +88,35 @@ header{
 .pass-btn-float img { width: 80%; height: 80%; object-fit: contain; filter: drop-shadow(0 0 5px gold); }
 @keyframes pulseGold { 0% { box-shadow: 0 0 10px rgba(255,207,74,0.3); } 100% { box-shadow: 0 0 25px rgba(255,207,74,0.8); } }
 
-main{flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column}
-.tab-content{position:absolute;inset:0;display:none;flex-direction:column;padding:10px;animation:slideUp .45s cubic-bezier(.16,1,.3,1);overflow:hidden}
-.tab-content.active{display:flex}
-@keyframes slideUp{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:none}}
+/* ОСНОВНОЙ КОНТЕЙНЕР ДЛЯ СКРОЛЛА */
+main{
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding-bottom: 80px; /* Место для кнопки пасса */
+  scroll-behavior: smooth;
+}
+
+.tab-content{
+  width:100%;
+  max-width:480px;
+  display:flex;
+  flex-direction:column;
+  padding:20px 10px;
+  min-height: 85vh; /* Чтобы каждая вкладка занимала почти весь экран */
+  flex-shrink:0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
 h2{
-  font-family:'Unbounded','Russo One',sans-serif;font-weight:900;font-size:16px;letter-spacing:.5px;text-align:center;
-  margin-bottom:8px;flex-shrink:0;
+  font-family:'Unbounded','Russo One',sans-serif;font-weight:900;font-size:18px;letter-spacing:.5px;text-align:center;
+  margin-bottom:15px;flex-shrink:0;
   background:linear-gradient(90deg,#fff,#cdb4ff 50%,var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent;
   filter:drop-shadow(0 0 10px var(--primary-glow));
 }
-
-nav{
-  height:55px;display:flex;justify-content:space-around;align-items:center;z-index:100;padding-bottom:env(safe-area-inset-bottom);
-  background:linear-gradient(0deg,rgba(14,9,30,.95),rgba(20,14,40,.6));
-  backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);
-  border-top:1px solid var(--glass-border);border-radius:20px 20px 0 0;
-}
-.nav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;width:20%;padding:4px 0;color:var(--text-muted);font-size:9px;font-weight:800;background:none;border:none;cursor:pointer;position:relative;transition:.3s}
-.nav-btn svg{width:20px;height:20px;fill:currentColor;transition:.35s cubic-bezier(.16,1,.3,1)}
-.nav-btn.active{color:#fff}
-.nav-btn.active svg{fill:var(--accent);filter:drop-shadow(0 0 6px var(--accent-glow));transform:translateY(-2px) scale(1.1)}
-.nav-btn.active::after{content:'';position:absolute;top:-8px;width:25px;height:2px;border-radius:0 0 4px 4px;background:var(--accent);box-shadow:0 0 10px var(--accent);bottom:auto}
 
 /* ВКЛАДКИ КЕЙСОВ */
 .case-tabs {
@@ -124,7 +132,7 @@ nav{
 }
 
 /* КЕЙСЫ */
-.cases-wrapper{flex:1;overflow-y:auto;padding:4px 2px 10px; display:flex; flex-direction:column;}
+.cases-wrapper{padding:4px 2px 10px; display:flex; flex-direction:column; width: 100%;}
 .case-category { display: none; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
 .case-category.active { display: grid; }
 
@@ -159,7 +167,7 @@ nav{
 .case-card.full-width .case-price img { width: 12px; height: 12px; }
 
 /* АПГРЕЙДЕР */
-.upgrader-layout{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:10px;width:100%;max-width:400px;margin:0 auto;overflow-y:auto;padding-bottom:10px;}
+.upgrader-layout{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:15px;width:100%;max-width:400px;margin:0 auto;padding-bottom:10px;}
 .upgrader-slots{display:flex;justify-content:space-between;align-items:center;width:100%}
 .slot{
   width:42%;max-width:110px;aspect-ratio:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:6px;text-align:center;cursor:pointer;position:relative;
@@ -185,7 +193,7 @@ nav{
 
 /* УЛУЧШЕННАЯ КРУГЛАЯ РУЛЕТКА */
 .circle-roulette-wrapper{
-  position:relative;width:160px;height:160px;margin:4px 0;padding:10px;flex-shrink:0;border-radius:50%;display:flex;justify-content:center;align-items:center;border:4px solid transparent;
+  position:relative;width:180px;height:180px;margin:10px 0;padding:10px;flex-shrink:0;border-radius:50%;display:flex;justify-content:center;align-items:center;border:4px solid transparent;
   background:radial-gradient(circle,#0b0716 60%,#1a1230) padding-box,conic-gradient(from 0deg,var(--accent),var(--primary),var(--pink),var(--gold),var(--accent)) border-box;
   box-shadow:0 0 30px rgba(155,92,255,.35),inset 0 0 20px #000;
   transition: box-shadow 0.3s;
@@ -201,8 +209,8 @@ nav{
   position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:72%;height:72%;border-radius:50%;z-index:10;display:flex;flex-direction:column;justify-content:center;align-items:center;
   background:radial-gradient(circle at 50% 30%,#1b1230,#07040f);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 0 15px #000;
 }
-.roulette-center-text{font-family:'Unbounded','Russo One',sans-serif;font-size:16px;font-weight:900;color:var(--green);}
-.roulette-center-sub{margin-top:2px;font-size:8px;font-weight:800;color:var(--text-muted);text-transform:uppercase}
+.roulette-center-text{font-family:'Unbounded','Russo One',sans-serif;font-size:18px;font-weight:900;color:var(--green);}
+.roulette-center-sub{margin-top:2px;font-size:9px;font-weight:800;color:var(--text-muted);text-transform:uppercase}
 .roulette-arrow{
   position:absolute;top:50%;left:50%;width:4px;height:50%;margin-left:-2px;margin-top:-50%;z-index:20;transform-origin:bottom center;
   background:linear-gradient(to top,transparent,#fff);transition:transform 5s cubic-bezier(.15,.85,.15,1);
@@ -210,7 +218,6 @@ nav{
 .roulette-arrow::after{content:'';position:absolute;top:-5px;left:-5px;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:10px solid #fff;}
 
 /* ИНВЕНТАРЬ */
-.inventory-wrapper{flex:1;overflow-y:auto;padding:2px 2px 10px;width:100%}
 .inventory-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;width:100%}
 .inv-item{
   position:relative;display:flex;flex-direction:column;align-items:center;padding:8px 4px 6px;border-radius:12px;transition:.25s;border:1px solid transparent;
@@ -226,9 +233,9 @@ nav{
 .inv-item.selected::after{content:'✓';position:absolute;top:4px;right:4px;width:14px;height:14px;border-radius:50%;background:var(--green);color:#04110b;font-size:9px;font-weight:900;line-height:14px;text-align:center;}
 
 /* КОЛОР ДАЙС */
-.dice-layout { display:flex; flex-direction:column; align-items:center; flex:1; gap:15px; width:100%; max-width:400px; margin:0 auto; overflow-y:auto; padding-bottom:10px; }
+.dice-layout { display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; gap:15px; width:100%; max-width:400px; margin:0 auto; padding-bottom:10px; }
 .dice-container { display:flex; gap:10px; justify-content:center; margin: 10px 0; }
-.dice { width: 50px; height: 50px; border-radius: 12px; background: #222; border: 2px solid #555; display: flex; justify-content: center; align-items: center; font-size: 24px; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); }
+.dice { width: 55px; height: 55px; border-radius: 12px; background: #222; border: 2px solid #555; display: flex; justify-content: center; align-items: center; font-size: 24px; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); }
 .dice.rolling { animation: dice-shake 0.3s infinite; }
 @keyframes dice-shake { 0% { transform: rotate(0deg) scale(1); } 25% { transform: rotate(15deg) scale(1.1); } 50% { transform: rotate(-15deg) scale(0.9); } 75% { transform: rotate(10deg) scale(1.05); } 100% { transform: rotate(0deg) scale(1); } }
 .color-picker { display: flex; gap: 8px; justify-content: center; width: 100%; flex-wrap: wrap; }
@@ -349,8 +356,14 @@ input:focus{border-color:var(--accent);}
         </div>
     </header>
 
+    <!-- КНОПКА ПАССА (ВИСИТ ПОВЕРХ) -->
+    <div class="pass-btn-float" onclick="openPassModal()">
+        <img id="pass-icon-img" src="" alt="Pass">
+    </div>
+
     <main>
-        <div id="tab-cases" class="tab-content active">
+        <!-- КЕЙСЫ -->
+        <div id="tab-cases" class="tab-content">
             <h2>Кейсы</h2>
             
             <div class="case-tabs">
@@ -420,6 +433,7 @@ input:focus{border-color:var(--accent);}
             </div>
         </div>
 
+        <!-- АПГРЕЙДЕР -->
         <div id="tab-upgrader" class="tab-content">
             <h2>Апгрейдер</h2>
             <div class="upgrader-layout">
@@ -451,6 +465,7 @@ input:focus{border-color:var(--accent);}
             </div>
         </div>
 
+        <!-- КОЛОР ДАЙС -->
         <div id="tab-colordice" class="tab-content">
             <h2>Колор Дайс</h2>
             <div class="dice-layout">
@@ -481,6 +496,7 @@ input:focus{border-color:var(--accent);}
             </div>
         </div>
 
+        <!-- ИНВЕНТАРЬ -->
         <div id="tab-inventory" class="tab-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-shrink: 0;">
                 <h2 style="margin: 0; text-align: left; font-size: 15px;">Инвентарь</h2>
@@ -492,9 +508,10 @@ input:focus{border-color:var(--accent);}
             <div class="inventory-wrapper">
                 <div class="inventory-grid" id="inventory-grid"></div>
             </div>
-            <button class="action-btn" id="action-next-btn" style="display: none; margin-top: 8px; flex-shrink: 0; align-self: center;" onclick="processAction()">Продолжить</button>
+            <button class="action-btn" id="action-next-btn" style="display: none; margin-top: 15px; flex-shrink: 0; align-self: center;" onclick="processAction()">Продолжить</button>
         </div>
 
+        <!-- ПРОФИЛЬ -->
         <div id="tab-profile" class="tab-content">
             <h2>Профиль</h2>
             <div class="profile-card">
@@ -506,34 +523,6 @@ input:focus{border-color:var(--accent);}
             </div>
         </div>
     </main>
-
-    <!-- КНОПКА ПАССА -->
-    <div class="pass-btn-float" onclick="openPassModal()">
-        <img id="pass-icon-img" src="" alt="Pass">
-    </div>
-
-    <nav>
-        <button class="nav-btn active" onclick="switchTab('cases', this)">
-            <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>
-            Кейсы
-        </button>
-        <button class="nav-btn" onclick="switchTab('upgrader', this)">
-            <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
-            Апгрейдер
-        </button>
-        <button class="nav-btn" onclick="switchTab('colordice', this)">
-            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
-            Дайс
-        </button>
-        <button class="nav-btn" onclick="switchTab('inventory', this)">
-            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zM6 10h2v2H6zm0 4h8v2H6zm10 0h2v2h-2zm-6-4h8v2h-8z"/></svg>
-            Инвентарь
-        </button>
-        <button class="nav-btn" onclick="switchTab('profile', this)">
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            Профиль
-        </button>
-    </nav>
 
     <div id="toast">Текст</div>
 
@@ -720,7 +709,6 @@ input:focus{border-color:var(--accent);}
             los_puggies: 'images/LosPuggies2.webp',
             cash_or_card: 'images/Cash_or_Card_New.webp',
             tagcase: 'images/4b9ba297-3c2d-4134-a21c-5e4951047e7b.png',
-            // Новые кейсы и предметы
             gearcase: 'images/Неоновый фиолетовый GearCase с перчатками.png',
             yinyangslap: 'images/YinYangSlap.webp',
             galaxyslap: 'images/Galaxy_Slap.webp',
@@ -770,14 +758,12 @@ input:focus{border-color:var(--accent);}
             'c5': { id: 'c5', name: '5 Монет', img: IMAGES.coin, value: 5, type: 'coin' },
             'c10': { id: 'c10', name: '10 Монет', img: IMAGES.coin, value: 10, type: 'coin' },
             'c55': { id: 'c55', name: '55 Монет', img: IMAGES.coin, value: 55, type: 'coin' },
-            // Новые предметы GearCase
             'yinyangslap': { id: 'yinyangslap', name: 'Yin Yang Slap', img: IMAGES.yinyangslap, value: 14, type: 'brainrot', rarity: 'common' },
             'galaxyslap': { id: 'galaxyslap', name: 'Galaxy Slap', img: IMAGES.galaxyslap, value: 17, type: 'brainrot', rarity: 'uncommon' },
             'rainbowslap': { id: 'rainbowslap', name: 'Rainbow Slap', img: IMAGES.rainbowslap, value: 20, type: 'brainrot', rarity: 'rare' },
             'alienslap': { id: 'alienslap', name: 'Alien Slap', img: IMAGES.alienslap, value: 14, type: 'brainrot', rarity: 'common' },
             'waverider': { id: 'waverider', name: 'Waverider', img: IMAGES.waverider, value: 40, type: 'brainrot', rarity: 'epic' },
             'bloodrot': { id: 'bloodrot', name: 'Bloodrot Hammer', img: IMAGES.bloodrot, value: 1200, type: 'brainrot', rarity: 'legendary' },
-            // Новые предметы AdminCase
             'caylusaurus': { id: 'caylusaurus', name: 'Caylusaurus', img: IMAGES.caylusaurus, value: 120, type: 'brainrot', rarity: 'rare' },
             'steakini': { id: 'steakini', name: 'Steakini Fattini', img: IMAGES.steakini, value: 90, type: 'brainrot', rarity: 'rare' },
             'sammyni_f': { id: 'sammyni_f', name: 'Sammyni Fattini', img: IMAGES.sammyni_f, value: 90, type: 'brainrot', rarity: 'rare' },
@@ -896,17 +882,6 @@ input:focus{border-color:var(--accent);}
         function updateCoinDisplay() { 
             document.getElementById('coin-display').innerText = state.coins; 
             document.getElementById('xp-display').innerText = state.xp; 
-        }
-
-        function switchTab(tabId, btnElement) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('tab-' + tabId).classList.add('active');
-            btnElement.classList.add('active');
-
-            if (tabId === 'inventory') { renderInventory(); toggleActionMode('none'); }
-            if (tabId === 'upgrader') updateUpgraderUI();
-            if (tabId === 'colordice') updateDiceUI();
         }
 
         function switchCaseTab(catId, btnElement) {
