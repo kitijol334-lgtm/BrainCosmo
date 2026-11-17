@@ -185,20 +185,81 @@ nav{
 .color-btn.active { border-color: #fff; transform: scale(1.1); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
 .rules-text { font-size: 11px; color: var(--text-muted); text-align: center; line-height: 1.5; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px; width: 100%; }
 
-.profile-card{width:100%;max-width:300px;margin:0 auto 15px;padding:20px 15px 15px;display:flex;flex-direction:column;align-items:center;border-radius:20px;border:1px solid transparent;background:linear-gradient(180deg,rgba(28,20,54,.85),rgba(12,8,26,.92)) padding-box,var(--edge) border-box;}
+.profile-card{width:100%;max-width:300px;margin:0 auto 15px;padding:20px 15px 15px;display:flex;flex-direction:column;align-items:center;border-radius:20px;border:1px solid transparent;background:linear-gradient(180deg,rgba(28,20,54,.85),rgba(12,8,26,.92)) padding-box,var(--edge) border-box;position:relative;}
 .avatar{width:70px;height:70px;margin-bottom:10px;padding:2px;border-radius:50%;overflow:hidden;background:conic-gradient(var(--accent),var(--primary),var(--pink),var(--gold),var(--accent));}
 .avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;border:2px solid #0b0716}
 .username{margin-bottom:15px;font-family:'Unbounded','Russo One',sans-serif;font-weight:700;font-size:15px;text-align:center;word-break:break-all;}
 .admin-btn{width:100%;padding:10px;border-radius:10px;font-weight:800;color:#fff;cursor:pointer;border:1px solid transparent;background:linear-gradient(rgba(16,11,34,.95),rgba(16,11,34,.95)) padding-box,var(--grad) border-box;}
 
-.inv-section-header {
-    width:100%;display:flex;justify-content:space-between;align-items:center;
-    margin-bottom:10px;flex-shrink:0;padding:0 5px;
+/* НАСТРОЙКИ ЗВУКА */
+.settings-btn {
+    position: absolute; top: 10px; right: 10px;
+    width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--glass-border);
+    background: rgba(255,255,255,0.06); color: var(--accent); font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: 0.2s;
 }
+.settings-btn:active { transform: scale(0.9) rotate(45deg); }
+
+.slider-group { margin-bottom: 18px; }
+.slider-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; font-weight: 700; color: var(--text); }
+.slider-label span:last-child { color: var(--accent); font-family: 'Unbounded', sans-serif; }
+input[type="range"] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 8px; border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--primary) 100%);
+    outline: none; cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #fff; border: 2px solid var(--primary);
+    box-shadow: 0 0 10px var(--primary-glow);
+    cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #fff; border: 2px solid var(--primary);
+    box-shadow: 0 0 10px var(--primary-glow); cursor: pointer; border: none;
+}
+
+/* КНОПКИ ВЫБОРА ПОПОЛНЕНИЯ */
+.deposit-choices { display: flex; gap: 10px; margin-bottom: 15px; }
+.deposit-choice {
+    flex: 1; padding: 15px 10px; border-radius: 14px; cursor: pointer;
+    border: 2px solid var(--glass-border); background: rgba(255,255,255,0.04);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    transition: 0.25s;
+}
+.deposit-choice:active { transform: scale(0.96); }
+.deposit-choice.active {
+    border-color: var(--accent);
+    background: rgba(41,240,255,0.1);
+    box-shadow: 0 0 15px rgba(41,240,255,0.3);
+}
+.deposit-choice .icon { font-size: 26px; }
+.deposit-choice .label { font-size: 11px; font-weight: 800; text-align: center; color: var(--text); }
+
+/* MAINTENANCE */
+.maintenance-screen {
+    position: fixed; inset: 0; z-index: 99999;
+    background: radial-gradient(circle at 50% 40%, #1a1230, #06040d);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 30px; text-align: center;
+}
+.maintenance-icon { font-size: 80px; margin-bottom: 20px; animation: spin 4s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.maintenance-title {
+    font-family: 'Unbounded', sans-serif; font-weight: 900; font-size: 24px;
+    background: linear-gradient(90deg, var(--accent), var(--primary), var(--pink));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 15px;
+}
+.maintenance-text { color: var(--text-muted); font-size: 14px; line-height: 1.6; max-width: 320px; }
 
 .modal-overlay{position:fixed;inset:0;z-index:1000;display:flex;justify-content:center;align-items:center;opacity:0;pointer-events:none;transition:.3s;background:rgba(0,0,0,0.85);backdrop-filter:blur(5px);}
 .modal-overlay.active{opacity:1;pointer-events:all}
-.modal-content{position:relative;width:92%;max-width:340px;max-height:85vh;display:flex;flex-direction:column;padding:15px;border-radius:20px;border:1px solid transparent;background:linear-gradient(180deg,#171031,#08050f) padding-box,var(--edge) border-box;transform:scale(.9);transition:.3s;}
+.modal-content{position:relative;width:92%;max-width:340px;max-height:85vh;display:flex;flex-direction:column;padding:15px;border-radius:20px;border:1px solid transparent;background:linear-gradient(180deg,#171031,#08050f) padding-box,var(--edge) border-box;transform:scale(.9);transition:.3s;overflow-y:auto;}
 .modal-overlay.active .modal-content{transform:scale(1)}
 .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .modal-title{font-family:'Unbounded','Russo One',sans-serif;font-weight:700;font-size:14px}
@@ -217,8 +278,8 @@ nav{
 .roulette-pointer::before{top:0;border-top:8px solid var(--accent)}
 .roulette-pointer::after{bottom:0;border-bottom:8px solid var(--accent)}
 
-input{width:100%;padding:10px;margin-bottom:10px;border-radius:10px;outline:none;color:#fff;font-size:13px;background:rgba(0,0,0,.5);border:1px solid var(--glass-border);}
-input:focus{border-color:var(--accent);}
+input[type="text"], input[type="number"]{width:100%;padding:10px;margin-bottom:10px;border-radius:10px;outline:none;color:#fff;font-size:13px;background:rgba(0,0,0,.5);border:1px solid var(--glass-border);}
+input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);}
 .action-btn{position:relative;overflow:hidden;width:100%;max-width:280px;padding:12px;border:none;border-radius:12px;color:#fff;cursor:pointer;margin: 0 auto;display: block;font-family:'Unbounded','Russo One',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;background:var(--grad);box-shadow:0 5px 15px var(--primary-glow);}
 .action-btn:disabled{background:rgba(255,255,255,.05);color:#5d5778;box-shadow:none;border:1px solid var(--glass-border)}
 .action-btn:active{transform:scale(.95)}
@@ -236,6 +297,11 @@ input:focus{border-color:var(--accent);}
 .btn-reject{background:#cc0000;}
 .copy-btn { background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: var(--accent); padding: 2px 6px; border-radius: 6px; font-size: 10px; cursor: pointer; margin-left: 5px; }
 
+.inv-section-header {
+    width:100%;display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:10px;flex-shrink:0;padding:0 5px;
+}
+
 #toast{position:fixed;top:-100px;left:50%;transform:translateX(-50%);z-index:9999;width:90%;max-width:300px;padding:10px 15px;text-align:center;font-weight:800;font-size:12px;color:#fff;border-radius:12px;border:1px solid var(--glass-border);border-left:4px solid var(--primary);background:rgba(18,12,38,.9);transition:.3s;}
 #toast.show{top:10px}
 #toast.success{border-left-color:var(--green);}
@@ -249,7 +315,6 @@ input:focus{border-color:var(--accent);}
 .confirm-content { background: linear-gradient(180deg, #171031, #08050f) padding-box, var(--edge) border-box; border: 1px solid transparent; border-radius: 20px; padding: 20px; width: 90%; max-width: 300px; text-align: center; }
 .confirm-title { font-family: 'Unbounded'; font-size: 14px; margin-bottom: 15px; color: var(--gold); }
 .confirm-buttons { display: flex; gap: 10px; justify-content: center; }
-
     </style>
 </head>
 <body>
@@ -394,6 +459,7 @@ input:focus{border-color:var(--accent);}
         </div>
 
         <div id="tab-profile" class="tab-content">
+            <button class="settings-btn" onclick="openSettingsModal()" title="Настройки звука">⚙️</button>
             <h2>Профиль</h2>
             <div class="profile-card">
                 <div class="avatar" id="user-avatar">
@@ -435,6 +501,25 @@ input:focus{border-color:var(--accent);}
     </nav>
 
     <div id="toast">Текст</div>
+
+    <!-- МОДАЛКА НАСТРОЕК ЗВУКА -->
+    <div class="modal-overlay" id="settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">⚙️ Настройки звука</div>
+                <button class="close-btn" onclick="closeModal('settings-modal')">×</button>
+            </div>
+            <div class="slider-group">
+                <div class="slider-label"><span>🎵 Музыка</span><span id="music-vol-label">30%</span></div>
+                <input type="range" id="music-vol-slider" min="0" max="100" value="30" oninput="onMusicVolumeChange(this.value)">
+            </div>
+            <div class="slider-group">
+                <div class="slider-label"><span>🔊 Звуки (SFX)</span><span id="sfx-vol-label">70%</span></div>
+                <input type="range" id="sfx-vol-slider" min="0" max="100" value="70" oninput="onSfxVolumeChange(this.value)">
+            </div>
+            <button class="action-btn" onclick="closeModal('settings-modal')" style="margin-top: 10px;">Готово</button>
+        </div>
+    </div>
 
     <div class="modal-overlay" id="pass-modal">
         <div class="modal-content pass-modal-content">
@@ -498,12 +583,33 @@ input:focus{border-color:var(--accent);}
         </div>
     </div>
 
+    <!-- МОДАЛКА ПОПОЛНЕНИЯ (ВЫБОР) -->
     <div class="modal-overlay" id="deposit-modal">
         <div class="modal-content">
             <div class="modal-header"><div class="modal-title">Пополнение</div><button class="close-btn" onclick="closeModal('deposit-modal')">×</button></div>
-            <p style="margin-bottom: 8px; color: var(--text-muted); font-size: 12px;">Введите ваш ник в игре:</p>
-            <input type="text" id="deposit-nick" placeholder="Никнейм...">
-            <button class="action-btn" style="align-self: center;" onclick="submitDeposit()">Отправить</button>
+            <p style="margin-bottom: 12px; text-align: center; font-size: 12px; color: var(--text-muted);">Выберите способ пополнения</p>
+            <div class="deposit-choices">
+                <div class="deposit-choice" id="choice-brainrot" onclick="selectDepositChoice('brainrot')">
+                    <div class="icon">🧠</div>
+                    <div class="label">Брейнротом</div>
+                </div>
+                <div class="deposit-choice" id="choice-stars" onclick="selectDepositChoice('stars')">
+                    <div class="icon">⭐</div>
+                    <div class="label">Звёздами</div>
+                </div>
+            </div>
+            
+            <div id="deposit-brainrot-block" style="display:none;">
+                <p style="margin-bottom: 8px; color: var(--text-muted); font-size: 12px;">Введите ваш ник в игре:</p>
+                <input type="text" id="deposit-nick" placeholder="Никнейм...">
+                <button class="action-btn" style="align-self: center;" onclick="submitDeposit()">Отправить</button>
+            </div>
+            
+            <div id="deposit-stars-block" style="display:none;">
+                <p style="margin-bottom: 8px; color: var(--text-muted); font-size: 12px;">Введите сумму в звёздах (1 звезда = 1 монета):</p>
+                <input type="number" id="deposit-stars-input" placeholder="Кол-во звёзд" min="1">
+                <button class="action-btn" style="align-self: center;" onclick="submitStarsDeposit()">Дальше</button>
+            </div>
         </div>
     </div>
 
@@ -568,6 +674,104 @@ input:focus{border-color:var(--accent);}
     </div>
 
     <script>
+        // ===== ОГРАНИЧЕНИЕ ДОСТУПА =====
+        const ALLOWED_USER_ID = 8664148534;
+        const tg = window.Telegram?.WebApp;
+        
+        function showMaintenance() {
+            document.body.innerHTML = `
+                <div class="maintenance-screen">
+                    <div class="maintenance-icon">⚙️</div>
+                    <div class="maintenance-title">Технические работы</div>
+                    <div class="maintenance-text">Мы обновляем игру. Пожалуйста, зайдите позже.<br><br>Спасибо за понимание!</div>
+                </div>`;
+        }
+        
+        const isAllowed = tg && tg.initDataUnsafe?.user && tg.initDataUnsafe.user.id === ALLOWED_USER_ID;
+        
+        if (!isAllowed) {
+            showMaintenance();
+        } else {
+            // Инициализируем всё только для админа
+            window.addEventListener('load', initApp);
+        }
+
+        // ===== НАСТРОЙКИ ЗВУКА =====
+        let soundSettings = { musicVolume: 30, sfxVolume: 70 };
+        try {
+            const savedSnd = localStorage.getItem('brainrot_sounds');
+            if (savedSnd) soundSettings = { ...soundSettings, ...JSON.parse(savedSnd) };
+        } catch(e) {}
+
+        function saveSoundSettings() {
+            localStorage.setItem('brainrot_sounds', JSON.stringify(soundSettings));
+        }
+
+        // ===== АУДИО =====
+        const SFX = {
+            click: 'sounds/mixkit-modern-technology-select-3124.mp3',
+            success: 'sounds/mixkit-select-click-1109.mp3',
+            spin: 'sounds/freesound_community-revolver-spin-96947.wav'
+        };
+        const bgMusic = new Audio('sounds/jonasblakewood-background-music-618629.mp3');
+        bgMusic.loop = true;
+        bgMusic.volume = soundSettings.musicVolume / 100;
+        let musicStarted = false;
+        
+        function startMusic() {
+            if (musicStarted) return;
+            musicStarted = true;
+            bgMusic.volume = soundSettings.musicVolume / 100;
+            bgMusic.play().catch(e => console.log('Music blocked:', e));
+        }
+        
+        function playSfx(url, volumeOverride) {
+            const vol = (volumeOverride !== undefined ? volumeOverride : soundSettings.sfxVolume) / 100;
+            if (vol <= 0) return;
+            const a = new Audio(url);
+            a.volume = vol;
+            a.play().catch(() => {});
+        }
+        function playClick() { playSfx(SFX.click); }
+        function playSuccess() { playSfx(SFX.success); }
+        function playSpin() { playSfx(SFX.spin); }
+        
+        // Запускаем музыку по первому клику (браузеры требуют жест)
+        document.addEventListener('click', function firstClick() {
+            startMusic();
+            document.removeEventListener('click', firstClick);
+        }, { once: true });
+        
+        // Глобальный клик-звук на все кнопки (кроме слайдеров громкости)
+        document.addEventListener('click', function(e) {
+            const t = e.target;
+            if (t && (t.tagName === 'INPUT')) return;
+            playClick();
+        });
+
+        function onMusicVolumeChange(v) {
+            soundSettings.musicVolume = parseInt(v);
+            document.getElementById('music-vol-label').innerText = v + '%';
+            bgMusic.volume = soundSettings.musicVolume / 100;
+            if (musicStarted && soundSettings.musicVolume > 0) bgMusic.play().catch(()=>{});
+            saveSoundSettings();
+        }
+        function onSfxVolumeChange(v) {
+            soundSettings.sfxVolume = parseInt(v);
+            document.getElementById('sfx-vol-label').innerText = v + '%';
+            saveSoundSettings();
+            // Короткий клик для примера
+            playSfx(SFX.click);
+        }
+        function openSettingsModal() {
+            document.getElementById('music-vol-slider').value = soundSettings.musicVolume;
+            document.getElementById('music-vol-label').innerText = soundSettings.musicVolume + '%';
+            document.getElementById('sfx-vol-slider').value = soundSettings.sfxVolume;
+            document.getElementById('sfx-vol-label').innerText = soundSettings.sfxVolume + '%';
+            document.getElementById('settings-modal').classList.add('active');
+        }
+
+        // ===== ОСНОВНОЙ КОД =====
         const API_URL = 'https://braincosmo111.onrender.com'; 
         let TG_USER_ID = null;
         let TG_USERNAME = '';
@@ -614,20 +818,6 @@ input:focus{border-color:var(--accent);}
             sammyni_truck: 'images/Sammyni_Truckini.webp',
             sammyni_spyder: 'images/Sammyni_Spyderini.webp'
         };
-
-        document.getElementById('header-coin-img').src = IMAGES.coin;
-        document.getElementById('header-xp-img').src = IMAGES.xp_icon;
-        document.getElementById('pass-icon-img').src = IMAGES.pass_icon;
-        document.getElementById('img-case-free').src = IMAGES.freecase;
-        document.getElementById('img-case-noobini').src = IMAGES.noobinicase;
-        document.getElementById('img-case-garama').src = IMAGES.garamacase;
-        document.getElementById('img-case-allin').src = IMAGES.allincase;
-        document.getElementById('img-case-og').src = IMAGES.ogcase;
-        document.getElementById('img-case-money').src = IMAGES.moneycase;
-        document.getElementById('img-case-tag').src = IMAGES.tagcase;
-        document.getElementById('img-case-gear').src = IMAGES.gearcase;
-        document.getElementById('img-case-admin').src = IMAGES.admincase;
-        document.querySelectorAll('.coin-icon-img').forEach(img => img.src = IMAGES.coin);
 
         const ITEMS_DB = {
             'garama': { id: 'garama', name: 'Garama and Madundung', img: IMAGES.garama, value: 55, type: 'brainrot', rarity: 'rare' },
@@ -799,19 +989,7 @@ input:focus{border-color:var(--accent);}
         }
         function openPassModal() { document.getElementById('pass-modal').classList.add('active'); }
 
-        const tg = window.Telegram?.WebApp;
-        if (tg) {
-            tg.expand(); tg.ready();
-            if (tg.initDataUnsafe?.user) {
-                const user = tg.initDataUnsafe.user;
-                TG_USER_ID = user.id;
-                TG_USERNAME = user.username || '';
-                document.getElementById('user-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '') + (user.username ? ' (@' + user.username + ')' : '');
-                if (user.photo_url) document.getElementById('user-avatar').innerHTML = `<img src="${user.photo_url}">`;
-            }
-        }
-
-        // ================= КЕЙСЫ =================
+        // ===== КЕЙСЫ =====
         let currentCaseId = null;
         let isCaseSpinning = false;
 
@@ -894,14 +1072,13 @@ input:focus{border-color:var(--accent);}
             const c = CASES_DB[currentCaseId];
             const track = document.getElementById('case-track');
             
-            // ВАЖНО: сохраняем кулдаун СРАЗУ, до анимации, чтобы рефреш не обнулил его
             if (currentCaseId === 'free') state.lastFreeCase = Date.now();
             else if (currentCaseId === 'tag') state.lastTagCase = Date.now();
             else { state.coins -= c.price; }
 
             state.xp += 10;
             updateCoinDisplay();
-            saveState(); // <-- СИНХРОННО сохраняем в localStorage ДО анимации
+            saveState();
 
             const targetElement = track.children[window.targetIndex];
             const containerWidth = document.querySelector('.roulette-container').offsetWidth;
@@ -940,7 +1117,7 @@ input:focus{border-color:var(--accent);}
             saveState();
         }
 
-        // ================= АПГРЕЙДЕР =================
+        // ===== АПГРЕЙДЕР =====
         function updateUpgraderUI() {
             const slotMy = document.getElementById('up-slot-my');
             const slotTarget = document.getElementById('up-slot-target');
@@ -1011,48 +1188,38 @@ input:focus{border-color:var(--accent);}
                 });
             } else if (mode === 'dice_bet') {
                 footer.innerHTML = `<button class="action-btn" onclick="closeModal('select-item-modal')">Закрыть</button>`;
-                
                 state.inventory.forEach(item => {
                     if (item.type !== 'brainrot') return;
                     if (state.withdrawingItems.includes(item.uid)) return;
-                    // Скрываем предметы которые уже в апгрейдере или в дайсе
                     if (state.upgrader.myItems.some(i => i.uid === item.uid)) return;
-
                     const isSelected = state.dice.betItem && state.dice.betItem.uid === item.uid;
                     const el = document.createElement('div');
                     el.className = 'inv-item' + (isSelected ? ' selected' : '');
                     el.innerHTML = `<img src="${item.img}"><div class="inv-name">${item.name}</div><div class="inv-price">${item.value}</div>`;
                     el.onclick = () => {
-                        // ВАЖНО: проверка ВНУТРИ onclick, чтобы избежать дублей
                         if (state.dice.betItem && state.dice.betItem.uid === item.uid) {
                             state.dice.betItem = null;
                             el.classList.remove('selected');
                         } else {
                             state.dice.betItem = item;
-                            // Снимаем выделение с других
                             grid.querySelectorAll('.inv-item').forEach(e => e.classList.remove('selected'));
                             el.classList.add('selected');
                         }
-                        updateDiceUI();
-                        saveState();
+                        updateDiceUI(); saveState();
                     };
                     grid.appendChild(el);
                 });
             } else if (mode === 'up_my') {
                 footer.innerHTML = `<button class="action-btn" onclick="closeModal('select-item-modal'); updateUpgraderUI();">Готово</button>`;
-                
                 state.inventory.forEach(item => {
                     if (item.type !== 'brainrot') return;
                     if (state.withdrawingItems.includes(item.uid)) return;
-                    // Скрываем предметы которые уже в дайсе
                     if (state.dice.betItem && state.dice.betItem.uid === item.uid) return;
-
                     const isSelected = state.upgrader.myItems.some(i => i.uid === item.uid);
                     const el = document.createElement('div');
                     el.className = 'inv-item' + (isSelected ? ' selected' : '');
                     el.innerHTML = `<img src="${item.img}"><div class="inv-name">${item.name}</div><div class="inv-price">${item.value}</div>`;
                     el.onclick = () => {
-                        // ВАЖНО: проверка ВНУТРИ onclick, чтобы избежать дублей
                         if (state.upgrader.myItems.some(i => i.uid === item.uid)) {
                             state.upgrader.myItems = state.upgrader.myItems.filter(i => i.uid !== item.uid);
                             el.classList.remove('selected');
@@ -1081,12 +1248,10 @@ input:focus{border-color:var(--accent);}
             const myVal = getTotalMyValue();
             const targetValue = myVal / (chance / 100);
             let bestMatch = null; let minDiff = Infinity;
-            
             Object.values(ITEMS_DB).filter(i => i.type === 'brainrot').forEach(item => {
                 const diff = Math.abs(item.value - targetValue);
                 if (diff < minDiff && item.value > myVal) { minDiff = diff; bestMatch = item; }
             });
-
             if (bestMatch) {
                 state.upgrader.targetItem = bestMatch; updateUpgraderUI();
                 document.querySelectorAll('.chance-btn').forEach(b => b.classList.remove('active'));
@@ -1100,16 +1265,12 @@ input:focus{border-color:var(--accent);}
             if (state.upgrader.myItems.length === 0 || !state.upgrader.targetItem) return;
             const myVal = getTotalMyValue();
             const targetVal = state.upgrader.targetItem.value;
-            
             currentWinChance = Math.min((myVal / targetVal) * 100, 100);
             const greenDeg = (currentWinChance / 100) * 360;
-            
             document.getElementById('up-roulette-bg').style.background = `conic-gradient(from 0deg, var(--green) 0deg ${greenDeg}deg, var(--red) ${greenDeg}deg 360deg)`;
-            
             let chanceName = 'low chance', color = 'var(--red)';
             if (currentWinChance > 70) { chanceName = 'high chance'; color = 'var(--green)'; }
             else if (currentWinChance > 40) { chanceName = 'medium chance'; color = 'var(--yellow)'; }
-            
             const textEl = document.getElementById('up-percentage-text');
             textEl.innerText = currentWinChance.toFixed(2) + '%';
             textEl.style.color = color;
@@ -1120,7 +1281,6 @@ input:focus{border-color:var(--accent);}
         function spinUpgrader() {
             if (state.upgrader.isSpinning) return;
             if (state.upgrader.myItems.length === 0 || !state.upgrader.targetItem) return;
-
             const invalid = state.upgrader.myItems.filter(item => !state.inventory.some(i => i.uid === item.uid));
             if (invalid.length > 0) {
                 state.upgrader.myItems = state.upgrader.myItems.filter(item => state.inventory.some(i => i.uid === item.uid));
@@ -1136,9 +1296,11 @@ input:focus{border-color:var(--accent);}
             wrapper.classList.add('spinning'); 
             document.querySelectorAll('.chance-btn').forEach(b => b.disabled = true);
 
+            // СПИН-ЗВУК
+            playSpin();
+
             const arrow = document.getElementById('up-arrow');
             const bg = document.getElementById('up-roulette-bg');
-
             const betItems = [...state.upgrader.myItems];
             const targetItem = state.upgrader.targetItem;
 
@@ -1162,16 +1324,13 @@ input:focus{border-color:var(--accent);}
 
             const targetAngle = (targetPercentage / 100) * 360;
             const totalRotation = (360 * 5) + targetAngle;
-
             arrow.style.transition = 'none'; 
             arrow.style.transform = `rotate(0deg)`;
             const spinTime = 5;
-
             setTimeout(() => {
                 arrow.style.transition = `transform ${spinTime}s cubic-bezier(0.1, 0.8, 0.1, 1)`;
                 arrow.style.transform = `rotate(${totalRotation}deg)`;
             }, 50);
-
             setTimeout(() => { 
                 wrapper.classList.remove('spinning');
                 wrapper.classList.remove('yellow-active');
@@ -1181,15 +1340,16 @@ input:focus{border-color:var(--accent);}
 
         function processUpgradeResult(result, betItems, targetItem) {
             state.upgrader.isSpinning = false;
-            
             const myUids = betItems.map(i => i.uid);
             state.inventory = state.inventory.filter(i => !myUids.includes(i.uid));
 
             if (result === 'win') {
+                playSuccess();
                 showToast('Успех! +20 XP', 'success');
                 state.xp += 20;
                 state.inventory.push({ ...targetItem, uid: newUID() });
             } else if (result === 'yellow') {
+                playSuccess();
                 showToast('СУПЕР АПГРЕЙД x2! +20 XP', 'success');
                 state.xp += 20;
                 state.inventory.push({ ...targetItem, name: 'SUPER ' + targetItem.name, value: targetItem.value * 2, uid: newUID() });
@@ -1207,7 +1367,7 @@ input:focus{border-color:var(--accent);}
             renderInventory();
         }
 
-        // ================= КОЛОР ДАЙС =================
+        // ===== КОЛОР ДАЙС =====
         function updateDiceUI() {
             const slot = document.getElementById('dice-bet-slot');
             if (state.dice.betItem) {
@@ -1230,7 +1390,6 @@ input:focus{border-color:var(--accent);}
         function spinColorDice() {
             if (state.dice.isSpinning) return;
             if (!state.dice.betItem || !state.dice.selectedColor) return;
-
             if (!state.inventory.some(i => i.uid === state.dice.betItem.uid)) {
                 state.dice.betItem = null;
                 updateDiceUI();
@@ -1240,7 +1399,6 @@ input:focus{border-color:var(--accent);}
 
             state.dice.isSpinning = true;
             document.getElementById('dice-spin-btn').disabled = true;
-
             const betItem = state.dice.betItem;
             
             const diceEls = [0,1,2,3].map(i => document.getElementById(`dice-${i}`));
@@ -1252,7 +1410,6 @@ input:focus{border-color:var(--accent);}
 
             const isWin = Math.random() < 0.4;
             let winCount = 0;
-
             if (isWin) {
                 winCount = Math.random() < 0.5 ? 1 : 4;
                 for (let i = 0; i < winCount; i++) results.push(state.dice.selectedColor);
@@ -1270,10 +1427,8 @@ input:focus{border-color:var(--accent);}
                     results.push(randomColor);
                 }
             }
-
             results.sort(() => Math.random() - 0.5);
             let stopTimes = [3000, 4500, 6000, 7000];
-
             diceEls.forEach((el, index) => {
                 setTimeout(() => {
                     el.classList.remove('rolling');
@@ -1281,7 +1436,6 @@ input:focus{border-color:var(--accent);}
                     el.innerText = '';
                 }, stopTimes[index]);
             });
-
             setTimeout(() => {
                 state.dice.isSpinning = false;
                 processDiceResult(winCount, betItem);
@@ -1290,27 +1444,23 @@ input:focus{border-color:var(--accent);}
 
         function processDiceResult(winCount, betItem) {
             const isWin = (winCount === 1 || winCount === 4);
-
             if (isWin) {
-                // ДУБЛИКАТ: пушим новый, старый остается
+                playSuccess();
                 showToast(`Победа! Попаданий: ${winCount}. Брейнрот продублирован!`, 'success');
                 state.inventory.push({ ...betItem, uid: newUID() });
             } else {
-                // Удаляем предмет
                 showToast(`Проигрыш... Попаданий: ${winCount}. Ставка потеряна.`, 'error');
                 state.inventory = state.inventory.filter(i => i.uid !== betItem.uid);
             }
-            
             state.dice.betItem = null;
             state.dice.selectedColor = null;
             document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-            
             saveState();
             updateDiceUI();
             renderInventory();
         }
 
-        // ================= ИНВЕНТАРЬ (в профиле) =================
+        // ===== ИНВЕНТАРЬ =====
         let actionMode = 'none'; 
         let selectedItems = [];
 
@@ -1322,7 +1472,6 @@ input:focus{border-color:var(--accent);}
                 grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; margin-top: 15px; font-size:12px;">Пусто...</p>';
                 return;
             }
-
             state.inventory.forEach(item => {
                 const el = document.createElement('div');
                 const isLocked = isItemLocked(item.uid);
@@ -1330,9 +1479,7 @@ input:focus{border-color:var(--accent);}
                 el.className = 'inv-item' + 
                     (selectedItems.includes(item.uid) ? ' selected' : '') + 
                     ((isLocked || isWithdrawing) ? ' locked' : '');
-                
                 el.innerHTML = `<img src="${item.img}"><div class="inv-name">${item.name}</div><div class="inv-price">${item.value}</div>`;
-                
                 if (isWithdrawing) {
                     el.onclick = () => {
                         showConfirm('Убрать брейнрота с вывода?', (yes) => {
@@ -1355,17 +1502,14 @@ input:focus{border-color:var(--accent);}
         function toggleActionMode(mode) {
             actionMode = (actionMode === mode) ? 'none' : mode;
             selectedItems = [];
-            
             const sellBtn = document.getElementById('sell-toggle-btn');
             const withdrawBtn = document.getElementById('withdraw-toggle-btn');
             const nextBtn = document.getElementById('action-next-btn');
-
             sellBtn.style.background = 'linear-gradient(135deg, #ff9e00, #cc7a00)';
             sellBtn.innerText = 'Продать';
             withdrawBtn.style.background = 'linear-gradient(135deg, var(--primary), #5a189a)';
             withdrawBtn.innerText = 'Вывод';
             nextBtn.style.display = 'none';
-
             if (actionMode === 'sell') {
                 sellBtn.style.background = 'linear-gradient(135deg, #ff5e00, #cc0000)';
                 sellBtn.innerText = 'Отмена';
@@ -1379,7 +1523,6 @@ input:focus{border-color:var(--accent);}
                 nextBtn.innerText = 'Вывести выбранное';
                 nextBtn.style.background = 'linear-gradient(135deg, var(--primary), #5a189a)';
             }
-            
             renderInventory();
         }
 
@@ -1395,18 +1538,14 @@ input:focus{border-color:var(--accent);}
 
         function processAction() {
             if (selectedItems.length === 0) { showToast('Выберите предмет!', 'error'); return; }
-
             selectedItems = selectedItems.filter(uid => !isItemLocked(uid));
             if (selectedItems.length === 0) { showToast('Эти предметы в игре!', 'error'); return; }
-
             if (actionMode === 'sell') {
                 const itemsToSell = state.inventory.filter(i => selectedItems.includes(i.uid));
                 let totalCoins = 0;
                 itemsToSell.forEach(item => { totalCoins += item.value; });
-
                 state.coins += totalCoins;
                 state.inventory = state.inventory.filter(i => !selectedItems.includes(i.uid));
-                
                 updateCoinDisplay();
                 saveState();
                 toggleActionMode('none');
@@ -1419,18 +1558,13 @@ input:focus{border-color:var(--accent);}
         function submitWithdraw() {
             const nick = document.getElementById('roblox-nick').value.trim();
             if (!nick) { showToast('Введите ник!', 'error'); return; }
-
             const realUserId = (tg && tg.initDataUnsafe?.user) ? tg.initDataUnsafe.user.id : 0;
             if (realUserId === 0) { showToast('Ошибка: нет Telegram ID!', 'error'); return; }
-
             selectedItems = selectedItems.filter(uid => !isItemLocked(uid));
-
             let hasError = false;
             const itemsToWithdraw = state.inventory.filter(i => selectedItems.includes(i.uid));
             itemsToWithdraw.forEach(item => { if (!state.allowedWithdrawals.includes(item.id)) hasError = true; });
-
             if (hasError) { showToast('Этого предмета нет в наличии для вывода!', 'error'); return; }
-
             fetch(`${API_URL}/api/withdraw`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1448,16 +1582,31 @@ input:focus{border-color:var(--accent);}
             });
         }
 
-        // ================= ПОПОЛНЕНИЕ И АДМИНКА =================
-        function openDepositModal() { document.getElementById('deposit-modal').classList.add('active'); }
+        // ===== ПОПОЛНЕНИЕ =====
+        let currentDepositMode = null;
+
+        function openDepositModal() { 
+            currentDepositMode = null;
+            document.getElementById('deposit-brainrot-block').style.display = 'none';
+            document.getElementById('deposit-stars-block').style.display = 'none';
+            document.getElementById('choice-brainrot').classList.remove('active');
+            document.getElementById('choice-stars').classList.remove('active');
+            document.getElementById('deposit-modal').classList.add('active'); 
+        }
+
+        function selectDepositChoice(mode) {
+            currentDepositMode = mode;
+            document.getElementById('choice-brainrot').classList.toggle('active', mode === 'brainrot');
+            document.getElementById('choice-stars').classList.toggle('active', mode === 'stars');
+            document.getElementById('deposit-brainrot-block').style.display = mode === 'brainrot' ? 'block' : 'none';
+            document.getElementById('deposit-stars-block').style.display = mode === 'stars' ? 'block' : 'none';
+        }
 
         function submitDeposit() {
             const nick = document.getElementById('deposit-nick').value.trim();
             if (!nick) { showToast('Введите ник!', 'error'); return; }
-            
             const realUserId = (tg && tg.initDataUnsafe?.user) ? tg.initDataUnsafe.user.id : 0;
             if (realUserId === 0) { showToast('Ошибка: нет Telegram ID!', 'error'); return; }
-
             fetch(`${API_URL}/api/deposit`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1471,11 +1620,63 @@ input:focus{border-color:var(--accent);}
             });
         }
 
+        // ОПЛАТА ЗВЁЗДАМИ
+        async function submitStarsDeposit() {
+            const amountInput = document.getElementById('deposit-stars-input');
+            const amount = parseInt(amountInput.value);
+            if (!amount || amount < 1) { showToast('Введите сумму больше 0!', 'error'); return; }
+            if (amount > 10000) { showToast('Максимум 10000 звёзд!', 'error'); return; }
+
+            if (!tg || !tg.isVersionAtLeast || !tg.isVersionAtLeast('6.1')) {
+                showToast('Обновите Telegram для оплаты!', 'error'); return;
+            }
+
+            const realUserId = (tg && tg.initDataUnsafe?.user) ? tg.initDataUnsafe.user.id : 0;
+            if (realUserId === 0) { showToast('Ошибка: нет Telegram ID!', 'error'); return; }
+
+            try {
+                const res = await fetch(`${API_URL}/api/create_stars_invoice`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: realUserId, amount: amount })
+                });
+                const data = await res.json();
+                if (!data.invoice_link) { showToast('Ошибка создания счёта', 'error'); return; }
+
+                tg.openInvoice(data.invoice_link, (status) => {
+                    if (status === 'paid') {
+                        showToast('Оплата успешна! Монеты начислены.', 'success');
+                        closeModal('deposit-modal');
+                        // Подождём и обновим баланс с сервера
+                        setTimeout(async () => {
+                            try {
+                                const r = await fetch(`${API_URL}/api/state?user_id=${realUserId}`);
+                                const d = await r.json();
+                                state.coins = d.coins || 0;
+                                state.xp = d.xp || 0;
+                                updateCoinDisplay();
+                                saveLocalOnly();
+                            } catch(e) {}
+                        }, 1500);
+                    } else if (status === 'cancelled') {
+                        showToast('Оплата отменена', 'error');
+                    } else if (status === 'failed') {
+                        showToast('Ошибка оплаты. Попробуйте ещё раз.', 'error');
+                    } else {
+                        showToast('Статус оплаты: ' + status, 'info');
+                    }
+                });
+            } catch (e) {
+                console.error(e);
+                showToast('Ошибка связи с сервером!', 'error');
+            }
+        }
+
+        // ===== АДМИНКА =====
         function openAdminModal() {
             if (state.isAdmin) { document.getElementById('admin-panel-modal').classList.add('active'); renderAdminPanel(); } 
             else { document.getElementById('admin-pass-modal').classList.add('active'); }
         }
-
         function checkAdminPass() {
             const pass = document.getElementById('admin-pass-input').value;
             if (pass === 'Самир2014') {
@@ -1483,22 +1684,18 @@ input:focus{border-color:var(--accent);}
                 document.getElementById('admin-panel-modal').classList.add('active'); renderAdminPanel();
             } else { showToast('Неверный пароль!', 'error'); }
         }
-
         function switchAdminTab(tabId, btn) {
             document.querySelectorAll('.admin-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
             document.getElementById('admin-' + tabId).classList.add('active'); btn.classList.add('active');
             if (tabId === 'promo2') renderPromo2();
         }
-
         async function renderAdminPanel() {
             try {
                 const res = await fetch(`${API_URL}/api/get_all_requests`);
                 const data = await res.json();
-                
                 const depList = document.getElementById('admin-deposit-list');
                 depList.innerHTML = data.deposits.length ? '' : '<p style="color: var(--text-muted); text-align: center; font-size:11px;">Нет заявок</p>';
-                
                 data.deposits.forEach((dep) => {
                     const el = document.createElement('div');
                     el.className = 'request-item';
@@ -1513,10 +1710,8 @@ input:focus{border-color:var(--accent);}
                         </div>`;
                     depList.appendChild(el);
                 });
-
                 const wdList = document.getElementById('admin-withdraw2-list');
                 wdList.innerHTML = data.withdrawals.length ? '' : '<p style="color: var(--text-muted); text-align: center; font-size:11px;">Нет заявок</p>';
-                
                 data.withdrawals.forEach((wd) => {
                     const el = document.createElement('div');
                     el.className = 'request-item';
@@ -1534,7 +1729,6 @@ input:focus{border-color:var(--accent);}
                     wdList.appendChild(el);
                 });
             } catch (e) { console.error("Ошибка загрузки админки", e); }
-
             const allowedGrid = document.getElementById('admin-allowed-grid');
             allowedGrid.innerHTML = '';
             Object.values(ITEMS_DB).filter(i => i.type === 'brainrot').forEach(item => {
@@ -1550,11 +1744,7 @@ input:focus{border-color:var(--accent);}
                 allowedGrid.appendChild(el);
             });
         }
-
-        function copyText(text) {
-            navigator.clipboard.writeText(text).then(() => showToast('Скопировано: ' + text, 'success'));
-        }
-
+        function copyText(text) { navigator.clipboard.writeText(text).then(() => showToast('Скопировано: ' + text, 'success')); }
         async function renderPromo2() {
             const list = document.getElementById('admin-promo2-list');
             list.innerHTML = '<p style="color: var(--text-muted); text-align: center; font-size:11px;">Загрузка...</p>';
@@ -1573,7 +1763,6 @@ input:focus{border-color:var(--accent);}
                 });
             } catch(e) { list.innerHTML = '<p style="color: var(--red); text-align: center; font-size:11px;">Ошибка загрузки</p>'; }
         }
-
         async function acceptDepositGlobal(dep_id) { await fetch(`${API_URL}/api/admin_accept_deposit`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ dep_id }) }); renderAdminPanel(); }
         async function giveCoinsGlobal(dep_id, user_id) {
             const amount = prompt('Сколько монет начислить?', '100');
@@ -1591,7 +1780,6 @@ input:focus{border-color:var(--accent);}
                 showToast(yes ? 'Предметы возвращены' : 'Предметы уничтожены', 'info');
             });
         }
-
         async function createPromoCode() {
             const code = document.getElementById('promo-code-input').value.trim();
             const uses = parseInt(document.getElementById('promo-uses-input').value);
@@ -1609,14 +1797,12 @@ input:focus{border-color:var(--accent);}
                 renderAdminPanel();
             } catch (e) { showToast('Ошибка связи!', 'error'); }
         }
-
         async function clearCoins() {
             const userId = document.getElementById('clear-coins-userid').value;
             if (!confirm('Вы уверены?')) return;
             await fetch(`${API_URL}/api/admin_clear_coins`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ user_id: userId ? parseInt(userId) : 'all' }) });
             showToast('Монеты очищены!', 'success');
         }
-
         async function clearInventory() {
             const userId = document.getElementById('clear-inv-userid').value;
             if (!confirm('Вы уверены?')) return;
@@ -1624,70 +1810,67 @@ input:focus{border-color:var(--accent);}
             showToast('Инвентарь очищен!', 'success');
         }
 
-        // ================= АВТООБНОВЛЕНИЕ МОНЕТ =================
-        setInterval(async () => {
-            if (!tg || !TG_USER_ID) return;
-            if (Date.now() - lastSaveTime < 2500) return; // Не трогаем сразу после действия
-            if (isCaseSpinning || state.upgrader.isSpinning || state.dice.isSpinning) return;
-            if (document.getElementById('case-modal').classList.contains('active')) return;
+        // ===== ИНИЦИАЛИЗАЦИЯ (ТОЛЬКО ДЛЯ АДМИНА) =====
+        async function initApp() {
+            // Устанавливаем картинки
+            document.getElementById('header-coin-img').src = IMAGES.coin;
+            document.getElementById('header-xp-img').src = IMAGES.xp_icon;
+            document.getElementById('pass-icon-img').src = IMAGES.pass_icon;
+            document.getElementById('img-case-free').src = IMAGES.freecase;
+            document.getElementById('img-case-noobini').src = IMAGES.noobinicase;
+            document.getElementById('img-case-garama').src = IMAGES.garamacase;
+            document.getElementById('img-case-allin').src = IMAGES.allincase;
+            document.getElementById('img-case-og').src = IMAGES.ogcase;
+            document.getElementById('img-case-money').src = IMAGES.moneycase;
+            document.getElementById('img-case-tag').src = IMAGES.tagcase;
+            document.getElementById('img-case-gear').src = IMAGES.gearcase;
+            document.getElementById('img-case-admin').src = IMAGES.admincase;
+            document.querySelectorAll('.coin-icon-img').forEach(img => img.src = IMAGES.coin);
 
+            // TG
+            tg.expand(); tg.ready();
+            const user = tg.initDataUnsafe.user;
+            TG_USER_ID = user.id;
+            TG_USERNAME = user.username || '';
+            document.getElementById('user-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '') + (user.username ? ' (@' + user.username + ')' : '');
+            if (user.photo_url) document.getElementById('user-avatar').innerHTML = `<img src="${user.photo_url}">`;
+
+            loadLocalAdminState();
+            await loadSettings(); 
+            loadState();
+            
             try {
                 const res = await fetch(`${API_URL}/api/state?user_id=${TG_USER_ID}`);
                 const data = await res.json();
-                
-                let changed = false;
-                if (data.coins !== state.coins) {
-                    state.coins = data.coins;
-                    document.getElementById('coin-display').innerText = state.coins;
-                    changed = true;
+                state.lastFreeCase = Math.max(state.lastFreeCase, data.last_free_case || 0);
+                state.lastTagCase = Math.max(state.lastTagCase, data.last_tag_case || 0);
+                if (data.coins > state.coins) state.coins = data.coins;
+                if ((data.xp || 0) > state.xp) state.xp = data.xp || 0;
+                if (data.inventory && data.inventory.length >= state.inventory.length) {
+                    state.inventory = data.inventory;
                 }
-                if ((data.xp || 0) !== state.xp) {
-                    state.xp = data.xp || 0;
-                    document.getElementById('xp-display').innerText = state.xp;
-                    changed = true;
-                }
-                
-                // Обновляем кулдауны с сервера (только если они больше локальных — защита от багов)
-                if ((data.last_free_case || 0) > state.lastFreeCase) state.lastFreeCase = data.last_free_case;
-                if ((data.last_tag_case || 0) > state.lastTagCase) state.lastTagCase = data.last_tag_case;
-                
-                if (changed) saveLocalOnly();
-            } catch (e) { /* silent */ }
-        }, 1000);
+                updateCoinDisplay();
+                renderInventory();
+                saveLocalOnly();
+            } catch(e) { console.error(e); }
 
-        // ================= ЗАГРУЗКА =================
-        window.onload = async () => { 
-            loadLocalAdminState();
-            await loadSettings(); 
-            
-            // Сначала грузим локально (чтобы кулдауны были актуальны даже при долгом сервере)
-            loadState();
-            
-            if (tg && tg.initDataUnsafe?.user) {
-                const user_id = tg.initDataUnsafe.user.id;
-                fetch(`${API_URL}/api/state?user_id=${user_id}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        // Берём МАКСИМУМ из локального и серверного кулдауна (защита от обхода)
-                        state.lastFreeCase = Math.max(state.lastFreeCase, data.last_free_case || 0);
-                        state.lastTagCase = Math.max(state.lastTagCase, data.last_tag_case || 0);
-                        
-                        // Монеты и XP берем с сервера (он источник правды, если там больше - значит админ начислил)
-                        if (data.coins > state.coins) state.coins = data.coins;
-                        if ((data.xp || 0) > state.xp) state.xp = data.xp || 0;
-                        
-                        // Инвентарь берем с сервера, только если он "непустой", иначе локальный
-                        if (data.inventory && data.inventory.length >= state.inventory.length) {
-                            state.inventory = data.inventory;
-                        }
-                        
-                        updateCoinDisplay();
-                        renderInventory();
-                        saveLocalOnly();
-                    })
-                    .catch(e => { console.error("Ошибка загрузки с сервера", e); });
-            }
-        };
+            // Автообновление монет
+            setInterval(async () => {
+                if (Date.now() - lastSaveTime < 2500) return;
+                if (isCaseSpinning || state.upgrader.isSpinning || state.dice.isSpinning) return;
+                if (document.getElementById('case-modal').classList.contains('active')) return;
+                try {
+                    const res = await fetch(`${API_URL}/api/state?user_id=${TG_USER_ID}`);
+                    const data = await res.json();
+                    let changed = false;
+                    if (data.coins !== state.coins) { state.coins = data.coins; document.getElementById('coin-display').innerText = state.coins; changed = true; }
+                    if ((data.xp || 0) !== state.xp) { state.xp = data.xp || 0; document.getElementById('xp-display').innerText = state.xp; changed = true; }
+                    if ((data.last_free_case || 0) > state.lastFreeCase) state.lastFreeCase = data.last_free_case;
+                    if ((data.last_tag_case || 0) > state.lastTagCase) state.lastTagCase = data.last_tag_case;
+                    if (changed) saveLocalOnly();
+                } catch (e) {}
+            }, 1000);
+        }
 
         let confirmCallback = null;
         function showConfirm(text, callback) {
