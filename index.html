@@ -74,7 +74,7 @@ header{
 .xp-balance img{width:18px;height:18px;object-fit:contain;filter:drop-shadow(0 0 5px var(--accent))}
 
 .pass-btn-float {
-  position: fixed; bottom: 80px; right: 15px; z-index: 90;
+  position: fixed; bottom: 20px; right: 15px; z-index: 90;
   width: 65px; height: 65px; border-radius: 50%; border: 2px solid var(--gold);
   background: radial-gradient(circle, #2a1f4d, #0b0716);
   box-shadow: 0 0 20px rgba(255, 207, 74, 0.5), inset 0 0 10px rgba(0,0,0,0.8);
@@ -85,31 +85,51 @@ header{
 .pass-btn-float img { width: 80%; height: 80%; object-fit: contain; filter: drop-shadow(0 0 5px gold); }
 @keyframes pulseGold { 0% { box-shadow: 0 0 10px rgba(255,207,74,0.3); } 100% { box-shadow: 0 0 25px rgba(255,207,74,0.8); } }
 
-main{flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center}
-.tab-content{position:absolute;inset:0;display:none;flex-direction:column;padding:10px;animation:slideUp .45s cubic-bezier(.16,1,.3,1);overflow:hidden;max-width:480px;width:100%}
-.tab-content.active{display:flex}
-@keyframes slideUp{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:none}}
+main{
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding-bottom: 80px;
+  scroll-behavior: smooth;
+}
+
+.tab-content{
+  width:100%;
+  max-width:480px;
+  display:none;
+  flex-direction:column;
+  padding:20px 10px;
+  min-height: 85vh;
+  flex-shrink:0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.tab-content.active { display: flex; }
+
 h2{
-  font-family:'Unbounded','Russo One',sans-serif;font-weight:900;font-size:16px;letter-spacing:.5px;text-align:center;
-  margin-bottom:8px;flex-shrink:0;
+  font-family:'Unbounded','Russo One',sans-serif;font-weight:900;font-size:18px;letter-spacing:.5px;text-align:center;
+  margin-bottom:15px;flex-shrink:0;
   background:linear-gradient(90deg,#fff,#cdb4ff 50%,var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent;
   filter:drop-shadow(0 0 10px var(--primary-glow));
 }
 
-nav{
-  height:55px;display:flex;justify-content:space-around;align-items:center;z-index:100;padding-bottom:env(safe-area-inset-bottom);
-  background:linear-gradient(0deg,rgba(14,9,30,.95),rgba(20,14,40,.6));
-  backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);
-  border-top:1px solid var(--glass-border);border-radius:20px 20px 0 0;
+/* ВКЛАДКИ КЕЙСОВ */
+.case-tabs {
+  display: flex; gap: 6px; margin-bottom: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; flex-shrink: 0;
 }
-.nav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;width:20%;padding:4px 0;color:var(--text-muted);font-size:9px;font-weight:800;background:none;border:none;cursor:pointer;position:relative;transition:.3s}
-.nav-btn svg{width:20px;height:20px;fill:currentColor;transition:.35s cubic-bezier(.16,1,.3,1)}
-.nav-btn.active{color:#fff}
-.nav-btn.active svg{fill:var(--accent);filter:drop-shadow(0 0 6px var(--accent-glow));transform:translateY(-2px) scale(1.1)}
-.nav-btn.active::after{content:'';position:absolute;top:-8px;width:25px;height:2px;border-radius:0 0 4px 4px;background:var(--accent);box-shadow:0 0 10px var(--accent);bottom:auto}
+.case-tabs::-webkit-scrollbar { display: none; }
+.case-tab {
+  padding: 6px 12px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+  color: var(--text-muted); font-size: 11px; font-weight: 800; white-space: nowrap; cursor: pointer; transition: 0.3s;
+}
+.case-tab.active {
+  background: var(--grad); color: #fff; border-color: transparent; box-shadow: 0 0 10px var(--primary-glow);
+}
 
 /* КЕЙСЫ */
-.cases-wrapper{flex:1;overflow-y:auto;padding:4px 2px 10px; display:flex; flex-direction:column;}
+.cases-wrapper{padding:4px 2px 10px; display:flex; flex-direction:column; width: 100%;}
 .case-cat-title{
   font-family:'Unbounded','Russo One',sans-serif;
   font-size:13px;
@@ -156,7 +176,7 @@ nav{
 .case-card.full-width .case-price img { width: 12px; height: 12px; }
 
 /* АПГРЕЙДЕР */
-.upgrader-layout{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:10px;width:100%;max-width:400px;margin:0 auto;overflow-y:auto;padding-bottom:10px;}
+.upgrader-layout{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:10px;width:100%;max-width:400px;margin:0 auto;padding-bottom:10px;}
 .upgrader-slots{display:flex;justify-content:space-between;align-items:center;width:100%}
 .slot{
   width:42%;max-width:110px;aspect-ratio:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:6px;text-align:center;cursor:pointer;position:relative;
@@ -181,7 +201,7 @@ nav{
 .chance-btn:disabled{opacity:.5}
 
 .circle-roulette-wrapper{
-  position:relative;width:160px;height:160px;margin:4px 0;padding:10px;flex-shrink:0;border-radius:50%;display:flex;justify-content:center;align-items:center;border:4px solid transparent;
+  position:relative;width:180px;height:180px;margin:10px 0;padding:10px;flex-shrink:0;border-radius:50%;display:flex;justify-content:center;align-items:center;border:4px solid transparent;
   background:radial-gradient(circle,#0b0716 60%,#1a1230) padding-box,conic-gradient(from 0deg,var(--accent),var(--primary),var(--pink),var(--gold),var(--accent)) border-box;
   box-shadow:0 0 30px rgba(155,92,255,.35),inset 0 0 20px #000;
   transition: box-shadow 0.3s;
@@ -222,9 +242,9 @@ nav{
 .inv-item.selected::after{content:'✓';position:absolute;top:4px;right:4px;width:14px;height:14px;border-radius:50%;background:var(--green);color:#04110b;font-size:9px;font-weight:900;line-height:14px;text-align:center;}
 
 /* КОЛОР ДАЙС */
-.dice-layout { display:flex; flex-direction:column; align-items:center; flex:1; gap:15px; width:100%; max-width:400px; margin:0 auto; overflow-y:auto; padding-bottom:10px; }
+.dice-layout { display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; gap:15px; width:100%; max-width:400px; margin:0 auto; padding-bottom:10px; }
 .dice-container { display:flex; gap:10px; justify-content:center; margin: 10px 0; }
-.dice { width: 50px; height: 50px; border-radius: 12px; background: #222; border: 2px solid #555; display: flex; justify-content: center; align-items: center; font-size: 24px; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); }
+.dice { width: 55px; height: 55px; border-radius: 12px; background: #222; border: 2px solid #555; display: flex; justify-content: center; align-items: center; font-size: 24px; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); }
 .dice.rolling { animation: dice-shake 0.3s infinite; }
 @keyframes dice-shake { 0% { transform: rotate(0deg) scale(1); } 25% { transform: rotate(15deg) scale(1.1); } 50% { transform: rotate(-15deg) scale(0.9); } 75% { transform: rotate(10deg) scale(1.05); } 100% { transform: rotate(0deg) scale(1); } }
 .color-picker { display: flex; gap: 8px; justify-content: center; width: 100%; flex-wrap: wrap; }
@@ -315,6 +335,12 @@ input:focus{border-color:var(--accent);}
 .btn-reject{background:#cc0000;}
 .copy-btn { background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: var(--accent); padding: 2px 6px; border-radius: 6px; font-size: 10px; cursor: pointer; margin-left: 5px; }
 
+/* СЕРАЯ ИКОНКА ДЛЯ ВЫВОДА */
+.inv-item.locked {
+  filter: grayscale(100%) opacity(0.5);
+  pointer-events: none;
+}
+
 /* УВЕДОМЛЕНИЯ */
 #toast{
   position:fixed;top:-100px;left:50%;transform:translateX(-50%);z-index:9999;width:90%;max-width:300px;padding:10px 15px;text-align:center;
@@ -327,6 +353,21 @@ input:focus{border-color:var(--accent);}
 
 @keyframes popResult{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
 .result-anim{animation:popResult .5s forwards}
+
+/* ВЫБОР ВЕРНУТЬ ИЛИ УНИЧТОЖИТЬ */
+.confirm-box {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000;
+  display: none; justify-content: center; align-items: center;
+  background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
+}
+.confirm-box.active { display: flex; }
+.confirm-content {
+  background: linear-gradient(180deg, #171031, #08050f) padding-box, var(--edge) border-box;
+  border: 1px solid transparent; border-radius: 20px; padding: 20px; width: 90%; max-width: 300px;
+  text-align: center;
+}
+.confirm-title { font-family: 'Unbounded'; font-size: 14px; margin-bottom: 15px; color: var(--gold); }
+.confirm-buttons { display: flex; gap: 10px; justify-content: center; }
 
     </style>
 </head>
@@ -679,6 +720,17 @@ input:focus{border-color:var(--accent);}
         </div>
     </div>
 
+    <!-- МОДАЛКА ПОДТВЕРЖДЕНИЯ -->
+    <div class="confirm-box" id="confirm-box">
+        <div class="confirm-content">
+            <div class="confirm-title" id="confirm-text">Текст</div>
+            <div class="confirm-buttons">
+                <button class="action-btn" style="width: 100%; max-width: 120px; background: var(--red);" onclick="confirmAction(true)">Да</button>
+                <button class="action-btn" style="width: 100%; max-width: 120px; background: #444;" onclick="confirmAction(false)">Нет</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const API_URL = 'https://braincosmo111.onrender.com'; 
         let TG_USER_ID = null;
@@ -803,7 +855,8 @@ input:focus{border-color:var(--accent);}
             lastFreeCase: 0, lastTagCase: 0,
             allowedWithdrawals: [], deposits: [], withdrawals: [], promos: [],
             upgrader: { myItems: [], targetItem: null, isSpinning: false },
-            dice: { betItem: null, selectedColor: null, isSpinning: false }
+            dice: { betItem: null, selectedColor: null, isSpinning: false },
+            withdrawingItems: [] // Массив uid предметов, которые на выводе
         };
 
         function getTotalMyValue() {
@@ -826,6 +879,7 @@ input:focus{border-color:var(--accent);}
                 state.inventory = parsed.inventory || [];
                 state.lastFreeCase = parsed.lastFreeCase || 0;
                 state.lastTagCase = parsed.lastTagCase || 0;
+                state.withdrawingItems = parsed.withdrawingItems || [];
             }
             updateCoinDisplay(); renderInventory();
         }
@@ -836,7 +890,8 @@ input:focus{border-color:var(--accent);}
                 xp: state.xp,
                 inventory: state.inventory,
                 lastFreeCase: state.lastFreeCase,
-                lastTagCase: state.lastTagCase
+                lastTagCase: state.lastTagCase,
+                withdrawingItems: state.withdrawingItems
             })); 
             localStorage.setItem('brainrot_isAdmin', state.isAdmin);
             
@@ -918,6 +973,8 @@ input:focus{border-color:var(--accent);}
         let isCaseSpinning = false;
 
         function openCase(caseId) {
+            // БАГ-ФИКС: блокируем открытие другого кейса во время кручения
+            if (isCaseSpinning) { showToast('Подождите, кейс открывается!', 'error'); return; }
             currentCaseId = caseId;
             const c = CASES_DB[caseId];
 
@@ -1116,6 +1173,9 @@ input:focus{border-color:var(--accent);}
         }
 
         function openSelectInventoryModal(mode) {
+            if (state.upgrader.isSpinning || state.dice.isSpinning) {
+                showToast('Подождите, идет игра!', 'error'); return;
+            }
             const modal = document.getElementById('select-item-modal');
             const grid = document.getElementById('select-grid');
             const footer = document.getElementById('select-modal-footer');
@@ -1155,6 +1215,9 @@ input:focus{border-color:var(--accent);}
                 footer.innerHTML = `<button class="action-btn" onclick="closeModal('select-item-modal'); updateUpgraderUI();">Готово</button>`;
                 state.inventory.forEach(item => {
                     if (item.type !== 'brainrot') return;
+                    // БАГ-ФИКС: нельзя выбрать предметы, которые уже стоят на выводе
+                    if (state.withdrawingItems.includes(item.uid)) return;
+
                     const el = document.createElement('div');
                     const isSelected = state.upgrader.myItems.some(i => i.uid === item.uid);
                     el.className = 'inv-item' + (isSelected ? ' selected' : '');
@@ -1234,6 +1297,8 @@ input:focus{border-color:var(--accent);}
 
         function spinUpgrader() {
             if (state.upgrader.isSpinning) return;
+            if (state.upgrader.myItems.length === 0 || !state.upgrader.targetItem) return;
+
             state.upgrader.isSpinning = true;
             document.getElementById('up-spin-btn').disabled = true;
             const wrapper = document.getElementById('up-roulette-wrapper');
@@ -1302,6 +1367,7 @@ input:focus{border-color:var(--accent);}
             const targetItem = state.upgrader.targetItem;
             
             const myUids = myItems.map(i => i.uid);
+            // Удаляем предметы из инвентаря
             state.inventory = state.inventory.filter(i => !myUids.includes(i.uid));
 
             if (result === 'win') {
@@ -1346,6 +1412,13 @@ input:focus{border-color:var(--accent);}
 
         function spinColorDice() {
             if (state.dice.isSpinning) return;
+            if (!state.dice.betItem || !state.dice.selectedColor) return;
+
+            // БАГ-ФИКС: нельзя ставить предмет, который стоит на выводе
+            if (state.withdrawingItems.includes(state.dice.betItem.uid)) {
+                showToast('Этот предмет на выводе!', 'error'); return;
+            }
+
             state.dice.isSpinning = true;
             document.getElementById('dice-spin-btn').disabled = true;
             
@@ -1356,19 +1429,42 @@ input:focus{border-color:var(--accent);}
             const colorHex = { red: '#ff4466', green: '#3dffa0', orange: '#ff9e00', yellow: '#ffea00', cyan: '#29f0ff' };
             const results = [];
 
-            for(let i=0; i<4; i++) {
-                results.push(colors[Math.floor(Math.random() * colors.length)]);
+            // Шанс 40% на победу (1 или 4 попадания)
+            const isWin = Math.random() < 0.4;
+            let winCount = 0;
+
+            if (isWin) {
+                winCount = Math.random() < 0.5 ? 1 : 4;
+                // Генерируем результаты: нужное количество нужного цвета + остальные рандом
+                for (let i = 0; i < winCount; i++) results.push(state.dice.selectedColor);
+                for (let i = winCount; i < 4; i++) {
+                    let randomColor;
+                    do { randomColor = colors[Math.floor(Math.random() * colors.length)]; } 
+                    while (randomColor === state.dice.selectedColor);
+                    results.push(randomColor);
+                }
+            } else {
+                // Проигрыш: 0, 2 или 3 попадания
+                winCount = [0, 2, 3][Math.floor(Math.random() * 3)];
+                for (let i = 0; i < winCount; i++) results.push(state.dice.selectedColor);
+                for (let i = winCount; i < 4; i++) {
+                    let randomColor;
+                    do { randomColor = colors[Math.floor(Math.random() * colors.length)]; } 
+                    while (randomColor === state.dice.selectedColor);
+                    results.push(randomColor);
+                }
             }
 
+            // Перемешиваем результаты
+            results.sort(() => Math.random() - 0.5);
+
             let stopTimes = [3000, 4500, 6000, 7000];
-            let winCount = 0;
 
             diceEls.forEach((el, index) => {
                 setTimeout(() => {
                     el.classList.remove('rolling');
                     el.style.background = colorHex[results[index]];
                     el.innerText = '';
-                    if (results[index] === state.dice.selectedColor) winCount++;
                 }, stopTimes[index]);
             });
 
@@ -1380,12 +1476,14 @@ input:focus{border-color:var(--accent);}
 
         function processDiceResult(winCount) {
             const isWin = (winCount === 1 || winCount === 4);
+            // БАГ-ФИКС: удаляем ставку из инвентаря ДО обработки результата
+            state.inventory = state.inventory.filter(i => i.uid !== state.dice.betItem.uid);
+
             if (isWin) {
                 showToast(`Победа! Попаданий: ${winCount}. Брейнрот продублирован!`, 'success');
                 state.inventory.push({ ...state.dice.betItem, uid: Date.now() + Math.random().toString(36).substr(2, 9) });
             } else {
                 showToast(`Проигрыш... Попаданий: ${winCount}. Ставка потеряна.`, 'error');
-                state.inventory = state.inventory.filter(i => i.uid !== state.dice.betItem.uid);
             }
             
             state.dice.betItem = null;
@@ -1409,10 +1507,23 @@ input:focus{border-color:var(--accent);}
 
             state.inventory.forEach(item => {
                 const el = document.createElement('div');
-                el.className = 'inv-item' + (selectedItems.includes(item.uid) ? ' selected' : '');
+                // БАГ-ФИКС: серые предметы, которые на выводе
+                const isWithdrawing = state.withdrawingItems.includes(item.uid);
+                el.className = 'inv-item' + (selectedItems.includes(item.uid) ? ' selected' : '') + (isWithdrawing ? ' locked' : '');
+                
                 el.innerHTML = `<img src="${item.img}"><div class="inv-name">${item.name}</div><div class="inv-price">${item.value}</div>`;
                 
-                if (actionMode !== 'none') {
+                if (isWithdrawing) {
+                    el.onclick = () => {
+                        showConfirm('Убрать брейнрота с вывода?', (yes) => {
+                            if (yes) {
+                                state.withdrawingItems = state.withdrawingItems.filter(uid => uid !== item.uid);
+                                showToast('Брейнрот убран с вывода', 'success');
+                                saveState(); renderInventory();
+                            }
+                        });
+                    };
+                } else if (actionMode !== 'none') {
                     el.onclick = () => toggleSelectItem(item.uid, el);
                 }
                 grid.appendChild(el);
@@ -1506,12 +1617,13 @@ input:focus{border-color:var(--accent);}
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ user_id: realUserId, tg_username: TG_USERNAME, nick: nick, items: itemsToWithdraw })
             }).then(() => {
-                state.inventory = state.inventory.filter(i => !selectedItems.includes(i.uid));
+                // БАГ-ФИКС: Помечаем предметы как "на выводе" вместо удаления
+                state.withdrawingItems.push(...selectedItems);
                 saveState(); 
                 closeModal('withdraw-modal'); 
                 toggleActionMode('none'); 
                 renderInventory();
-                showToast('Заявка на вывод создана!', 'success');
+                showToast('Заявка на вывод создана! Предметы заблокированы.', 'success');
             }).catch(e => {
                 console.error("Ошибка отправки вывода", e);
                 showToast('Ошибка связи с сервером!', 'error');
@@ -1685,8 +1797,15 @@ input:focus{border-color:var(--accent);}
             renderAdminPanel();
         }
         async function rejectWithdrawGlobal(wd_id) {
-            await fetch(`${API_URL}/api/admin_reject_withdraw`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ wd_id }) });
-            renderAdminPanel();
+            showConfirm('Вернуть брейнротов игроку?', async (yes) => {
+                await fetch(`${API_URL}/api/admin_reject_withdraw`, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ wd_id, return_items: yes }) 
+                });
+                renderAdminPanel();
+                showToast(yes ? 'Вывод отклонен, предметы возвращены' : 'Вывод отклонен, предметы уничтожены', 'info');
+            });
         }
 
         async function createPromoCode() {
@@ -1787,6 +1906,19 @@ input:focus{border-color:var(--accent);}
                 loadState();
             }
         };
+
+        // ================= СИСТЕМА ПОДТВЕРЖДЕНИЯ =================
+        let confirmCallback = null;
+        function showConfirm(text, callback) {
+            document.getElementById('confirm-text').innerText = text;
+            document.getElementById('confirm-box').classList.add('active');
+            confirmCallback = callback;
+        }
+        function confirmAction(yes) {
+            document.getElementById('confirm-box').classList.remove('active');
+            if (confirmCallback) confirmCallback(yes);
+            confirmCallback = null;
+        }
     </script>
 </body>
 </html>
