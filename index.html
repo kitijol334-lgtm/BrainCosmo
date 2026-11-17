@@ -96,7 +96,6 @@ h2{
   filter:drop-shadow(0 0 10px var(--primary-glow));
 }
 
-/* ИСХОДНОЕ НИЖНЕЕ МЕНЮ */
 nav{
   height:55px;display:flex;justify-content:space-around;align-items:center;z-index:100;padding-bottom:env(safe-area-inset-bottom);
   background:linear-gradient(0deg,rgba(14,9,30,.95),rgba(20,14,40,.6));
@@ -525,7 +524,6 @@ input:focus{border-color:var(--accent);}
         </div>
     </main>
 
-    <!-- ИСХОДНОЕ НИЖНЕЕ МЕНЮ -->
     <nav>
         <button class="nav-btn active" onclick="switchTab('cases', this)">
             <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>
@@ -1471,6 +1469,19 @@ input:focus{border-color:var(--accent);}
         let actionMode = 'none'; 
         let selectedItems = [];
 
+        // ФУНКЦИЯ ОЧИСТКИ СЛОТОВ
+        function clearSlotsOfItems(uids) {
+            // Апгрейдер
+            state.upgrader.myItems = state.upgrader.myItems.filter(i => !uids.includes(i.uid));
+            if (state.upgrader.myItems.length === 0) state.upgrader.targetItem = null;
+            // Дайс
+            if (state.dice.betItem && uids.includes(state.dice.betItem.uid)) {
+                state.dice.betItem = null;
+            }
+            updateUpgraderUI();
+            updateDiceUI();
+        }
+
         function renderInventory() {
             const grid = document.getElementById('inventory-grid');
             grid.innerHTML = '';
@@ -1555,6 +1566,9 @@ input:focus{border-color:var(--accent);}
                 let totalCoins = 0;
                 itemsToSell.forEach(item => { totalCoins += item.value; });
 
+                // ФИКС: очищаем слоты перед удалением
+                clearSlotsOfItems(selectedItems);
+
                 state.coins += totalCoins;
                 state.inventory = state.inventory.filter(i => !selectedItems.includes(i.uid));
                 
@@ -1589,6 +1603,9 @@ input:focus{border-color:var(--accent);}
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ user_id: realUserId, tg_username: TG_USERNAME, nick: nick, items: itemsToWithdraw })
             }).then(() => {
+                // ФИКС: очищаем слоты перед тем как пометить на вывод
+                clearSlotsOfItems(selectedItems);
+
                 state.withdrawingItems.push(...selectedItems);
                 saveState(); 
                 closeModal('withdraw-modal'); 
