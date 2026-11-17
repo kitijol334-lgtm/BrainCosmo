@@ -111,16 +111,9 @@ nav{
 /* КЕЙСЫ */
 .cases-wrapper{flex:1;overflow-y:auto;padding:4px 2px 10px; display:flex; flex-direction:column;}
 .case-cat-title{
-  font-family:'Unbounded','Russo One',sans-serif;
-  font-size:13px;
-  color:var(--accent);
-  margin:12px 0 8px;
-  text-transform:uppercase;
-  letter-spacing:1px;
-  text-align:left;
-  width:100%;
-  filter:drop-shadow(0 0 5px var(--accent-glow));
-  flex-shrink: 0;
+  font-family:'Unbounded','Russo One',sans-serif;font-size:13px;color:var(--accent);
+  margin:12px 0 8px;text-transform:uppercase;letter-spacing:1px;text-align:left;width:100%;
+  filter:drop-shadow(0 0 5px var(--accent-glow));flex-shrink: 0;
 }
 .case-cat-title:first-child{margin-top:0;}
 .case-category { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; margin-bottom: 5px; }
@@ -221,11 +214,11 @@ nav{
 }
 .inv-item.selected::after{content:'✓';position:absolute;top:4px;right:4px;width:14px;height:14px;border-radius:50%;background:var(--green);color:#04110b;font-size:9px;font-weight:900;line-height:14px;text-align:center;}
 
-/* СЕРАЯ ИКОНКА ДЛЯ ВЫВОДА */
+/* СЕРАЯ ИКОНКА */
 .inv-item.locked {
   filter: grayscale(100%) opacity(0.5);
-  pointer-events: none;
 }
+.inv-item.locked::after { content:'🔒'; position:absolute; top:2px; right:4px; font-size:12px; }
 
 /* КОЛОР ДАЙС */
 .dice-layout { display:flex; flex-direction:column; align-items:center; flex:1; gap:15px; width:100%; max-width:400px; margin:0 auto; overflow-y:auto; padding-bottom:10px; }
@@ -267,47 +260,25 @@ nav{
 .modal-title{font-family:'Unbounded','Russo One',sans-serif;font-weight:700;font-size:14px}
 .close-btn{width:26px;height:26px;display:flex;justify-content:center;align-items:center;border-radius:50%;background:rgba(255,255,255,.07);color:var(--text-muted);font-size:18px;cursor:pointer;border:none}
 
-/* ПАСС МОДАЛКА */
-.pass-modal-content {
-  background: linear-gradient(180deg, #1a1238, #08050f) padding-box, linear-gradient(145deg, var(--gold), var(--primary)) border-box;
-}
-.pass-close-btn {
-  position: absolute; top: 10px; left: 10px; width: 30px; height: 30px; border-radius: 50%;
-  background: rgba(255,255,255,0.1); color: #fff; border: none; font-size: 18px; cursor: pointer; z-index: 10;
-}
+.pass-modal-content { background: linear-gradient(180deg, #1a1238, #08050f) padding-box, linear-gradient(145deg, var(--gold), var(--primary)) border-box; }
+.pass-close-btn { position: absolute; top: 10px; left: 10px; width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.1); color: #fff; border: none; font-size: 18px; cursor: pointer; z-index: 10; }
 .pass-placeholder { text-align: center; font-size: 18px; font-family: 'Unbounded', sans-serif; color: var(--gold); margin: 40px 0; text-shadow: 0 0 10px gold; }
 
-/* РУЛЕТКА КЕЙСОВ */
-.roulette-container{
-  position:relative;width:100%;height:90px;margin:10px 0;display:flex;align-items:center;overflow:hidden;border-radius:12px;
-  background:linear-gradient(180deg,rgba(0,0,0,.85),rgba(14,8,30,.9));border:1px solid rgba(155,92,255,.6);
-}
+.roulette-container{position:relative;width:100%;height:90px;margin:10px 0;display:flex;align-items:center;overflow:hidden;border-radius:12px;background:linear-gradient(180deg,rgba(0,0,0,.85),rgba(14,8,30,.9));border:1px solid rgba(155,92,255,.6);}
 .roulette-track{display:flex;gap:8px;padding:0 10px;position:relative;will-change:transform;transition:transform 5s cubic-bezier(.1,.8,.1,1)}
-.roulette-item{
-  position:relative;width:70px;height:70px;flex-shrink:0;display:flex;justify-content:center;align-items:center;border-radius:10px;
-  background:radial-gradient(circle at 50% 30%,rgba(155,92,255,.3),rgba(255,255,255,.03));border:1px solid var(--glass-border);
-}
+.roulette-item{position:relative;width:70px;height:70px;flex-shrink:0;display:flex;justify-content:center;align-items:center;border-radius:10px;background:radial-gradient(circle at 50% 30%,rgba(155,92,255,.3),rgba(255,255,255,.03));border:1px solid var(--glass-border);}
 .roulette-item img{max-width:85%;max-height:85%;object-fit:contain;}
 .roulette-pointer{position:absolute;top:0;left:50%;transform:translateX(-50%);width:3px;height:100%;z-index:10;background:var(--accent);box-shadow:0 0 10px var(--accent);}
 .roulette-pointer::before,.roulette-pointer::after{content:'';position:absolute;left:-5px;border-left:6.5px solid transparent;border-right:6.5px solid transparent}
 .roulette-pointer::before{top:0;border-top:8px solid var(--accent)}
 .roulette-pointer::after{bottom:0;border-bottom:8px solid var(--accent)}
 
-/* ФОРМЫ И КНОПКИ */
-input{
-  width:100%;padding:10px;margin-bottom:10px;border-radius:10px;outline:none;color:#fff;font-size:13px;
-  background:rgba(0,0,0,.5);border:1px solid var(--glass-border);
-}
+input{width:100%;padding:10px;margin-bottom:10px;border-radius:10px;outline:none;color:#fff;font-size:13px;background:rgba(0,0,0,.5);border:1px solid var(--glass-border);}
 input:focus{border-color:var(--accent);}
-.action-btn{
-  position:relative;overflow:hidden;width:100%;max-width:280px;padding:12px;border:none;border-radius:12px;color:#fff;cursor:pointer;margin: 0 auto;display: block;
-  font-family:'Unbounded','Russo One',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;
-  background:var(--grad);box-shadow:0 5px 15px var(--primary-glow);
-}
+.action-btn{position:relative;overflow:hidden;width:100%;max-width:280px;padding:12px;border:none;border-radius:12px;color:#fff;cursor:pointer;margin: 0 auto;display: block;font-family:'Unbounded','Russo One',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;background:var(--grad);box-shadow:0 5px 15px var(--primary-glow);}
 .action-btn:disabled{background:rgba(255,255,255,.05);color:#5d5778;box-shadow:none;border:1px solid var(--glass-border)}
 .action-btn:active{transform:scale(.95)}
 
-/* АДМИНКА */
 .admin-tabs{display:flex;gap:4px;margin-bottom:10px;padding-bottom:4px;overflow-x:auto;scrollbar-width:none; flex-shrink: 0;}
 .admin-tab{padding:6px 10px;border-radius:8px;white-space:nowrap;font-size:10px;font-weight:800;color:var(--text-muted);background:rgba(255,255,255,.04);border:1px solid var(--glass-border);}
 .admin-tab.active{color:#06040d;background:var(--accent);border-color:var(--accent);}
@@ -321,12 +292,7 @@ input:focus{border-color:var(--accent);}
 .btn-reject{background:#cc0000;}
 .copy-btn { background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: var(--accent); padding: 2px 6px; border-radius: 6px; font-size: 10px; cursor: pointer; margin-left: 5px; }
 
-/* УВЕДОМЛЕНИЯ */
-#toast{
-  position:fixed;top:-100px;left:50%;transform:translateX(-50%);z-index:9999;width:90%;max-width:300px;padding:10px 15px;text-align:center;
-  font-weight:800;font-size:12px;color:#fff;border-radius:12px;border:1px solid var(--glass-border);border-left:4px solid var(--primary);
-  background:rgba(18,12,38,.9);transition:.3s;
-}
+#toast{position:fixed;top:-100px;left:50%;transform:translateX(-50%);z-index:9999;width:90%;max-width:300px;padding:10px 15px;text-align:center;font-weight:800;font-size:12px;color:#fff;border-radius:12px;border:1px solid var(--glass-border);border-left:4px solid var(--primary);background:rgba(18,12,38,.9);transition:.3s;}
 #toast.show{top:10px}
 #toast.success{border-left-color:var(--green);}
 #toast.error{border-left-color:var(--red);}
@@ -334,18 +300,9 @@ input:focus{border-color:var(--accent);}
 @keyframes popResult{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
 .result-anim{animation:popResult .5s forwards}
 
-/* ВЫБОР ВЕРНУТЬ ИЛИ УНИЧТОЖИТЬ */
-.confirm-box {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000;
-  display: none; justify-content: center; align-items: center;
-  background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
-}
+.confirm-box { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
 .confirm-box.active { display: flex; }
-.confirm-content {
-  background: linear-gradient(180deg, #171031, #08050f) padding-box, var(--edge) border-box;
-  border: 1px solid transparent; border-radius: 20px; padding: 20px; width: 90%; max-width: 300px;
-  text-align: center;
-}
+.confirm-content { background: linear-gradient(180deg, #171031, #08050f) padding-box, var(--edge) border-box; border: 1px solid transparent; border-radius: 20px; padding: 20px; width: 90%; max-width: 300px; text-align: center; }
 .confirm-title { font-family: 'Unbounded'; font-size: 14px; margin-bottom: 15px; color: var(--gold); }
 .confirm-buttons { display: flex; gap: 10px; justify-content: center; }
 
@@ -371,7 +328,6 @@ input:focus{border-color:var(--accent);}
     </div>
 
     <main>
-        <!-- КЕЙСЫ -->
         <div id="tab-cases" class="tab-content active">
             <h2>Кейсы</h2>
             <div class="cases-wrapper">
@@ -433,7 +389,6 @@ input:focus{border-color:var(--accent);}
             </div>
         </div>
 
-        <!-- АПГРЕЙДЕР -->
         <div id="tab-upgrader" class="tab-content">
             <h2>Апгрейдер</h2>
             <div class="upgrader-layout">
@@ -465,7 +420,6 @@ input:focus{border-color:var(--accent);}
             </div>
         </div>
 
-        <!-- КОЛОР ДАЙС -->
         <div id="tab-colordice" class="tab-content">
             <h2>Колор Дайс</h2>
             <div class="dice-layout">
@@ -496,7 +450,6 @@ input:focus{border-color:var(--accent);}
             </div>
         </div>
 
-        <!-- ИНВЕНТАРЬ -->
         <div id="tab-inventory" class="tab-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-shrink: 0;">
                 <h2 style="margin: 0; text-align: left; font-size: 15px;">Инвентарь</h2>
@@ -511,7 +464,6 @@ input:focus{border-color:var(--accent);}
             <button class="action-btn" id="action-next-btn" style="display: none; margin-top: 8px; flex-shrink: 0; align-self: center;" onclick="processAction()">Продолжить</button>
         </div>
 
-        <!-- ПРОФИЛЬ -->
         <div id="tab-profile" class="tab-content">
             <h2>Профиль</h2>
             <div class="profile-card">
@@ -549,7 +501,6 @@ input:focus{border-color:var(--accent);}
 
     <div id="toast">Текст</div>
 
-    <!-- МОДАЛКА ПАССА -->
     <div class="modal-overlay" id="pass-modal">
         <div class="modal-content pass-modal-content">
             <button class="pass-close-btn" onclick="closeModal('pass-modal')">×</button>
@@ -558,7 +509,6 @@ input:focus{border-color:var(--accent);}
         </div>
     </div>
 
-    <!-- МОДАЛКА КЕЙСА -->
     <div class="modal-overlay" id="case-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -578,83 +528,58 @@ input:focus{border-color:var(--accent);}
         </div>
     </div>
 
-    <!-- МОДАЛКА ПОДПИСКИ -->
     <div class="modal-overlay" id="sub-modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">Подписка</div>
-                <button class="close-btn" onclick="closeModal('sub-modal')">×</button>
-            </div>
+            <div class="modal-header"><div class="modal-title">Подписка</div><button class="close-btn" onclick="closeModal('sub-modal')">×</button></div>
             <p style="margin-bottom: 12px; text-align: center; font-size: 13px;">Для открытия подпишись на <br><b style="color: var(--accent); font-size: 14px;">https://t.me/Braincosmo</b></p>
             <a href="https://t.me/Braincosmo" target="_blank" class="action-btn" style="display: block; text-align: center; text-decoration: none; margin: 0 auto 8px; background: #0088cc;">Подписаться</a>
             <button class="action-btn" style="align-self: center;" onclick="checkSubAndOpen()">Я подписался</button>
         </div>
     </div>
 
-    <!-- МОДАЛКА ТЕГА -->
     <div class="modal-overlay" id="tag-modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">Условие TagCase</div>
-                <button class="close-btn" onclick="closeModal('tag-modal')">×</button>
-            </div>
+            <div class="modal-header"><div class="modal-title">Условие TagCase</div><button class="close-btn" onclick="closeModal('tag-modal')">×</button></div>
             <p style="margin-bottom: 12px; text-align: center; font-size: 13px;">Для открытия кейса добавь в свой ник Telegram:<br><br><b style="color: var(--accent); font-size: 16px;">@Brainrot_Cosmobot</b></p>
             <button class="action-btn" style="margin-bottom:8px; background: #0088cc;" onclick="copyTag()">Скопировать тег</button>
             <button class="action-btn" style="align-self: center;" onclick="checkTagAndOpen()">Проверить</button>
         </div>
     </div>
 
-    <!-- МОДАЛКА ВЫБОРА ПРЕДМЕТА -->
     <div class="modal-overlay" id="select-item-modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title" id="select-modal-title">Выбрать</div>
-                <button class="close-btn" onclick="closeModal('select-item-modal')">×</button>
-            </div>
+            <div class="modal-header"><div class="modal-title" id="select-modal-title">Выбрать</div><button class="close-btn" onclick="closeModal('select-item-modal')">×</button></div>
             <div class="inventory-grid" id="select-grid" style="max-height: 50vh; overflow-y: auto;"></div>
             <div id="select-modal-footer" style="margin-top: 10px;"></div>
         </div>
     </div>
 
-    <!-- МОДАЛКА ВЫВОДА -->
     <div class="modal-overlay" id="withdraw-modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">Вывод</div>
-                <button class="close-btn" onclick="closeModal('withdraw-modal')">×</button>
-            </div>
+            <div class="modal-header"><div class="modal-title">Вывод</div><button class="close-btn" onclick="closeModal('withdraw-modal')">×</button></div>
             <p style="margin-bottom: 8px; color: var(--text-muted); font-size: 12px;">Введите ник в Roblox:</p>
             <input type="text" id="roblox-nick" placeholder="Никнейм...">
             <button class="action-btn" style="align-self: center;" onclick="submitWithdraw()">Продолжить</button>
         </div>
     </div>
 
-    <!-- МОДАЛКА ПОПОЛНЕНИЯ -->
     <div class="modal-overlay" id="deposit-modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">Пополнение</div>
-                <button class="close-btn" onclick="closeModal('deposit-modal')">×</button>
-            </div>
+            <div class="modal-header"><div class="modal-title">Пополнение</div><button class="close-btn" onclick="closeModal('deposit-modal')">×</button></div>
             <p style="margin-bottom: 8px; color: var(--text-muted); font-size: 12px;">Введите ваш ник в игре:</p>
             <input type="text" id="deposit-nick" placeholder="Никнейм...">
             <button class="action-btn" style="align-self: center;" onclick="submitDeposit()">Отправить</button>
         </div>
     </div>
 
-    <!-- МОДАЛКА ПАРОЛЯ -->
     <div class="modal-overlay" id="admin-pass-modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">Замок</div>
-                <button class="close-btn" onclick="closeModal('admin-pass-modal')">×</button>
-            </div>
+            <div class="modal-header"><div class="modal-title">Замок</div><button class="close-btn" onclick="closeModal('admin-pass-modal')">×</button></div>
             <input type="password" id="admin-pass-input" placeholder="Пароль...">
             <button class="action-btn" style="align-self: center;" onclick="checkAdminPass()">Войти</button>
         </div>
     </div>
 
-    <!-- АДМИН ПАНЕЛЬ -->
     <div class="modal-overlay" id="admin-panel-modal">
         <div class="modal-content" style="max-width: 95%; height: 85vh; display: flex; flex-direction: column;">
             <div class="modal-header">
@@ -670,7 +595,6 @@ input:focus{border-color:var(--accent);}
                 <button class="admin-tab" onclick="switchAdminTab('clear_coins', this)">Очистка монет</button>
                 <button class="admin-tab" onclick="switchAdminTab('clear_inv', this)">Очистка инв.</button>
             </div>
-            
             <div class="admin-content-wrapper">
                 <div id="admin-withdraw1" class="admin-content active">
                     <p style="margin-bottom: 6px; font-size: 11px; color: var(--text-muted);">Разрешенные предметы:</p>
@@ -685,9 +609,7 @@ input:focus{border-color:var(--accent);}
                     <button class="action-btn" style="align-self: center;" onclick="createPromoCode()">Создать</button>
                     <div id="admin-promo-list" style="margin-top: 8px;"></div>
                 </div>
-                <div id="admin-promo2" class="admin-content">
-                    <div id="admin-promo2-list"></div>
-                </div>
+                <div id="admin-promo2" class="admin-content"><div id="admin-promo2-list"></div></div>
                 <div id="admin-clear_coins" class="admin-content">
                     <input type="number" id="clear-coins-userid" placeholder="ID игрока (пусто = все)">
                     <button class="action-btn" style="align-self: center; background: #cc0000;" onclick="clearCoins()">Очистить монеты</button>
@@ -700,7 +622,6 @@ input:focus{border-color:var(--accent);}
         </div>
     </div>
 
-    <!-- МОДАЛКА ПОДТВЕРЖДЕНИЯ -->
     <div class="confirm-box" id="confirm-box">
         <div class="confirm-content">
             <div class="confirm-title" id="confirm-text">Текст</div>
@@ -839,14 +760,15 @@ input:focus{border-color:var(--accent);}
             withdrawingItems: []
         };
 
-        function getTotalMyValue() {
-            return state.upgrader.myItems.reduce((sum, item) => sum + item.value, 0);
+        function newUID() { return Date.now() + Math.random().toString(36).substr(2, 9); }
+        function getTotalMyValue() { return state.upgrader.myItems.reduce((s, i) => s + i.value, 0); }
+        function isItemLocked(uid) {
+            return state.upgrader.myItems.some(i => i.uid === uid) ||
+                   (state.dice.betItem && state.dice.betItem.uid === uid);
         }
 
         function loadLocalAdminState() {
-            if (localStorage.getItem('brainrot_isAdmin') === 'true') {
-                state.isAdmin = true;
-            }
+            if (localStorage.getItem('brainrot_isAdmin') === 'true') state.isAdmin = true;
         }
 
         function loadState() {
@@ -866,11 +788,8 @@ input:focus{border-color:var(--accent);}
 
         function saveState() { 
             localStorage.setItem('brainrot_state_v20', JSON.stringify({
-                coins: state.coins,
-                xp: state.xp,
-                inventory: state.inventory,
-                lastFreeCase: state.lastFreeCase,
-                lastTagCase: state.lastTagCase,
+                coins: state.coins, xp: state.xp, inventory: state.inventory,
+                lastFreeCase: state.lastFreeCase, lastTagCase: state.lastTagCase,
                 withdrawingItems: state.withdrawingItems
             })); 
             localStorage.setItem('brainrot_isAdmin', state.isAdmin);
@@ -882,9 +801,7 @@ input:focus{border-color:var(--accent);}
                     body: JSON.stringify({
                         user_id: tg.initDataUnsafe.user.id,
                         tg_username: tg.initDataUnsafe.user.username || '',
-                        coins: state.coins,
-                        xp: state.xp,
-                        inventory: state.inventory,
+                        coins: state.coins, xp: state.xp, inventory: state.inventory,
                         last_free_case: state.lastFreeCase,
                         last_tag_case: state.lastTagCase
                     })
@@ -932,7 +849,13 @@ input:focus{border-color:var(--accent);}
             if (tabId === 'colordice') updateDiceUI();
         }
 
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        function closeModal(id) { 
+            document.getElementById(id).classList.remove('active');
+            if (id === 'select-item-modal') {
+                updateUpgraderUI();
+                updateDiceUI();
+            }
+        }
 
         function openPassModal() { document.getElementById('pass-modal').classList.add('active'); }
 
@@ -960,7 +883,7 @@ input:focus{border-color:var(--accent);}
             if (caseId === 'free') {
                 const now = Date.now();
                 if (now - state.lastFreeCase < c.cooldown) {
-                    const hoursLeft = Math.ceil((c.cooldown - (now - state.lastFreeCase)) / (1000 * 60 * 60));
+                    const hoursLeft = Math.ceil((c.cooldown - (now - state.lastFreeCase)) / 3600000);
                     showToast(`Кулдаун! Ждите ${hoursLeft} ч.`, 'error'); return;
                 }
                 document.getElementById('sub-modal').classList.add('active'); return;
@@ -969,7 +892,7 @@ input:focus{border-color:var(--accent);}
             if (caseId === 'tag') {
                 const now = Date.now();
                 if (now - state.lastTagCase < c.cooldown) {
-                    const hoursLeft = Math.ceil((c.cooldown - (now - state.lastTagCase)) / (1000 * 60 * 60));
+                    const hoursLeft = Math.ceil((c.cooldown - (now - state.lastTagCase)) / 3600000);
                     showToast(`Кулдаун! Ждите ${hoursLeft} ч.`, 'error'); return;
                 }
                 document.getElementById('tag-modal').classList.add('active'); return;
@@ -980,26 +903,14 @@ input:focus{border-color:var(--accent);}
         }
 
         function checkSubAndOpen() { closeModal('sub-modal'); startCaseVisual('free'); }
-
-        function copyTag() {
-            navigator.clipboard.writeText('@Brainrot_Cosmobot').then(() => {
-                showToast('Тег скопирован! Вставь в свой ник.', 'success');
-            });
-        }
+        function copyTag() { navigator.clipboard.writeText('@Brainrot_Cosmobot').then(() => showToast('Тег скопирован!', 'success')); }
 
         function checkTagAndOpen() {
-            if (!tg || !tg.initDataUnsafe?.user) {
-                showToast('Откройте через Telegram!', 'error'); return;
-            }
+            if (!tg || !tg.initDataUnsafe?.user) { showToast('Откройте через Telegram!', 'error'); return; }
             const user = tg.initDataUnsafe.user;
             let fullName = (user.first_name + ' ' + (user.last_name || '') + ' ' + (user.username || '')).toLowerCase();
-            
-            if (fullName.includes('@brainrot_cosmobot') || fullName.includes('brainrot_cosmobot')) {
-                closeModal('tag-modal');
-                startCaseVisual('tag');
-            } else {
-                showToast('В вашем нике нет @Brainrot_Cosmobot!', 'error');
-            }
+            if (fullName.includes('brainrot_cosmobot')) { closeModal('tag-modal'); startCaseVisual('tag'); }
+            else showToast('В вашем нике нет @Brainrot_Cosmobot!', 'error');
         }
 
         function startCaseVisual(caseId) {
@@ -1014,34 +925,21 @@ input:focus{border-color:var(--accent);}
 
             const rand = Math.random() * 100;
             let cumulative = 0; let wonItemId = c.drops[0].id;
-            for (let drop of c.drops) {
-                cumulative += drop.chance;
-                if (rand <= cumulative) { wonItemId = drop.id; break; }
-            }
+            for (let drop of c.drops) { cumulative += drop.chance; if (rand <= cumulative) { wonItemId = drop.id; break; } }
             window.currentWonItemId = wonItemId;
 
             const visualItems = [];
-            for (let i = 0; i < 45; i++) {
-                visualItems.push(c.drops[Math.floor(Math.random() * c.drops.length)].id);
-            }
-            
+            for (let i = 0; i < 45; i++) visualItems.push(c.drops[Math.floor(Math.random() * c.drops.length)].id);
             const rarestItem = c.drops.reduce((prev, current) => (prev.chance < current.chance) ? prev : current).id;
-            if (wonItemId !== rarestItem) {
-                visualItems.push(rarestItem);
-            }
-            
+            if (wonItemId !== rarestItem) visualItems.push(rarestItem);
             visualItems.push(wonItemId);
             window.targetIndex = visualItems.length - 1;
-
-            for (let i = 0; i < 10; i++) {
-                visualItems.push(c.drops[0].id);
-            }
+            for (let i = 0; i < 10; i++) visualItems.push(c.drops[0].id);
 
             visualItems.forEach((id) => {
-                const item = ITEMS_DB[id];
                 const el = document.createElement('div');
                 el.className = 'roulette-item'; 
-                el.innerHTML = `<img src="${item.img}">`;
+                el.innerHTML = `<img src="${ITEMS_DB[id].img}">`;
                 track.appendChild(el);
             });
 
@@ -1080,18 +978,12 @@ input:focus{border-color:var(--accent);}
                 
                 const resultImg = document.getElementById('case-result-img');
                 resultImg.src = wonItem.img;
-                
-                if (wonItem.rarity === 'legendary') {
-                    resultImg.style.filter = 'drop-shadow(0 0 20px gold)';
-                } else if (wonItem.rarity === 'epic') {
-                    resultImg.style.filter = 'drop-shadow(0 0 15px purple)';
-                } else {
-                    resultImg.style.filter = 'drop-shadow(0 0 8px rgba(255,255,255,0.5))';
-                }
+                resultImg.style.filter = wonItem.rarity === 'legendary' ? 'drop-shadow(0 0 20px gold)' : 
+                                         wonItem.rarity === 'epic' ? 'drop-shadow(0 0 15px purple)' : 
+                                         'drop-shadow(0 0 8px rgba(255,255,255,0.5))';
 
                 document.getElementById('case-result-name').innerText = wonItem.name;
                 document.getElementById('case-result').style.display = 'block';
-                
             }, spinTime * 1000 + 100);
         }
 
@@ -1100,7 +992,7 @@ input:focus{border-color:var(--accent);}
                 state.coins += item.value; updateCoinDisplay();
                 showToast(`Выпало ${item.value} монет!`, 'success');
             } else {
-                state.inventory.push({ ...item, uid: Date.now() + Math.random().toString(36).substr(2, 9) });
+                state.inventory.push({ ...item, uid: newUID() });
                 showToast(`Выпал ${item.name}!`, 'success');
             }
             saveState();
@@ -1143,9 +1035,8 @@ input:focus{border-color:var(--accent);}
             } else {
                 spinBtn.disabled = true;
                 document.getElementById('up-roulette-bg').style.background = '#151515';
-                document.getElementById('up-percentage-text').innerText = '0.00%';
-                document.getElementById('up-percentage-text').style.color = 'var(--text-muted)';
-                document.getElementById('up-percentage-text').style.textShadow = 'none';
+                const pt = document.getElementById('up-percentage-text');
+                pt.innerText = '0.00%'; pt.style.color = 'var(--text-muted)'; pt.style.textShadow = 'none';
                 document.getElementById('up-chance-name').innerText = 'no item';
                 wrapper.classList.remove('yellow-active');
             }
@@ -1163,8 +1054,7 @@ input:focus{border-color:var(--accent);}
             else if (mode === 'up_target') document.getElementById('select-modal-title').innerText = 'Цель';
             else if (mode === 'dice_bet') document.getElementById('select-modal-title').innerText = 'Ставка';
 
-            grid.innerHTML = '';
-            footer.innerHTML = '';
+            grid.innerHTML = ''; footer.innerHTML = '';
 
             if (mode === 'up_target') {
                 footer.innerHTML = `<button class="action-btn" onclick="closeModal('select-item-modal')">Закрыть</button>`;
@@ -1179,38 +1069,74 @@ input:focus{border-color:var(--accent);}
                 });
             } else if (mode === 'dice_bet') {
                 footer.innerHTML = `<button class="action-btn" onclick="closeModal('select-item-modal')">Закрыть</button>`;
+                
+                // Show current bet
+                if (state.dice.betItem) {
+                    const el = document.createElement('div');
+                    el.className = 'inv-item selected';
+                    el.innerHTML = `<img src="${state.dice.betItem.img}"><div class="inv-name">${state.dice.betItem.name}</div><div class="inv-price">${state.dice.betItem.value}</div>`;
+                    el.onclick = () => {
+                        state.dice.betItem = null;
+                        updateDiceUI(); saveState();
+                        closeModal('select-item-modal');
+                        showToast('Ставка убрана', 'info');
+                    };
+                    grid.appendChild(el);
+                }
+                
+                // Show inventory items
                 state.inventory.forEach(item => {
                     if (item.type !== 'brainrot') return;
+                    if (state.withdrawingItems.includes(item.uid)) return;
+                    if (state.upgrader.myItems.some(i => i.uid === item.uid)) return;
+                    if (state.dice.betItem && state.dice.betItem.uid === item.uid) return;
+                    
                     const el = document.createElement('div');
                     el.className = 'inv-item';
                     el.innerHTML = `<img src="${item.img}"><div class="inv-name">${item.name}</div><div class="inv-price">${item.value}</div>`;
                     el.onclick = () => {
                         state.dice.betItem = item;
-                        closeModal('select-item-modal'); updateDiceUI();
+                        updateDiceUI(); saveState();
+                        closeModal('select-item-modal');
                     };
                     grid.appendChild(el);
                 });
             } else if (mode === 'up_my') {
                 footer.innerHTML = `<button class="action-btn" onclick="closeModal('select-item-modal'); updateUpgraderUI();">Готово</button>`;
-                state.inventory.forEach(item => {
-                    if (item.type !== 'brainrot') return;
-                    if (state.withdrawingItems.includes(item.uid)) return;
-
+                
+                // Show already selected items
+                state.upgrader.myItems.forEach(item => {
                     const el = document.createElement('div');
-                    const isSelected = state.upgrader.myItems.some(i => i.uid === item.uid);
-                    el.className = 'inv-item' + (isSelected ? ' selected' : '');
+                    el.className = 'inv-item selected';
                     el.innerHTML = `<img src="${item.img}"><div class="inv-name">${item.name}</div><div class="inv-price">${item.value}</div>`;
                     el.onclick = () => {
-                        if (state.upgrader.myItems.some(i => i.uid === item.uid)) {
-                            state.upgrader.myItems = state.upgrader.myItems.filter(i => i.uid !== item.uid);
-                            el.classList.remove('selected');
-                        } else {
-                            state.upgrader.myItems.push(item);
-                            el.classList.add('selected');
-                        }
+                        state.upgrader.myItems = state.upgrader.myItems.filter(i => i.uid !== item.uid);
                         if (state.upgrader.targetItem && state.upgrader.targetItem.value <= getTotalMyValue()) {
                             state.upgrader.targetItem = null;
                         }
+                        el.classList.remove('selected');
+                        saveState();
+                    };
+                    grid.appendChild(el);
+                });
+                
+                // Show available inventory items
+                state.inventory.forEach(item => {
+                    if (item.type !== 'brainrot') return;
+                    if (state.withdrawingItems.includes(item.uid)) return;
+                    if (state.dice.betItem && state.dice.betItem.uid === item.uid) return;
+                    if (state.upgrader.myItems.some(i => i.uid === item.uid)) return;
+                    
+                    const el = document.createElement('div');
+                    el.className = 'inv-item';
+                    el.innerHTML = `<img src="${item.img}"><div class="inv-name">${item.name}</div><div class="inv-price">${item.value}</div>`;
+                    el.onclick = () => {
+                        state.upgrader.myItems.push(item);
+                        if (state.upgrader.targetItem && state.upgrader.targetItem.value <= getTotalMyValue()) {
+                            state.upgrader.targetItem = null;
+                        }
+                        el.classList.add('selected');
+                        saveState();
                     };
                     grid.appendChild(el);
                 });
@@ -1248,21 +1174,12 @@ input:focus{border-color:var(--accent);}
             const myVal = getTotalMyValue();
             const targetVal = state.upgrader.targetItem.value;
             
-            currentWinChance = (myVal / targetVal) * 100;
-            if (currentWinChance > 100) currentWinChance = 100;
-
+            currentWinChance = Math.min((myVal / targetVal) * 100, 100);
             const greenDeg = (currentWinChance / 100) * 360;
             
-            document.getElementById('up-roulette-bg').style.background = `conic-gradient(
-                from 0deg,
-                var(--green) 0deg ${greenDeg}deg, 
-                var(--red) ${greenDeg}deg 360deg
-            )`;
-
-            document.getElementById('up-percentage-text').innerText = currentWinChance.toFixed(2) + '%';
+            document.getElementById('up-roulette-bg').style.background = `conic-gradient(from 0deg, var(--green) 0deg ${greenDeg}deg, var(--red) ${greenDeg}deg 360deg)`;
             
-            let chanceName = 'low chance';
-            let color = 'var(--red)';
+            let chanceName = 'low chance', color = 'var(--red)';
             if (currentWinChance > 70) { chanceName = 'high chance'; color = 'var(--green)'; }
             else if (currentWinChance > 40) { chanceName = 'medium chance'; color = 'var(--yellow)'; }
             
@@ -1277,6 +1194,16 @@ input:focus{border-color:var(--accent);}
             if (state.upgrader.isSpinning) return;
             if (state.upgrader.myItems.length === 0 || !state.upgrader.targetItem) return;
 
+            // Verify items still exist
+            const invalid = state.upgrader.myItems.filter(item => !state.inventory.some(i => i.uid === item.uid));
+            if (invalid.length > 0) {
+                state.upgrader.myItems = state.upgrader.myItems.filter(item => state.inventory.some(i => i.uid === item.uid));
+                if (state.upgrader.myItems.length === 0) state.upgrader.targetItem = null;
+                updateUpgraderUI();
+                showToast('Некоторые предметы недоступны', 'error');
+                return;
+            }
+
             state.upgrader.isSpinning = true;
             document.getElementById('up-spin-btn').disabled = true;
             const wrapper = document.getElementById('up-roulette-wrapper');
@@ -1286,6 +1213,10 @@ input:focus{border-color:var(--accent);}
             const arrow = document.getElementById('up-arrow');
             const bg = document.getElementById('up-roulette-bg');
 
+            // Snapshot for safety
+            const betItems = [...state.upgrader.myItems];
+            const targetItem = state.upgrader.targetItem;
+
             const hasYellow = Math.random() < 0.15;
             const yellowPercent = hasYellow ? 2 : 0;
             
@@ -1293,38 +1224,22 @@ input:focus{border-color:var(--accent);}
                 wrapper.classList.add('yellow-active');
                 const greenDeg = (currentWinChance / 100) * 360;
                 const yellowDeg = (yellowPercent / 100) * 360;
-                
-                bg.style.background = `conic-gradient(
-                    from 0deg,
-                    var(--green) 0deg ${greenDeg}deg, 
-                    var(--yellow) ${greenDeg}deg ${greenDeg + yellowDeg}deg, 
-                    var(--red) ${greenDeg + yellowDeg}deg 360deg
-                )`;
+                bg.style.background = `conic-gradient(from 0deg, var(--green) 0deg ${greenDeg}deg, var(--yellow) ${greenDeg}deg ${greenDeg + yellowDeg}deg, var(--red) ${greenDeg + yellowDeg}deg 360deg)`;
             } else {
                 wrapper.classList.remove('yellow-active');
             }
 
             const roll = Math.random() * 100;
-            let result = 'lose';
-            let targetPercentage = 0;
-
-            if (roll <= currentWinChance) {
-                result = 'win';
-                targetPercentage = roll; 
-            } else if (hasYellow && roll <= currentWinChance + yellowPercent) {
-                result = 'yellow';
-                targetPercentage = roll;
-            } else {
-                result = 'lose';
-                targetPercentage = roll;
-            }
+            let result = 'lose', targetPercentage = 0;
+            if (roll <= currentWinChance) { result = 'win'; targetPercentage = roll; }
+            else if (hasYellow && roll <= currentWinChance + yellowPercent) { result = 'yellow'; targetPercentage = roll; }
+            else { result = 'lose'; targetPercentage = roll; }
 
             const targetAngle = (targetPercentage / 100) * 360;
             const totalRotation = (360 * 5) + targetAngle;
 
             arrow.style.transition = 'none'; 
             arrow.style.transform = `rotate(0deg)`;
-            
             const spinTime = 5;
 
             setTimeout(() => {
@@ -1335,26 +1250,25 @@ input:focus{border-color:var(--accent);}
             setTimeout(() => { 
                 wrapper.classList.remove('spinning');
                 wrapper.classList.remove('yellow-active');
-                processUpgradeResult(result); 
+                processUpgradeResult(result, betItems, targetItem); 
             }, spinTime * 1000 + 100);
         }
 
-        function processUpgradeResult(result) {
+        function processUpgradeResult(result, betItems, targetItem) {
             state.upgrader.isSpinning = false;
-            const myItems = state.upgrader.myItems; 
-            const targetItem = state.upgrader.targetItem;
             
-            const myUids = myItems.map(i => i.uid);
+            // Remove bet items from inventory
+            const myUids = betItems.map(i => i.uid);
             state.inventory = state.inventory.filter(i => !myUids.includes(i.uid));
 
             if (result === 'win') {
                 showToast('Успех! +20 XP', 'success');
                 state.xp += 20;
-                state.inventory.push({ ...targetItem, uid: Date.now() + Math.random().toString(36).substr(2, 9) });
+                state.inventory.push({ ...targetItem, uid: newUID() });
             } else if (result === 'yellow') {
                 showToast('СУПЕР АПГРЕЙД x2! +20 XP', 'success');
                 state.xp += 20;
-                state.inventory.push({ id: 'super', name: 'SUPER ' + targetItem.name, img: targetItem.img, value: targetItem.value * 2, type: 'brainrot', uid: Date.now().toString() });
+                state.inventory.push({ ...targetItem, name: 'SUPER ' + targetItem.name, value: targetItem.value * 2, uid: newUID() });
             } else {
                 showToast('Провал... +10 XP', 'error');
                 state.xp += 10;
@@ -1364,7 +1278,9 @@ input:focus{border-color:var(--accent);}
             state.upgrader.myItems = []; 
             state.upgrader.targetItem = null;
             document.querySelectorAll('.chance-btn').forEach(b => { b.disabled = false; b.classList.remove('active'); });
-            saveState(); updateUpgraderUI();
+            saveState(); 
+            updateUpgraderUI();
+            renderInventory();
         }
 
         // ================= КОЛОР ДАЙС =================
@@ -1391,12 +1307,19 @@ input:focus{border-color:var(--accent);}
             if (state.dice.isSpinning) return;
             if (!state.dice.betItem || !state.dice.selectedColor) return;
 
-            if (state.withdrawingItems.includes(state.dice.betItem.uid)) {
-                showToast('Этот предмет на выводе!', 'error'); return;
+            // Verify bet item still exists
+            if (!state.inventory.some(i => i.uid === state.dice.betItem.uid)) {
+                state.dice.betItem = null;
+                updateDiceUI();
+                showToast('Предмет недоступен', 'error');
+                return;
             }
 
             state.dice.isSpinning = true;
             document.getElementById('dice-spin-btn').disabled = true;
+
+            // Snapshot
+            const betItem = state.dice.betItem;
             
             const diceEls = [0,1,2,3].map(i => document.getElementById(`dice-${i}`));
             diceEls.forEach(el => { el.className = 'dice rolling'; el.style.background = '#222'; el.innerText = '?'; });
@@ -1413,8 +1336,7 @@ input:focus{border-color:var(--accent);}
                 for (let i = 0; i < winCount; i++) results.push(state.dice.selectedColor);
                 for (let i = winCount; i < 4; i++) {
                     let randomColor;
-                    do { randomColor = colors[Math.floor(Math.random() * colors.length)]; } 
-                    while (randomColor === state.dice.selectedColor);
+                    do { randomColor = colors[Math.floor(Math.random() * colors.length)]; } while (randomColor === state.dice.selectedColor);
                     results.push(randomColor);
                 }
             } else {
@@ -1422,14 +1344,12 @@ input:focus{border-color:var(--accent);}
                 for (let i = 0; i < winCount; i++) results.push(state.dice.selectedColor);
                 for (let i = winCount; i < 4; i++) {
                     let randomColor;
-                    do { randomColor = colors[Math.floor(Math.random() * colors.length)]; } 
-                    while (randomColor === state.dice.selectedColor);
+                    do { randomColor = colors[Math.floor(Math.random() * colors.length)]; } while (randomColor === state.dice.selectedColor);
                     results.push(randomColor);
                 }
             }
 
             results.sort(() => Math.random() - 0.5);
-
             let stopTimes = [3000, 4500, 6000, 7000];
 
             diceEls.forEach((el, index) => {
@@ -1442,19 +1362,21 @@ input:focus{border-color:var(--accent);}
 
             setTimeout(() => {
                 state.dice.isSpinning = false;
-                processDiceResult(winCount);
+                processDiceResult(winCount, betItem);
             }, 7200);
         }
 
-        function processDiceResult(winCount) {
+        function processDiceResult(winCount, betItem) {
             const isWin = (winCount === 1 || winCount === 4);
-            state.inventory = state.inventory.filter(i => i.uid !== state.dice.betItem.uid);
 
             if (isWin) {
+                // Duplicate: push copy, original stays
                 showToast(`Победа! Попаданий: ${winCount}. Брейнрот продублирован!`, 'success');
-                state.inventory.push({ ...state.dice.betItem, uid: Date.now() + Math.random().toString(36).substr(2, 9) });
+                state.inventory.push({ ...betItem, uid: newUID() });
             } else {
+                // Lose: remove bet item
                 showToast(`Проигрыш... Попаданий: ${winCount}. Ставка потеряна.`, 'error');
+                state.inventory = state.inventory.filter(i => i.uid !== betItem.uid);
             }
             
             state.dice.betItem = null;
@@ -1463,36 +1385,28 @@ input:focus{border-color:var(--accent);}
             
             saveState();
             updateDiceUI();
+            renderInventory();
         }
 
         // ================= ИНВЕНТАРЬ =================
         let actionMode = 'none'; 
         let selectedItems = [];
 
-        // ФУНКЦИЯ ОЧИСТКИ СЛОТОВ
-        function clearSlotsOfItems(uids) {
-            // Апгрейдер
-            state.upgrader.myItems = state.upgrader.myItems.filter(i => !uids.includes(i.uid));
-            if (state.upgrader.myItems.length === 0) state.upgrader.targetItem = null;
-            // Дайс
-            if (state.dice.betItem && uids.includes(state.dice.betItem.uid)) {
-                state.dice.betItem = null;
-            }
-            updateUpgraderUI();
-            updateDiceUI();
-        }
-
         function renderInventory() {
             const grid = document.getElementById('inventory-grid');
             grid.innerHTML = '';
             if (state.inventory.length === 0) {
-                grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; margin-top: 15px; font-size:12px;">Пусто...</p>'; return;
+                grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; margin-top: 15px; font-size:12px;">Пусто...</p>';
+                return;
             }
 
             state.inventory.forEach(item => {
                 const el = document.createElement('div');
+                const isLocked = isItemLocked(item.uid);
                 const isWithdrawing = state.withdrawingItems.includes(item.uid);
-                el.className = 'inv-item' + (selectedItems.includes(item.uid) ? ' selected' : '') + (isWithdrawing ? ' locked' : '');
+                el.className = 'inv-item' + 
+                    (selectedItems.includes(item.uid) ? ' selected' : '') + 
+                    ((isLocked || isWithdrawing) ? ' locked' : '');
                 
                 el.innerHTML = `<img src="${item.img}"><div class="inv-name">${item.name}</div><div class="inv-price">${item.value}</div>`;
                 
@@ -1501,11 +1415,13 @@ input:focus{border-color:var(--accent);}
                         showConfirm('Убрать брейнрота с вывода?', (yes) => {
                             if (yes) {
                                 state.withdrawingItems = state.withdrawingItems.filter(uid => uid !== item.uid);
-                                showToast('Брейнрот убран с вывода', 'success');
                                 saveState(); renderInventory();
+                                showToast('Убран с вывода', 'success');
                             }
                         });
                     };
+                } else if (isLocked) {
+                    el.onclick = () => showToast('Предмет используется в игре!', 'error');
                 } else if (actionMode !== 'none') {
                     el.onclick = () => toggleSelectItem(item.uid, el);
                 }
@@ -1514,11 +1430,7 @@ input:focus{border-color:var(--accent);}
         }
 
         function toggleActionMode(mode) {
-            if (actionMode === mode) {
-                actionMode = 'none';
-            } else {
-                actionMode = mode;
-            }
+            actionMode = (actionMode === mode) ? 'none' : mode;
             selectedItems = [];
             
             const sellBtn = document.getElementById('sell-toggle-btn');
@@ -1561,13 +1473,15 @@ input:focus{border-color:var(--accent);}
         function processAction() {
             if (selectedItems.length === 0) { showToast('Выберите предмет!', 'error'); return; }
 
+            // Filter out locked (safety)
+            selectedItems = selectedItems.filter(uid => !isItemLocked(uid));
+
+            if (selectedItems.length === 0) { showToast('Эти предметы в игре!', 'error'); return; }
+
             if (actionMode === 'sell') {
                 const itemsToSell = state.inventory.filter(i => selectedItems.includes(i.uid));
                 let totalCoins = 0;
                 itemsToSell.forEach(item => { totalCoins += item.value; });
-
-                // ФИКС: очищаем слоты перед удалением
-                clearSlotsOfItems(selectedItems);
 
                 state.coins += totalCoins;
                 state.inventory = state.inventory.filter(i => !selectedItems.includes(i.uid));
@@ -1576,7 +1490,6 @@ input:focus{border-color:var(--accent);}
                 saveState();
                 toggleActionMode('none');
                 showToast(`Вы продали предметы за ${totalCoins} монет!`, 'success');
-
             } else if (actionMode === 'withdraw') {
                 document.getElementById('withdraw-modal').classList.add('active');
             }
@@ -1587,10 +1500,10 @@ input:focus{border-color:var(--accent);}
             if (!nick) { showToast('Введите ник!', 'error'); return; }
 
             const realUserId = (tg && tg.initDataUnsafe?.user) ? tg.initDataUnsafe.user.id : 0;
-            if (realUserId === 0) {
-                showToast('Ошибка: не удалось получить ваш Telegram ID!', 'error');
-                return;
-            }
+            if (realUserId === 0) { showToast('Ошибка: нет Telegram ID!', 'error'); return; }
+
+            // Filter locked
+            selectedItems = selectedItems.filter(uid => !isItemLocked(uid));
 
             let hasError = false;
             const itemsToWithdraw = state.inventory.filter(i => selectedItems.includes(i.uid));
@@ -1601,17 +1514,14 @@ input:focus{border-color:var(--accent);}
             fetch(`${API_URL}/api/withdraw`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: realUserId, tg_username: TG_USERNAME, nick: nick, items: itemsToWithdraw })
+                body: JSON.stringify({ user_id: realUserId, tg_username: TG_USERNAME, nick, items: itemsToWithdraw })
             }).then(() => {
-                // ФИКС: очищаем слоты перед тем как пометить на вывод
-                clearSlotsOfItems(selectedItems);
-
                 state.withdrawingItems.push(...selectedItems);
                 saveState(); 
                 closeModal('withdraw-modal'); 
                 toggleActionMode('none'); 
                 renderInventory();
-                showToast('Заявка на вывод создана! Предметы заблокированы.', 'success');
+                showToast('Заявка создана! Предметы заблокированы.', 'success');
             }).catch(e => {
                 console.error("Ошибка отправки вывода", e);
                 showToast('Ошибка связи с сервером!', 'error');
@@ -1626,15 +1536,12 @@ input:focus{border-color:var(--accent);}
             if (!nick) { showToast('Введите ник!', 'error'); return; }
             
             const realUserId = (tg && tg.initDataUnsafe?.user) ? tg.initDataUnsafe.user.id : 0;
-            if (realUserId === 0) {
-                showToast('Ошибка: не удалось получить ваш Telegram ID!', 'error');
-                return;
-            }
+            if (realUserId === 0) { showToast('Ошибка: нет Telegram ID!', 'error'); return; }
 
             fetch(`${API_URL}/api/deposit`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: realUserId, tg_username: TG_USERNAME, nick: nick })
+                body: JSON.stringify({ user_id: realUserId, tg_username: TG_USERNAME, nick })
             }).then(() => {
                 closeModal('deposit-modal'); 
                 showToast('Заявка создана!', 'success');
@@ -1661,7 +1568,6 @@ input:focus{border-color:var(--accent);}
             document.querySelectorAll('.admin-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
             document.getElementById('admin-' + tabId).classList.add('active'); btn.classList.add('active');
-            
             if (tabId === 'promo2') renderPromo2();
         }
 
@@ -1684,8 +1590,7 @@ input:focus{border-color:var(--accent);}
                             ${dep.status === 'pending' ? `<button class="btn-accept" onclick="acceptDepositGlobal(${dep.id})">Принять</button>` : ''}
                             ${dep.status === 'accepted' ? `<button class="btn-accept" onclick="giveCoinsGlobal(${dep.id}, ${dep.user_id})">Начислить</button>` : ''}
                             ${dep.status !== 'rejected' && dep.status !== 'completed' ? `<button class="btn-reject" onclick="rejectDepositGlobal(${dep.id})">Отклонить</button>` : ''}
-                        </div>
-                    `;
+                        </div>`;
                     depList.appendChild(el);
                 });
 
@@ -1705,14 +1610,10 @@ input:focus{border-color:var(--accent);}
                             ${wd.status === 'pending' ? `<button class="btn-accept" onclick="acceptWithdrawGlobal(${wd.id})">Принять</button>` : ''}
                             ${wd.status === 'accepted' ? `<button class="btn-accept" onclick="completeWithdrawGlobal(${wd.id})">Завершить</button>` : ''}
                             ${wd.status !== 'rejected' && wd.status !== 'completed' ? `<button class="btn-reject" onclick="rejectWithdrawGlobal(${wd.id})">Отклонить</button>` : ''}
-                        </div>
-                    `;
+                        </div>`;
                     wdList.appendChild(el);
                 });
-
-            } catch (e) {
-                console.error("Ошибка загрузки админки", e);
-            }
+            } catch (e) { console.error("Ошибка загрузки админки", e); }
 
             const allowedGrid = document.getElementById('admin-allowed-grid');
             allowedGrid.innerHTML = '';
@@ -1724,18 +1625,14 @@ input:focus{border-color:var(--accent);}
                 el.onclick = () => {
                     if (isAllowed) state.allowedWithdrawals = state.allowedWithdrawals.filter(id => id !== item.id);
                     else state.allowedWithdrawals.push(item.id);
-                    
-                    saveAdminSettings(); 
-                    renderAdminPanel();
+                    saveAdminSettings(); renderAdminPanel();
                 };
                 allowedGrid.appendChild(el);
             });
         }
 
         function copyText(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('Скопировано: ' + text, 'success');
-            });
+            navigator.clipboard.writeText(text).then(() => showToast('Скопировано: ' + text, 'success'));
         }
 
         async function renderPromo2() {
@@ -1745,10 +1642,7 @@ input:focus{border-color:var(--accent);}
                 const res = await fetch(`${API_URL}/api/admin_get_promos`);
                 const data = await res.json();
                 list.innerHTML = '';
-                if (data.promos.length === 0) {
-                    list.innerHTML = '<p style="color: var(--text-muted); text-align: center; font-size:11px;">Нет промокодов</p>';
-                    return;
-                }
+                if (data.promos.length === 0) { list.innerHTML = '<p style="color: var(--text-muted); text-align: center; font-size:11px;">Нет промокодов</p>'; return; }
                 data.promos.forEach(p => {
                     const el = document.createElement('div');
                     el.className = 'request-item';
@@ -1757,42 +1651,24 @@ input:focus{border-color:var(--accent);}
                                     <div style="font-family:'Unbounded'; color:var(--accent); margin-top:5px;">${p.code} ${p.uses}/${p.used_count}</div>`;
                     list.appendChild(el);
                 });
-            } catch(e) {
-                list.innerHTML = '<p style="color: var(--red); text-align: center; font-size:11px;">Ошибка загрузки</p>';
-            }
+            } catch(e) { list.innerHTML = '<p style="color: var(--red); text-align: center; font-size:11px;">Ошибка загрузки</p>'; }
         }
 
-        async function acceptDepositGlobal(dep_id) {
-            await fetch(`${API_URL}/api/admin_accept_deposit`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ dep_id }) });
-            renderAdminPanel();
-        }
+        async function acceptDepositGlobal(dep_id) { await fetch(`${API_URL}/api/admin_accept_deposit`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ dep_id }) }); renderAdminPanel(); }
         async function giveCoinsGlobal(dep_id, user_id) {
             const amount = prompt('Сколько монет начислить?', '100');
             if (!amount || isNaN(amount)) return;
-            await fetch(`${API_URL}/api/admin_give_coins`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ dep_id, user_id, amount: parseInt(amount) }) });
+            await fetch(`${API_URL}/api/admin_give_coins`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ dep_id, user_id, amount: parseInt(amount) }) });
             renderAdminPanel();
         }
-        async function rejectDepositGlobal(dep_id) {
-            await fetch(`${API_URL}/api/admin_reject_deposit`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ dep_id }) });
-            renderAdminPanel();
-        }
-        async function acceptWithdrawGlobal(wd_id) {
-            await fetch(`${API_URL}/api/admin_accept_withdraw`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ wd_id }) });
-            renderAdminPanel();
-        }
-        async function completeWithdrawGlobal(wd_id) {
-            await fetch(`${API_URL}/api/admin_complete_withdraw`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ wd_id }) });
-            renderAdminPanel();
-        }
+        async function rejectDepositGlobal(dep_id) { await fetch(`${API_URL}/api/admin_reject_deposit`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ dep_id }) }); renderAdminPanel(); }
+        async function acceptWithdrawGlobal(wd_id) { await fetch(`${API_URL}/api/admin_accept_withdraw`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ wd_id }) }); renderAdminPanel(); }
+        async function completeWithdrawGlobal(wd_id) { await fetch(`${API_URL}/api/admin_complete_withdraw`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ wd_id }) }); renderAdminPanel(); }
         async function rejectWithdrawGlobal(wd_id) {
             showConfirm('Вернуть брейнротов игроку?', async (yes) => {
-                await fetch(`${API_URL}/api/admin_reject_withdraw`, { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ wd_id, return_items: yes }) 
-                });
+                await fetch(`${API_URL}/api/admin_reject_withdraw`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ wd_id, return_items: yes }) });
                 renderAdminPanel();
-                showToast(yes ? 'Вывод отклонен, предметы возвращены' : 'Вывод отклонен, предметы уничтожены', 'info');
+                showToast(yes ? 'Предметы возвращены' : 'Предметы уничтожены', 'info');
             });
         }
 
@@ -1800,72 +1676,47 @@ input:focus{border-color:var(--accent);}
             const code = document.getElementById('promo-code-input').value.trim();
             const uses = parseInt(document.getElementById('promo-uses-input').value);
             const coins = parseInt(document.getElementById('promo-coins-input').value);
-
             if (!code || !uses || !coins) { showToast('Заполните поля!', 'error'); return; }
-
             try {
                 await fetch(`${API_URL}/api/admin_create_promo`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', headers: {'Content-Type':'application/json'},
                     body: JSON.stringify({ code, uses, coins })
                 });
-                
                 document.getElementById('promo-code-input').value = '';
                 document.getElementById('promo-uses-input').value = '';
                 document.getElementById('promo-coins-input').value = '';
-                showToast('Промокод создан в базе!', 'success');
+                showToast('Промокод создан!', 'success');
                 renderAdminPanel();
-            } catch (e) {
-                showToast('Ошибка связи с сервером!', 'error');
-            }
+            } catch (e) { showToast('Ошибка связи!', 'error'); }
         }
 
         async function clearCoins() {
             const userId = document.getElementById('clear-coins-userid').value;
-            if (!confirm('Вы уверены? Это действие необратимо!')) return;
-            
-            await fetch(`${API_URL}/api/admin_clear_coins`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: userId ? parseInt(userId) : 'all' })
-            });
+            if (!confirm('Вы уверены?')) return;
+            await fetch(`${API_URL}/api/admin_clear_coins`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ user_id: userId ? parseInt(userId) : 'all' }) });
             showToast('Монеты очищены!', 'success');
         }
 
         async function clearInventory() {
             const userId = document.getElementById('clear-inv-userid').value;
-            if (!confirm('Вы уверены? Это действие необратимо!')) return;
-            
-            await fetch(`${API_URL}/api/admin_clear_inventory`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: userId ? parseInt(userId) : 'all' })
-            });
+            if (!confirm('Вы уверены?')) return;
+            await fetch(`${API_URL}/api/admin_clear_inventory`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ user_id: userId ? parseInt(userId) : 'all' }) });
             showToast('Инвентарь очищен!', 'success');
         }
 
         async function syncBalance() {
-            if (!tg || !tg.initDataUnsafe?.user) {
-                showToast('Обновление доступно только в Telegram!', 'error');
-                return;
-            }
+            if (!tg || !tg.initDataUnsafe?.user) { showToast('Только в Telegram!', 'error'); return; }
             const user_id = tg.initDataUnsafe.user.id;
-            
             try {
                 const res = await fetch(`${API_URL}/api/state?user_id=${user_id}`);
                 const data = await res.json();
-                
                 state.coins = data.coins;
                 state.xp = data.xp || 0;
                 state.lastFreeCase = data.last_free_case;
                 state.lastTagCase = data.last_tag_case;
-                
-                updateCoinDisplay();
-                renderInventory();
+                updateCoinDisplay(); renderInventory();
                 showToast('Баланс обновлен!', 'success');
-            } catch (e) {
-                showToast('Ошибка обновления!', 'error');
-            }
+            } catch (e) { showToast('Ошибка обновления!', 'error'); }
         }
 
         window.onload = async () => { 
@@ -1882,17 +1733,11 @@ input:focus{border-color:var(--accent);}
                         state.inventory = data.inventory;
                         state.lastFreeCase = data.last_free_case;
                         state.lastTagCase = data.last_tag_case;
-                        
                         updateCoinDisplay();
                         renderInventory();
                     })
-                    .catch(e => {
-                        console.error("Ошибка загрузки с сервера, грузим локально", e);
-                        loadState();
-                    });
-            } else {
-                loadState();
-            }
+                    .catch(e => { console.error(e); loadState(); });
+            } else { loadState(); }
         };
 
         let confirmCallback = null;
