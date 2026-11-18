@@ -11,12 +11,10 @@ from flask_cors import CORS
 # ==========================================
 # НАСТРОЙКИ (токен берём из переменных окружения Render!)
 # ==========================================
-BOT_TOKEN = os.environ.get('BOT_TOKEN')
-ADMIN_ID = int(os.environ.get('ADMIN_ID', '8664148534'))
+BOT_TOKEN = '9147236041:AAGAm0N_FMiD-h6U8SlUooY2kEdJ8AZPJm8'
+ADMIN_ID = 8664148534
+WEBAPP_URL = 'https://braincosmo111.onrender.com'
 DATABASE_URL = os.environ.get('DATABASE_URL')
-
-if not BOT_TOKEN:
-    raise SystemExit("❌ Не задана переменная окружения BOT_TOKEN")
 
 bot = telebot.TeleBot(BOT_TOKEN)
 app = Flask(__name__, static_folder=None)
