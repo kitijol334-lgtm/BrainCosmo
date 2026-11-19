@@ -238,22 +238,6 @@ input[type="range"]::-moz-range-thumb {
 .deposit-choice .icon { font-size: 26px; }
 .deposit-choice .label { font-size: 11px; font-weight: 800; text-align: center; color: var(--text); }
 
-.maintenance-screen {
-    position: fixed; inset: 0; z-index: 99999;
-    background: radial-gradient(circle at 50% 40%, #1a1230, #06040d);
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    padding: 30px; text-align: center;
-}
-.maintenance-icon { font-size: 80px; margin-bottom: 20px; animation: spin 4s linear infinite; }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-.maintenance-title {
-    font-family: 'Unbounded', sans-serif; font-weight: 900; font-size: 24px;
-    background: linear-gradient(90deg, var(--accent), var(--primary), var(--pink));
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    margin-bottom: 15px;
-}
-.maintenance-text { color: var(--text-muted); font-size: 14px; line-height: 1.6; max-width: 320px; }
-
 .modal-overlay{position:fixed;inset:0;z-index:1000;display:flex;justify-content:center;align-items:center;opacity:0;pointer-events:none;transition:.3s;background:rgba(0,0,0,0.85);backdrop-filter:blur(5px);}
 .modal-overlay.active{opacity:1;pointer-events:all}
 .modal-content{position:relative;width:92%;max-width:340px;max-height:85vh;display:flex;flex-direction:column;padding:15px;border-radius:20px;border:1px solid transparent;background:linear-gradient(180deg,#171031,#08050f) padding-box,var(--edge) border-box;transform:scale(.9);transition:.3s;overflow-y:auto;}
@@ -669,26 +653,8 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
     </div>
 
     <script>
-        // ===== ОГРАНИЧЕНИЕ ДОСТУПА =====
-        const ALLOWED_USER_ID = 8664148534;
         const tg = window.Telegram?.WebApp;
-        
-        function showMaintenance() {
-            document.body.innerHTML = `
-                <div class="maintenance-screen">
-                    <div class="maintenance-icon">⚙️</div>
-                    <div class="maintenance-title">Технические работы</div>
-                    <div class="maintenance-text">Мы обновляем игру. Пожалуйста, зайдите позже.<br><br>Спасибо за понимание!</div>
-                </div>`;
-        }
-        
-        const isAllowed = tg && tg.initDataUnsafe?.user && tg.initDataUnsafe.user.id === ALLOWED_USER_ID;
-        
-        if (!isAllowed) {
-            showMaintenance();
-        } else {
-            window.addEventListener('load', initApp);
-        }
+        window.addEventListener('load', initApp);
 
         // ===== НАСТРОЙКИ ЗВУКА =====
         let soundSettings = { musicVolume: 30, sfxVolume: 70 };
@@ -1814,47 +1780,53 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             document.getElementById('img-case-admin').src = IMAGES.admincase;
             document.querySelectorAll('.coin-icon-img').forEach(img => img.src = IMAGES.coin);
 
-            tg.expand(); tg.ready();
-            const user = tg.initDataUnsafe.user;
-            TG_USER_ID = user.id;
-            TG_USERNAME = user.username || '';
-            document.getElementById('user-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '') + (user.username ? ' (@' + user.username + ')' : '');
-            if (user.photo_url) document.getElementById('user-avatar').innerHTML = `<img src="${user.photo_url}">`;
+            if (tg) {
+                tg.expand(); tg.ready();
+            }
+            const user = tg?.initDataUnsafe?.user;
+            if (user) {
+                TG_USER_ID = user.id;
+                TG_USERNAME = user.username || '';
+                document.getElementById('user-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '') + (user.username ? ' (@' + user.username + ')' : '');
+                if (user.photo_url) document.getElementById('user-avatar').innerHTML = `<img src="${user.photo_url}">`;
+            }
 
             loadLocalAdminState();
             await loadSettings(); 
             loadState();
             
-            try {
-                const res = await fetch(`${API_URL}/api/state?user_id=${TG_USER_ID}`);
-                const data = await res.json();
-                state.lastFreeCase = Math.max(state.lastFreeCase, data.last_free_case || 0);
-                state.lastTagCase = Math.max(state.lastTagCase, data.last_tag_case || 0);
-                if (data.coins > state.coins) state.coins = data.coins;
-                if ((data.xp || 0) > state.xp) state.xp = data.xp || 0;
-                if (data.inventory && data.inventory.length >= state.inventory.length) {
-                    state.inventory = data.inventory;
-                }
-                updateCoinDisplay();
-                renderInventory();
-                saveLocalOnly();
-            } catch(e) { console.error(e); }
-
-            setInterval(async () => {
-                if (Date.now() - lastSaveTime < 2500) return;
-                if (isCaseSpinning || state.upgrader.isSpinning || state.dice.isSpinning) return;
-                if (document.getElementById('case-modal').classList.contains('active')) return;
+            if (TG_USER_ID) {
                 try {
                     const res = await fetch(`${API_URL}/api/state?user_id=${TG_USER_ID}`);
                     const data = await res.json();
-                    let changed = false;
-                    if (data.coins !== state.coins) { state.coins = data.coins; document.getElementById('coin-display').innerText = state.coins; changed = true; }
-                    if ((data.xp || 0) !== state.xp) { state.xp = data.xp || 0; document.getElementById('xp-display').innerText = state.xp; changed = true; }
-                    if ((data.last_free_case || 0) > state.lastFreeCase) state.lastFreeCase = data.last_free_case;
-                    if ((data.last_tag_case || 0) > state.lastTagCase) state.lastTagCase = data.last_tag_case;
-                    if (changed) saveLocalOnly();
-                } catch (e) {}
-            }, 1000);
+                    state.lastFreeCase = Math.max(state.lastFreeCase, data.last_free_case || 0);
+                    state.lastTagCase = Math.max(state.lastTagCase, data.last_tag_case || 0);
+                    if (data.coins > state.coins) state.coins = data.coins;
+                    if ((data.xp || 0) > state.xp) state.xp = data.xp || 0;
+                    if (data.inventory && data.inventory.length >= state.inventory.length) {
+                        state.inventory = data.inventory;
+                    }
+                    updateCoinDisplay();
+                    renderInventory();
+                    saveLocalOnly();
+                } catch(e) { console.error(e); }
+
+                setInterval(async () => {
+                    if (Date.now() - lastSaveTime < 2500) return;
+                    if (isCaseSpinning || state.upgrader.isSpinning || state.dice.isSpinning) return;
+                    if (document.getElementById('case-modal').classList.contains('active')) return;
+                    try {
+                        const res = await fetch(`${API_URL}/api/state?user_id=${TG_USER_ID}`);
+                        const data = await res.json();
+                        let changed = false;
+                        if (data.coins !== state.coins) { state.coins = data.coins; document.getElementById('coin-display').innerText = state.coins; changed = true; }
+                        if ((data.xp || 0) !== state.xp) { state.xp = data.xp || 0; document.getElementById('xp-display').innerText = state.xp; changed = true; }
+                        if ((data.last_free_case || 0) > state.lastFreeCase) state.lastFreeCase = data.last_free_case;
+                        if ((data.last_tag_case || 0) > state.lastTagCase) state.lastTagCase = data.last_tag_case;
+                        if (changed) saveLocalOnly();
+                    } catch (e) {}
+                }, 1000);
+            }
         }
 
         let confirmCallback = null;
