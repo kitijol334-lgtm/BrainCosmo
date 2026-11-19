@@ -191,7 +191,6 @@ nav{
 .username{margin-bottom:15px;font-family:'Unbounded','Russo One',sans-serif;font-weight:700;font-size:15px;text-align:center;word-break:break-all;}
 .admin-btn{width:100%;padding:10px;border-radius:10px;font-weight:800;color:#fff;cursor:pointer;border:1px solid transparent;background:linear-gradient(rgba(16,11,34,.95),rgba(16,11,34,.95)) padding-box,var(--grad) border-box;}
 
-/* НАСТРОЙКИ ЗВУКА */
 .settings-btn {
     position: absolute; top: 10px; right: 10px;
     width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--glass-border);
@@ -223,7 +222,6 @@ input[type="range"]::-moz-range-thumb {
     box-shadow: 0 0 10px var(--primary-glow); cursor: pointer; border: none;
 }
 
-/* КНОПКИ ВЫБОРА ПОПОЛНЕНИЯ */
 .deposit-choices { display: flex; gap: 10px; margin-bottom: 15px; }
 .deposit-choice {
     flex: 1; padding: 15px 10px; border-radius: 14px; cursor: pointer;
@@ -240,7 +238,6 @@ input[type="range"]::-moz-range-thumb {
 .deposit-choice .icon { font-size: 26px; }
 .deposit-choice .label { font-size: 11px; font-weight: 800; text-align: center; color: var(--text); }
 
-/* MAINTENANCE */
 .maintenance-screen {
     position: fixed; inset: 0; z-index: 99999;
     background: radial-gradient(circle at 50% 40%, #1a1230, #06040d);
@@ -502,7 +499,6 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
 
     <div id="toast">Текст</div>
 
-    <!-- МОДАЛКА НАСТРОЕК ЗВУКА -->
     <div class="modal-overlay" id="settings-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -583,7 +579,6 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
         </div>
     </div>
 
-    <!-- МОДАЛКА ПОПОЛНЕНИЯ (ВЫБОР) -->
     <div class="modal-overlay" id="deposit-modal">
         <div class="modal-content">
             <div class="modal-header"><div class="modal-title">Пополнение</div><button class="close-btn" onclick="closeModal('deposit-modal')">×</button></div>
@@ -692,7 +687,6 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
         if (!isAllowed) {
             showMaintenance();
         } else {
-            // Инициализируем всё только для админа
             window.addEventListener('load', initApp);
         }
 
@@ -707,13 +701,13 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             localStorage.setItem('brainrot_sounds', JSON.stringify(soundSettings));
         }
 
-        // ===== АУДИО =====
+        // ===== АУДИО (в корне проекта, не в папке) =====
         const SFX = {
-            click: 'sounds/mixkit-modern-technology-select-3124.mp3',
-            success: 'sounds/mixkit-select-click-1109.mp3',
-            spin: 'sounds/freesound_community-revolver-spin-96947.wav'
+            click: 'mixkit-modern-technology-select-3124.mp3',
+            success: 'mixkit-select-click-1109.mp3',
+            spin: 'freesound_community-revolver-spin-96947.wav'
         };
-        const bgMusic = new Audio('sounds/jonasblakewood-background-music-618629.mp3');
+        const bgMusic = new Audio('jonasblakewood-background-music-618629.mp3');
         bgMusic.loop = true;
         bgMusic.volume = soundSettings.musicVolume / 100;
         let musicStarted = false;
@@ -736,13 +730,11 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
         function playSuccess() { playSfx(SFX.success); }
         function playSpin() { playSfx(SFX.spin); }
         
-        // Запускаем музыку по первому клику (браузеры требуют жест)
         document.addEventListener('click', function firstClick() {
             startMusic();
             document.removeEventListener('click', firstClick);
         }, { once: true });
         
-        // Глобальный клик-звук на все кнопки (кроме слайдеров громкости)
         document.addEventListener('click', function(e) {
             const t = e.target;
             if (t && (t.tagName === 'INPUT')) return;
@@ -760,7 +752,6 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             soundSettings.sfxVolume = parseInt(v);
             document.getElementById('sfx-vol-label').innerText = v + '%';
             saveSoundSettings();
-            // Короткий клик для примера
             playSfx(SFX.click);
         }
         function openSettingsModal() {
@@ -1296,7 +1287,6 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             wrapper.classList.add('spinning'); 
             document.querySelectorAll('.chance-btn').forEach(b => b.disabled = true);
 
-            // СПИН-ЗВУК
             playSpin();
 
             const arrow = document.getElementById('up-arrow');
@@ -1620,7 +1610,6 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             });
         }
 
-        // ОПЛАТА ЗВЁЗДАМИ
         async function submitStarsDeposit() {
             const amountInput = document.getElementById('deposit-stars-input');
             const amount = parseInt(amountInput.value);
@@ -1647,7 +1636,6 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
                     if (status === 'paid') {
                         showToast('Оплата успешна! Монеты начислены.', 'success');
                         closeModal('deposit-modal');
-                        // Подождём и обновим баланс с сервера
                         setTimeout(async () => {
                             try {
                                 const r = await fetch(`${API_URL}/api/state?user_id=${realUserId}`);
@@ -1810,9 +1798,8 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             showToast('Инвентарь очищен!', 'success');
         }
 
-        // ===== ИНИЦИАЛИЗАЦИЯ (ТОЛЬКО ДЛЯ АДМИНА) =====
+        // ===== ИНИЦИАЛИЗАЦИЯ =====
         async function initApp() {
-            // Устанавливаем картинки
             document.getElementById('header-coin-img').src = IMAGES.coin;
             document.getElementById('header-xp-img').src = IMAGES.xp_icon;
             document.getElementById('pass-icon-img').src = IMAGES.pass_icon;
@@ -1827,7 +1814,6 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             document.getElementById('img-case-admin').src = IMAGES.admincase;
             document.querySelectorAll('.coin-icon-img').forEach(img => img.src = IMAGES.coin);
 
-            // TG
             tg.expand(); tg.ready();
             const user = tg.initDataUnsafe.user;
             TG_USER_ID = user.id;
@@ -1854,7 +1840,6 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
                 saveLocalOnly();
             } catch(e) { console.error(e); }
 
-            // Автообновление монет
             setInterval(async () => {
                 if (Date.now() - lastSaveTime < 2500) return;
                 if (isCaseSpinning || state.upgrader.isSpinning || state.dice.isSpinning) return;
