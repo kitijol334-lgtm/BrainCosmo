@@ -11,7 +11,7 @@ import psycopg2
 # ==========================================
 # НАСТРОЙКИ
 # ==========================================
-BOT_TOKEN = '9147236041:AAEcJCKj0XLpZhWKVh0dPV1Qs7_lf37KLhw'
+BOT_TOKEN = '9147236041:AAGAm0N_FMiD-h6U8SlUooY2kEdJ8AZPJm8'
 ADMIN_ID = 8664148534
 WEBAPP_URL = 'https://braincosmo111.onrender.com'
 DATABASE_URL = os.environ.get('DATABASE_URL')
