@@ -11,14 +11,10 @@ import psycopg2
 # ==========================================
 # НАСТРОЙКИ
 # ==========================================
-# Токен теперь берётся из переменной окружения BOT_TOKEN (задайте её на Render).
-BOT_TOKEN = os.environ.get('BOT_TOKEN')
+BOT_TOKEN = '9147236041:AAEcJCKj0XLpZhWKVh0dPV1Qs7_lf37KLhw'
 ADMIN_ID = 8664148534
 WEBAPP_URL = 'https://braincosmo111.onrender.com'
 DATABASE_URL = os.environ.get('DATABASE_URL')
-
-if not BOT_TOKEN:
-    raise SystemExit("❌ Переменная окружения BOT_TOKEN не задана!")
 
 bot = telebot.TeleBot(BOT_TOKEN)
 app = Flask(__name__, static_folder='images')
