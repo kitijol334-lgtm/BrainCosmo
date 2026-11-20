@@ -11,7 +11,7 @@ from urllib.parse import urlparse
 # ==========================================
 # НАСТРОЙКИ
 # ==========================================
-BOT_TOKEN = '9147236041:AAGAm0N_FMiD-h6U8SlUooY2kEdJ8AZPJm8'
+BOT_TOKEN = '9147236041:AAEcJCKj0XLpZhWKVh0dPV1Qs7_lf37KLhw'
 ADMIN_ID = 8664148534
 WEBAPP_URL = 'https://braincosmo111.onrender.com'
 DATABASE_URL = os.environ.get('DATABASE_URL')
@@ -93,7 +93,6 @@ def serve_index():
 def serve_images(filename):
     return send_from_directory('images', filename)
 
-# ЗВУКИ ИЗ КОРНЯ ПРОЕКТА (mp3 и wav)
 @app.route('/<filename>')
 def serve_root_audio(filename):
     if filename.endswith('.mp3') or filename.endswith('.wav'):
@@ -352,20 +351,39 @@ def admin_reject_withdraw():
 @app.route('/api/admin_clear_coins', methods=['POST'])
 def admin_clear_coins():
     data = request.json
-    user_id = data.get('user_id')
+    nick = data.get('nick')
     conn = get_db(); cursor = conn.cursor()
-    if user_id == 'all': cursor.execute("UPDATE users SET coins = 0")
-    else: cursor.execute("UPDATE users SET coins = 0 WHERE user_id = %s", (user_id,))
+    if not nick:
+        cursor.execute("UPDATE users SET coins = 0")
+    else:
+        # Find user_id by nick from deposits or withdrawals
+        cursor.execute("SELECT user_id FROM deposits WHERE nick = %s LIMIT 1", (nick,))
+        res = cursor.fetchone()
+        if not res:
+            cursor.execute("SELECT user_id FROM withdrawals WHERE nick = %s LIMIT 1", (nick,))
+            res = cursor.fetchone()
+        
+        if res:
+            cursor.execute("UPDATE users SET coins = 0 WHERE user_id = %s", (res[0],))
     conn.commit(); conn.close()
     return jsonify({'success': True})
 
 @app.route('/api/admin_clear_inventory', methods=['POST'])
 def admin_clear_inventory():
     data = request.json
-    user_id = data.get('user_id')
+    nick = data.get('nick')
     conn = get_db(); cursor = conn.cursor()
-    if user_id == 'all': cursor.execute("UPDATE users SET inventory = '[]'")
-    else: cursor.execute("UPDATE users SET inventory = '[]' WHERE user_id = %s", (user_id,))
+    if not nick:
+        cursor.execute("UPDATE users SET inventory = '[]'")
+    else:
+        cursor.execute("SELECT user_id FROM deposits WHERE nick = %s LIMIT 1", (nick,))
+        res = cursor.fetchone()
+        if not res:
+            cursor.execute("SELECT user_id FROM withdrawals WHERE nick = %s LIMIT 1", (nick,))
+            res = cursor.fetchone()
+            
+        if res:
+            cursor.execute("UPDATE users SET inventory = '[]' WHERE user_id = %s", (res[0],))
     conn.commit(); conn.close()
     return jsonify({'success': True})
 

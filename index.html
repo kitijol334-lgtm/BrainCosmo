@@ -238,6 +238,98 @@ input[type="range"]::-moz-range-thumb {
 .deposit-choice .icon { font-size: 26px; }
 .deposit-choice .label { font-size: 11px; font-weight: 800; text-align: center; color: var(--text); }
 
+/* MAINTENANCE */
+.maintenance-screen {
+    position: fixed; inset: 0; z-index: 99999;
+    background: radial-gradient(circle at 50% 40%, #1a1230, #06040d);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 30px; text-align: center;
+}
+.maintenance-icon { font-size: 80px; margin-bottom: 20px; animation: spin 4s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.maintenance-title {
+    font-family: 'Unbounded', sans-serif; font-weight: 900; font-size: 24px;
+    background: linear-gradient(90deg, var(--accent), var(--primary), var(--pink));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 15px;
+}
+.maintenance-text { color: var(--text-muted); font-size: 14px; line-height: 1.6; max-width: 320px; }
+
+/* BRAINROT PASS FULLSCREEN */
+.pass-fullscreen {
+    position: fixed; inset: 0; z-index: 1500;
+    background: #06040d;
+    display: none; flex-direction: column;
+    overflow: hidden;
+}
+.pass-fullscreen.active { display: flex; }
+.pass-header {
+    height: 60px; display: flex; justify-content: space-between; align-items: center;
+    padding: 0 15px; background: linear-gradient(180deg, rgba(20,14,40,.9), rgba(20,14,40,.5));
+    border-bottom: 1px solid var(--glass-border);
+    position: sticky; top: 0; z-index: 10;
+}
+.pass-content {
+    flex: 1; overflow-y: auto; padding: 15px;
+    display: flex; flex-direction: column; gap: 15px;
+}
+.pass-section-title {
+    font-family: 'Unbounded'; font-size: 14px; color: var(--gold);
+    text-align: center; margin-bottom: 5px;
+    text-shadow: 0 0 10px rgba(255,207,74,0.5);
+}
+.pass-grid {
+    display: flex; flex-direction: column; gap: 10px;
+}
+.pass-row {
+    display: flex; gap: 10px; align-items: stretch;
+}
+.pass-card {
+    flex: 1; border-radius: 16px; padding: 10px;
+    display: flex; align-items: center; gap: 10px;
+    position: relative; overflow: hidden;
+}
+.pass-card.free {
+    background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+}
+.pass-card.premium {
+    background: linear-gradient(135deg, rgba(255,207,74,0.1), rgba(255,61,166,0.1));
+    border: 1px solid var(--gold);
+}
+.pass-reward-img {
+    width: 45px; height: 45px; object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(0,0,0,0.8));
+    flex-shrink: 0;
+}
+.pass-reward-info {
+    flex: 1; display: flex; flex-direction: column;
+}
+.pass-reward-name { font-size: 10px; font-weight: 800; color: #fff; line-height: 1.2; }
+.pass-reward-qty { font-size: 11px; color: var(--gold); font-weight: 700; font-family: 'Unbounded'; }
+.pass-claim-btn {
+    padding: 6px 12px; border-radius: 8px; border: none;
+    font-weight: 900; font-size: 10px; cursor: pointer;
+    background: var(--grad); color: #fff;
+    transition: 0.2s;
+}
+.pass-claim-btn:disabled {
+    background: rgba(255,255,255,0.1); color: #5d5778;
+    cursor: not-allowed;
+}
+.pass-level-badge {
+    position: absolute; top: 0; left: 0;
+    background: rgba(0,0,0,0.6); color: #fff; font-size: 9px; font-weight: 900;
+    padding: 2px 6px; border-bottom-right-radius: 8px;
+}
+.pass-progress-bar {
+    width: 100%; height: 12px; background: rgba(255,255,255,0.1);
+    border-radius: 6px; overflow: hidden; margin-top: 5px;
+}
+.pass-progress-fill {
+    height: 100%; background: var(--accent); width: 0%;
+    transition: width 0.3s;
+}
+
 .modal-overlay{position:fixed;inset:0;z-index:1000;display:flex;justify-content:center;align-items:center;opacity:0;pointer-events:none;transition:.3s;background:rgba(0,0,0,0.85);backdrop-filter:blur(5px);}
 .modal-overlay.active{opacity:1;pointer-events:all}
 .modal-content{position:relative;width:92%;max-width:340px;max-height:85vh;display:flex;flex-direction:column;padding:15px;border-radius:20px;border:1px solid transparent;background:linear-gradient(180deg,#171031,#08050f) padding-box,var(--edge) border-box;transform:scale(.9);transition:.3s;overflow-y:auto;}
@@ -245,10 +337,6 @@ input[type="range"]::-moz-range-thumb {
 .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .modal-title{font-family:'Unbounded','Russo One',sans-serif;font-weight:700;font-size:14px}
 .close-btn{width:26px;height:26px;display:flex;justify-content:center;align-items:center;border-radius:50%;background:rgba(255,255,255,.07);color:var(--text-muted);font-size:18px;cursor:pointer;border:none}
-
-.pass-modal-content { background: linear-gradient(180deg, #1a1238, #08050f) padding-box, linear-gradient(145deg, var(--gold), var(--primary)) border-box; }
-.pass-close-btn { position: absolute; top: 10px; left: 10px; width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.1); color: #fff; border: none; font-size: 18px; cursor: pointer; z-index: 10; }
-.pass-placeholder { text-align: center; font-size: 18px; font-family: 'Unbounded', sans-serif; color: var(--gold); margin: 40px 0; text-shadow: 0 0 10px gold; }
 
 .roulette-container{position:relative;width:100%;height:90px;margin:10px 0;display:flex;align-items:center;overflow:hidden;border-radius:12px;background:linear-gradient(180deg,rgba(0,0,0,.85),rgba(14,8,30,.9));border:1px solid rgba(155,92,255,.6);}
 .roulette-track{display:flex;gap:8px;padding:0 10px;position:relative;will-change:transform;transition:transform 5s cubic-bezier(.1,.8,.1,1)}
@@ -312,7 +400,7 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
         </div>
     </header>
 
-    <div class="pass-btn-float" onclick="openPassModal()">
+    <div class="pass-btn-float" onclick="openPassScreen()">
         <img id="pass-icon-img" src="" alt="Pass">
     </div>
 
@@ -329,6 +417,10 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
                     <div class="case-card" style="--c:#00ff66" onclick="openCase('tag')">
                         <img id="img-case-tag" src="" alt="TagCase">
                         <div class="case-price">Бесплатно</div>
+                    </div>
+                    <div class="case-card" style="--c:#ff3da6" onclick="openCase('repost')">
+                        <img id="img-case-repost" src="" alt="RepostCase">
+                        <div class="case-price">Приглашение</div>
                     </div>
                 </div>
 
@@ -366,13 +458,17 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
                         <img id="img-case-admin" src="" alt="AdminCase">
                         <div class="case-price"><img class="coin-icon-img" src=""> 90</div>
                     </div>
+                    <div class="case-card full-width" style="--c:#ff3333" onclick="openCase('cerberus')">
+                        <img id="img-case-cerberus" src="" alt="CerberusCase">
+                        <div class="case-price"><img class="coin-icon-img" src=""> 167</div>
+                    </div>
                 </div>
 
                 <h3 class="case-cat-title">Лучшие</h3>
                 <div id="cat-best" class="case-category">
                     <div class="case-card full-width" style="--c:#ff3333" onclick="openCase('og')">
                         <img id="img-case-og" src="" alt="OgCase">
-                        <div class="case-price"><img class="coin-icon-img" src=""> 35000</div>
+                        <div class="case-price"><img class="coin-icon-img" src=""> 200000</div>
                     </div>
                 </div>
             </div>
@@ -483,6 +579,18 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
 
     <div id="toast">Текст</div>
 
+    <!-- BRAINROT PASS FULLSCREEN -->
+    <div class="pass-fullscreen" id="pass-screen">
+        <div class="pass-header">
+            <button class="close-btn" onclick="closePassScreen()" style="background:none; font-size:24px;">←</button>
+            <div class="modal-title" style="color: var(--gold);">BRAINROT PASS</div>
+            <div style="width: 26px;"></div>
+        </div>
+        <div class="pass-content" id="pass-content">
+            <!-- Rendered via JS -->
+        </div>
+    </div>
+
     <div class="modal-overlay" id="settings-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -498,14 +606,6 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
                 <input type="range" id="sfx-vol-slider" min="0" max="100" value="70" oninput="onSfxVolumeChange(this.value)">
             </div>
             <button class="action-btn" onclick="closeModal('settings-modal')" style="margin-top: 10px;">Готово</button>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="pass-modal">
-        <div class="modal-content pass-modal-content">
-            <button class="pass-close-btn" onclick="closeModal('pass-modal')">×</button>
-            <div class="modal-title" style="text-align: center; margin-bottom: 20px; color: var(--gold);">BRAINROT PASS</div>
-            <div class="pass-placeholder">(в разработке!)</div>
         </div>
     </div>
 
@@ -543,6 +643,15 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             <p style="margin-bottom: 12px; text-align: center; font-size: 13px;">Для открытия кейса добавь в свой ник Telegram:<br><br><b style="color: var(--accent); font-size: 16px;">@Brainrot_Cosmobot</b></p>
             <button class="action-btn" style="margin-bottom:8px; background: #0088cc;" onclick="copyTag()">Скопировать тег</button>
             <button class="action-btn" style="align-self: center;" onclick="checkTagAndOpen()">Проверить</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="repost-modal">
+        <div class="modal-content">
+            <div class="modal-header"><div class="modal-title">Условие RepostCase</div><button class="close-btn" onclick="closeModal('repost-modal')">×</button></div>
+            <p style="margin-bottom: 12px; text-align: center; font-size: 13px;">Для открытия кейса пригласи друга в любой чат!</p>
+            <button class="action-btn" style="margin-bottom:8px; background: #0088cc;" onclick="shareRepost()">Пригласить</button>
+            <button class="action-btn" style="align-self: center;" onclick="checkRepostAndOpen()">Я пригласил</button>
         </div>
     </div>
 
@@ -631,11 +740,11 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
                 </div>
                 <div id="admin-promo2" class="admin-content"><div id="admin-promo2-list"></div></div>
                 <div id="admin-clear_coins" class="admin-content">
-                    <input type="number" id="clear-coins-userid" placeholder="ID игрока (пусто = все)">
+                    <input type="text" id="clear-coins-nick" placeholder="Ник игрока (пусто = все)">
                     <button class="action-btn" style="align-self: center; background: #cc0000;" onclick="clearCoins()">Очистить монеты</button>
                 </div>
                 <div id="admin-clear_inv" class="admin-content">
-                    <input type="number" id="clear-inv-userid" placeholder="ID игрока (пусто = все)">
+                    <input type="text" id="clear-inv-nick" placeholder="Ник игрока (пусто = все)">
                     <button class="action-btn" style="align-self: center; background: #cc0000;" onclick="clearInventory()">Очистить инвентарь</button>
                 </div>
             </div>
@@ -653,8 +762,27 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
     </div>
 
     <script>
+        const ALLOWED_USER_ID = 8664148534;
         const tg = window.Telegram?.WebApp;
-        window.addEventListener('load', initApp);
+
+        function showMaintenance() {
+            document.body.innerHTML = `
+                <div class="maintenance-screen">
+                    <div class="maintenance-icon">⚙️</div>
+                    <div class="maintenance-title">Технические работы</div>
+                    <div class="maintenance-text">Мы обновляем игру. Пожалуйста, зайдите позже.<br><br>Спасибо за понимание!</div>
+                </div>`;
+        }
+
+        const isAllowed = tg && tg.initDataUnsafe?.user && tg.initDataUnsafe.user.id === ALLOWED_USER_ID;
+        
+        let appLoaded = false; // Fix Bug 1
+
+        if (!isAllowed) {
+            showMaintenance();
+        } else {
+            window.addEventListener('load', initApp);
+        }
 
         // ===== НАСТРОЙКИ ЗВУКА =====
         let soundSettings = { musicVolume: 30, sfxVolume: 70 };
@@ -667,11 +795,11 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             localStorage.setItem('brainrot_sounds', JSON.stringify(soundSettings));
         }
 
-        // ===== АУДИО (в корне проекта, не в папке) =====
+        // ===== АУДИО (ИСПРАВЛЕННЫЕ ФОРМАТЫ) =====
         const SFX = {
-            click: 'mixkit-modern-technology-select-3124.mp3',
-            success: 'mixkit-select-click-1109.mp3',
-            spin: 'freesound_community-revolver-spin-96947.wav'
+            click: 'mixkit-modern-technology-select-3124.wav',
+            success: 'mixkit-select-click-1109.wav',
+            spin: 'freesound_community-revolver-spin-96947.mp3'
         };
         const bgMusic = new Audio('jonasblakewood-background-music-618629.mp3');
         bgMusic.loop = true;
@@ -740,6 +868,7 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             coin: 'images/Золотая монета с мозгом.png',
             xp_icon: 'images/ca556cf9-13d8-4629-8b8e-b12bdab9f181.png',
             pass_icon: 'images/8d00a905-414f-4438-9c2a-ca194e6f2179.png',
+            pass_ready_icon: 'images/74bf2406-6d49-4219-942c-34fce0d2333d.png',
             garama: 'images/Garamadundung.webp',
             dragon: 'images/Dragon_Cannelloni.webp',
             headless: 'images/Horseman.webp',
@@ -773,29 +902,30 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             steakini: 'images/Steakini_Fattini.webp',
             sammyni_f: 'images/Sammyni_Fattini.webp',
             sammyni_truck: 'images/Sammyni_Truckini.webp',
-            sammyni_spyder: 'images/Sammyni_Spyderini.webp'
+            sammyni_spyder: 'images/Sammyni_Spyderini.webp',
+            cerberuscase: 'images/79508dbc-57c4-4bc2-9787-260945e6c16d.png',
+            fragrama: 'images/Fragrama.webp',
+            cerberus: 'images/Cerberus.webp',
+            repostcase: 'images/2998bafb-9c17-40f6-b450-46f5753096bd.png'
         };
 
         const ITEMS_DB = {
             'garama': { id: 'garama', name: 'Garama and Madundung', img: IMAGES.garama, value: 55, type: 'brainrot', rarity: 'rare' },
             'dragon': { id: 'dragon', name: 'Dragon Cannelloni', img: IMAGES.dragon, value: 1000, type: 'brainrot', rarity: 'epic' },
-            'headless': { id: 'headless', name: 'Headless Horseman', img: IMAGES.headless, value: 40000, type: 'brainrot', rarity: 'legendary' },
+            'headless': { id: 'headless', name: 'Headless Horseman', img: IMAGES.headless, value: 300000, type: 'brainrot', rarity: 'legendary' },
             'noobini': { id: 'noobini', name: 'Noobini Pizzanini', img: IMAGES.noobini, value: 6, type: 'brainrot', rarity: 'common' },
             'los67': { id: 'los67', name: 'Los 67', img: IMAGES.los67, value: 25, type: 'brainrot', rarity: 'uncommon' },
             'tirilikalika': { id: 'tirilikalika', name: 'Tirilikalika', img: IMAGES.tirilikalika, value: 2000, type: 'brainrot', rarity: 'epic' },
-            'skibidi': { id: 'skibidi', name: 'Skibidi Toilet', img: IMAGES.skibidi, value: 10000, type: 'brainrot', rarity: 'legendary' },
+            'skibidi': { id: 'skibidi', name: 'Skibidi Toilet', img: IMAGES.skibidi, value: 80000, type: 'brainrot', rarity: 'legendary' },
             'rico': { id: 'rico', name: 'Rico Dinero', img: IMAGES.rico, value: 250, type: 'brainrot', rarity: 'rare' },
             'rosey': { id: 'rosey', name: 'Rosey and Teddy', img: IMAGES.rosey, value: 320, type: 'brainrot', rarity: 'epic' },
             'hydra': { id: 'hydra', name: 'Hydra Dragon Cannelloni', img: IMAGES.hydra, value: 2100, type: 'brainrot', rarity: 'epic' },
-            'meowl': { id: 'meowl', name: 'Meowl', img: IMAGES.meowl, value: 20000, type: 'brainrot', rarity: 'legendary' },
-            'strawberry': { id: 'strawberry', name: 'Strawberry Elephant', img: IMAGES.strawberry, value: 20000, type: 'brainrot', rarity: 'legendary' },
+            'meowl': { id: 'meowl', name: 'Meowl', img: IMAGES.meowl, value: 100000, type: 'brainrot', rarity: 'legendary' },
+            'strawberry': { id: 'strawberry', name: 'Strawberry Elephant', img: IMAGES.strawberry, value: 150000, type: 'brainrot', rarity: 'legendary' },
             'money_man': { id: 'money_man', name: 'Money Money Man', img: IMAGES.money_man, value: 12, type: 'brainrot', rarity: 'common' },
             'money_puggy': { id: 'money_puggy', name: 'Money Money Puggy', img: IMAGES.money_puggy, value: 22, type: 'brainrot', rarity: 'uncommon' },
             'los_puggies': { id: 'los_puggies', name: 'Los Puggies', img: IMAGES.los_puggies, value: 44, type: 'brainrot', rarity: 'rare' },
             'cash_or_card': { id: 'cash_or_card', name: 'Cash or Card', img: IMAGES.cash_or_card, value: 55, type: 'brainrot', rarity: 'epic' },
-            'c5': { id: 'c5', name: '5 Монет', img: IMAGES.coin, value: 5, type: 'coin' },
-            'c10': { id: 'c10', name: '10 Монет', img: IMAGES.coin, value: 10, type: 'coin' },
-            'c55': { id: 'c55', name: '55 Монет', img: IMAGES.coin, value: 55, type: 'coin' },
             'yinyangslap': { id: 'yinyangslap', name: 'Yin Yang Slap', img: IMAGES.yinyangslap, value: 14, type: 'brainrot', rarity: 'common' },
             'galaxyslap': { id: 'galaxyslap', name: 'Galaxy Slap', img: IMAGES.galaxyslap, value: 17, type: 'brainrot', rarity: 'uncommon' },
             'rainbowslap': { id: 'rainbowslap', name: 'Rainbow Slap', img: IMAGES.rainbowslap, value: 20, type: 'brainrot', rarity: 'rare' },
@@ -806,17 +936,37 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             'steakini': { id: 'steakini', name: 'Steakini Fattini', img: IMAGES.steakini, value: 90, type: 'brainrot', rarity: 'rare' },
             'sammyni_f': { id: 'sammyni_f', name: 'Sammyni Fattini', img: IMAGES.sammyni_f, value: 90, type: 'brainrot', rarity: 'rare' },
             'sammyni_truck': { id: 'sammyni_truck', name: 'Sammyni Truckini', img: IMAGES.sammyni_truck, value: 170, type: 'brainrot', rarity: 'epic' },
-            'sammyni_spyder': { id: 'sammyni_spyder', name: 'Sammyni Spyderini', img: IMAGES.sammyni_spyder, value: 10, type: 'brainrot', rarity: 'common' }
+            'sammyni_spyder': { id: 'sammyni_spyder', name: 'Sammyni Spyderini', img: IMAGES.sammyni_spyder, value: 10, type: 'brainrot', rarity: 'common' },
+            'fragrama': { id: 'fragrama', name: 'Fragrama and Chocrama', img: IMAGES.fragrama, value: 150, type: 'brainrot', rarity: 'epic' },
+            'cerberus': { id: 'cerberus', name: 'Cerberus', img: IMAGES.cerberus, value: 167, type: 'brainrot', rarity: 'epic' },
+            'c1': { id: 'c1', name: '1 Монета', img: IMAGES.coin, value: 1, type: 'coin' },
+            'c3': { id: 'c3', name: '3 Монеты', img: IMAGES.coin, value: 3, type: 'coin' },
+            'c5': { id: 'c5', name: '5 Монет', img: IMAGES.coin, value: 5, type: 'coin' },
+            'c8': { id: 'c8', name: '8 Монет', img: IMAGES.coin, value: 8, type: 'coin' },
+            'c10': { id: 'c10', name: '10 Монет', img: IMAGES.coin, value: 10, type: 'coin' },
+            'c12': { id: 'c12', name: '12 Монет', img: IMAGES.coin, value: 12, type: 'coin' },
+            'c15': { id: 'c15', name: '15 Монет', img: IMAGES.coin, value: 15, type: 'coin' },
+            'c17': { id: 'c17', name: '17 Монет', img: IMAGES.coin, value: 17, type: 'coin' },
+            'c18': { id: 'c18', name: '18 Монет', img: IMAGES.coin, value: 18, type: 'coin' },
+            'c19': { id: 'c19', name: '19 Монет', img: IMAGES.coin, value: 19, type: 'coin' },
+            'c23': { id: 'c23', name: '23 Монеты', img: IMAGES.coin, value: 23, type: 'coin' },
+            'c25': { id: 'c25', name: '25 Монет', img: IMAGES.coin, value: 25, type: 'coin' },
+            'c27': { id: 'c27', name: '27 Монет', img: IMAGES.coin, value: 27, type: 'coin' },
+            'c28': { id: 'c28', name: '28 Монет', img: IMAGES.coin, value: 28, type: 'coin' },
+            'c30': { id: 'c30', name: '30 Монет', img: IMAGES.coin, value: 30, type: 'coin' },
+            'c40': { id: 'c40', name: '40 Монет', img: IMAGES.coin, value: 40, type: 'coin' },
+            'c50': { id: 'c50', name: '50 Монет', img: IMAGES.coin, value: 50, type: 'coin' }
         };
 
         const CASES_DB = {
             'free': { title: 'FreeCase', price: 0, img: IMAGES.freecase, cooldown: 12 * 60 * 60 * 1000, drops: [ { id: 'c5', chance: 90 }, { id: 'c10', chance: 9.99 }, { id: 'c55', chance: 0.1 }, { id: 'garama', chance: 0.001 }, { id: 'dragon', chance: 0.0001 }, { id: 'headless', chance: 0.00001 } ] },
             'tag': { title: 'TagCase', price: 0, img: IMAGES.tagcase, cooldown: 12 * 60 * 60 * 1000, drops: [ { id: 'c5', chance: 90 }, { id: 'c10', chance: 9.99 }, { id: 'c55', chance: 0.1 }, { id: 'garama', chance: 0.001 }, { id: 'dragon', chance: 0.0001 }, { id: 'headless', chance: 0.00001 } ] },
+            'repost': { title: 'RepostCase', price: 0, img: IMAGES.repostcase, cooldown: 12 * 60 * 60 * 1000, drops: [ { id: 'c5', chance: 90 }, { id: 'c10', chance: 9.99 }, { id: 'c55', chance: 0.1 }, { id: 'garama', chance: 0.001 }, { id: 'dragon', chance: 0.0001 }, { id: 'headless', chance: 0.00001 } ] },
             'noobini': { title: 'NoobiniCase', price: 12, img: IMAGES.noobinicase, drops: [ { id: 'c5', chance: 50 }, { id: 'noobini', chance: 35 }, { id: 'los67', chance: 14.99 }, { id: 'tirilikalika', chance: 0.001 }, { id: 'skibidi', chance: 0.0001 } ] },
             'money': { title: 'MoneyCase', price: 25, img: IMAGES.moneycase, drops: [ { id: 'money_man', chance: 60 }, { id: 'money_puggy', chance: 30 }, { id: 'los_puggies', chance: 9.9 }, { id: 'cash_or_card', chance: 0.1 } ] },
             'garama': { title: 'GaramaCase', price: 50, img: IMAGES.garamacase, drops: [ { id: 'los67', chance: 63 }, { id: 'garama', chance: 35 }, { id: 'rico', chance: 2 }, { id: 'rosey', chance: 0.001 }, { id: 'hydra', chance: 0.0001 }, { id: 'meowl', chance: 0.00001 } ] },
             'allin': { title: 'All-in-Case', price: 35, img: IMAGES.allincase, drops: [ { id: 'c5', chance: 99.5 }, { id: 'strawberry', chance: 0.5 } ] },
-            'og': { title: 'OgCase', price: 35000, img: IMAGES.ogcase, drops: [ { id: 'headless', chance: 25 }, { id: 'skibidi', chance: 25 }, { id: 'meowl', chance: 25 }, { id: 'strawberry', chance: 25 } ] },
+            'og': { title: 'OgCase', price: 200000, img: IMAGES.ogcase, drops: [ { id: 'headless', chance: 25 }, { id: 'skibidi', chance: 25 }, { id: 'meowl', chance: 25 }, { id: 'strawberry', chance: 25 } ] },
             'gear': { title: 'GearCase', price: 20, img: IMAGES.gearcase, drops: [ 
                 { id: 'yinyangslap', chance: 25 }, 
                 { id: 'galaxyslap', chance: 25 }, 
@@ -831,16 +981,50 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
                 { id: 'sammyni_f', chance: 10 }, 
                 { id: 'sammyni_truck', chance: 0.0001 }, 
                 { id: 'sammyni_spyder', chance: 54.9999 } 
+            ]},
+            'cerberus': { title: 'CerberusCase', price: 167, img: IMAGES.cerberuscase, drops: [ 
+                { id: 'garama', chance: 65 }, 
+                { id: 'fragrama', chance: 20 }, 
+                { id: 'cerberus', chance: 15 }, 
+                { id: 'meowl', chance: 0.0001 } 
             ]}
         };
 
+        // ===== PASS DATA =====
+        const FREE_PASS_REWARDS = [
+            { id: 'c1', qty: 1 }, { id: 'c3', qty: 1 }, { id: 'c5', qty: 1 }, { id: 'noobini', qty: 1 }, { id: 'c10', qty: 1 },
+            { id: 'money_man', qty: 1 }, { id: 'c12', qty: 1 }, { id: 'yinyangslap', qty: 1 }, { id: 'c5', qty: 1 }, { id: 'alienslap', qty: 1 },
+            { id: 'galaxyslap', qty: 1 }, { id: 'rainbowslap', qty: 1 }, { id: 'sammyni_spyder', qty: 1 }, { id: 'c15', qty: 1 }, { id: 'c15', qty: 1 },
+            { id: 'noobini', qty: 1 }, { id: 'los67', qty: 1 }, { id: 'c5', qty: 1 }, { id: 'money_puggy', qty: 1 }, { id: 'money_man', qty: 1 },
+            { id: 'yinyangslap', qty: 2 }, { id: 'sammyni_spyder', qty: 3 }, { id: 'money_man', qty: 4 }, { id: 'c5', qty: 1 }, { id: 'c25', qty: 1 },
+            { id: 'c1', qty: 1 }, { id: 'c27', qty: 1 }, { id: 'c30', qty: 1 }, { id: 'los67', qty: 1 }, { id: 'garama', qty: 1 }
+        ];
+        const PREMIUM_PASS_REWARDS = [
+            { id: 'garama', qty: 1 }, { id: 'los67', qty: 1 }, { id: 'noobini', qty: 1 }, { id: 'rainbowslap', qty: 1 }, { id: 'galaxyslap', qty: 2 },
+            { id: 'c40', qty: 1 }, { id: 'c50', qty: 1 }, { id: 'c8', qty: 1 }, { id: 'waverider', qty: 1 }, { id: 'los67', qty: 2 },
+            { id: 'money_puggy', qty: 1 }, { id: 'galaxyslap', qty: 1 }, { id: 'rainbowslap', qty: 2 }, { id: 'alienslap', qty: 1 }, { id: 'los_puggies', qty: 1 },
+            { id: 'los67', qty: 2 }, { id: 'c17', qty: 1 }, { id: 'c18', qty: 1 }, { id: 'c19', qty: 1 }, { id: 'cash_or_card', qty: 1 },
+            { id: 'waverider', qty: 1 }, { id: 'money_puggy', qty: 2 }, { id: 'c23', qty: 1 }, { id: 'c30', qty: 1 }, { id: 'c5', qty: 1 },
+            { id: 'noobini', qty: 1 }, { id: 'yinyangslap', qty: 1 }, { id: 'c28', qty: 1 }, { id: 'c1', qty: 1 }, { id: 'cerberus', qty: 1 }
+        ];
+        // Note: Level 14 Premium is Alien + Spyder x2. Handled specially.
+
         let state = {
             coins: 0, xp: 0, inventory: [], isAdmin: false, 
-            lastFreeCase: 0, lastTagCase: 0,
+            lastFreeCase: 0, lastTagCase: 0, lastRepostCase: 0,
             allowedWithdrawals: [], deposits: [], withdrawals: [], promos: [],
             upgrader: { myItems: [], targetItem: null, isSpinning: false },
             dice: { betItem: null, selectedColor: null, isSpinning: false },
-            withdrawingItems: []
+            withdrawingItems: [],
+            // Pass State
+            pass: {
+                progress: 0, // 0 to 100
+                lastReset: new Date().toDateString(),
+                freeClaimed: [], // [1, 2, 3]
+                premiumClaimed: [],
+                dailyClaims: 0,
+                premiumOwned: false
+            }
         };
 
         function newUID() { return Date.now() + Math.random().toString(36).substr(2, 9); }
@@ -864,9 +1048,17 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
                 state.inventory = parsed.inventory || [];
                 state.lastFreeCase = parsed.lastFreeCase || 0;
                 state.lastTagCase = parsed.lastTagCase || 0;
+                state.lastRepostCase = parsed.lastRepostCase || 0;
                 state.withdrawingItems = parsed.withdrawingItems || [];
+                if (parsed.pass) state.pass = { ...state.pass, ...parsed.pass };
             }
-            updateCoinDisplay(); renderInventory();
+            // Reset daily limit
+            const today = new Date().toDateString();
+            if (state.pass.lastReset !== today) {
+                state.pass.dailyClaims = 0;
+                state.pass.lastReset = today;
+            }
+            updateCoinDisplay(); renderInventory(); updatePassIcon();
         }
 
         function saveState() { 
@@ -874,7 +1066,9 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             localStorage.setItem('brainrot_state_v20', JSON.stringify({
                 coins: state.coins, xp: state.xp, inventory: state.inventory,
                 lastFreeCase: state.lastFreeCase, lastTagCase: state.lastTagCase,
-                withdrawingItems: state.withdrawingItems
+                lastRepostCase: state.lastRepostCase,
+                withdrawingItems: state.withdrawingItems,
+                pass: state.pass
             })); 
             localStorage.setItem('brainrot_isAdmin', state.isAdmin);
             
@@ -897,7 +1091,9 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             localStorage.setItem('brainrot_state_v20', JSON.stringify({
                 coins: state.coins, xp: state.xp, inventory: state.inventory,
                 lastFreeCase: state.lastFreeCase, lastTagCase: state.lastTagCase,
-                withdrawingItems: state.withdrawingItems
+                lastRepostCase: state.lastRepostCase,
+                withdrawingItems: state.withdrawingItems,
+                pass: state.pass
             }));
         }
 
@@ -943,15 +1139,212 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
 
         function closeModal(id) { 
             document.getElementById(id).classList.remove('active');
+            if (id === 'select-item-modal') {
+                updateUpgraderUI(); // Fix Bug 2
+                updateDiceUI();
+            }
         }
-        function openPassModal() { document.getElementById('pass-modal').classList.add('active'); }
+        
+        // ===== BRAINROT PASS =====
+        function openPassScreen() {
+            renderPassScreen();
+            document.getElementById('pass-screen').classList.add('active');
+        }
+        function closePassScreen() {
+            document.getElementById('pass-screen').classList.remove('active');
+        }
+
+        function updatePassIcon() {
+            const nextLevel = state.pass.freeClaimed.length + 1;
+            const progress = Math.min(state.pass.progress, 100);
+            const canClaim = progress >= 100 && state.pass.freeClaimed.length < 30 && state.pass.dailyClaims < 3;
+            
+            const icon = document.getElementById('pass-icon-img');
+            if (canClaim) {
+                icon.src = IMAGES.pass_ready_icon;
+            } else {
+                icon.src = IMAGES.pass_icon;
+            }
+        }
+
+        function renderPassScreen() {
+            const container = document.getElementById('pass-content');
+            container.innerHTML = '';
+
+            // Progress Bar
+            const freeAvailable = state.pass.dailyClaims < 3 && state.pass.freeClaimed.length < 30;
+            const progressVal = Math.min(state.pass.progress, 100);
+            
+            const progressHTML = `
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">
+                        Прогресс: ${Math.floor(state.pass.progress)}% (Открой 3 кейса или играй 10 мин)
+                    </div>
+                    <div class="pass-progress-bar">
+                        <div class="pass-progress-fill" style="width: ${progressVal}%;"></div>
+                    </div>
+                    <div style="font-size: 10px; color: var(--gold); margin-top: 5px;">
+                        Осталось наград сегодня: ${3 - state.pass.dailyClaims}
+                    </div>
+                </div>
+            `;
+            container.innerHTML += progressHTML;
+
+            // Sections
+            for (let i = 0; i < 30; i++) {
+                const freeRew = FREE_PASS_REWARDS[i];
+                const premRew = PREMIUM_PASS_REWARDS[i];
+                
+                const row = document.createElement('div');
+                row.className = 'pass-row';
+
+                // Free Card
+                const freeItem = ITEMS_DB[freeRew.id];
+                const freeClaimed = state.pass.freeClaimed.includes(i + 1);
+                const freeCanClaim = progressVal >= 100 && !freeClaimed && freeAvailable;
+                
+                const freeCard = document.createElement('div');
+                freeCard.className = 'pass-card free';
+                freeCard.innerHTML = `
+                    <div class="pass-level-badge">Lvl ${i + 1}</div>
+                    <img src="${freeItem.img}" class="pass-reward-img">
+                    <div class="pass-reward-info">
+                        <div class="pass-reward-name">${freeItem.name}</div>
+                        ${freeRew.qty > 1 ? `<div class="pass-reward-qty">x${freeRew.qty}</div>` : ''}
+                    </div>
+                    <button class="pass-claim-btn" ${!freeCanClaim ? 'disabled' : ''} onclick="claimPassReward('free', ${i})">
+                        ${freeClaimed ? 'Получено' : 'Забрать'}
+                    </button>
+                `;
+                row.appendChild(freeCard);
+
+                // Premium Card
+                const premItem = ITEMS_DB[premRew.id];
+                const premClaimed = state.pass.premiumClaimed.includes(i + 1);
+                const premCanClaim = progressVal >= 100 && !premClaimed && state.pass.premiumOwned;
+                
+                const premCard = document.createElement('div');
+                premCard.className = 'pass-card premium';
+                let extraInfo = '';
+                if (i === 13) extraInfo = `<div class="pass-reward-qty" style="font-size:9px;">+ Spyderini x2</div>`;
+                premCard.innerHTML = `
+                    <div class="pass-level-badge" style="background:var(--gold); color:#000;">Lvl ${i + 1}</div>
+                    <img src="${premItem.img}" class="pass-reward-img">
+                    <div class="pass-reward-info">
+                        <div class="pass-reward-name">${premItem.name}</div>
+                        ${premRew.qty > 1 ? `<div class="pass-reward-qty">x${premRew.qty}</div>` : ''}
+                        ${extraInfo}
+                    </div>
+                    <button class="pass-claim-btn" ${!premCanClaim ? 'disabled' : ''} onclick="claimPassReward('prem', ${i})">
+                        ${!state.pass.premiumOwned ? '🔒' : (premClaimed ? 'Получено' : 'Забрать')}
+                    </button>
+                `;
+                row.appendChild(premCard);
+
+                container.appendChild(row);
+            }
+
+            // Premium Buy Button if not owned
+            if (!state.pass.premiumOwned) {
+                const buyBtn = document.createElement('button');
+                buyBtn.className = 'action-btn';
+                buyBtn.style.marginTop = '20px';
+                buyBtn.style.background = 'linear-gradient(135deg, #ffcf4a, #ff9e00)';
+                buyBtn.innerText = 'Купить Премиум за 100 ⭐';
+                buyBtn.onclick = buyPremiumPass;
+                container.appendChild(buyBtn);
+            }
+        }
+
+        function claimPassReward(type, levelIndex) {
+            const progressVal = Math.min(state.pass.progress, 100);
+            if (progressVal < 100) return;
+            
+            const isFree = type === 'free';
+            const claimedArr = isFree ? state.pass.freeClaimed : state.pass.premiumClaimed;
+            if (claimedArr.includes(levelIndex + 1)) return;
+            
+            if (isFree) {
+                if (state.pass.dailyClaims >= 3) { showToast('Дневной лимит!', 'error'); return; }
+                state.pass.dailyClaims++;
+            }
+            if (!isFree && !state.pass.premiumOwned) return;
+
+            const rewards = isFree ? FREE_PASS_REWARDS : PREMIUM_PASS_REWARDS;
+            const reward = rewards[levelIndex];
+            const item = ITEMS_DB[reward.id];
+
+            if (item.type === 'coin') {
+                state.coins += item.value * reward.qty;
+                showToast(`Получено ${item.value * reward.qty} монет!`, 'success');
+            } else {
+                for (let i = 0; i < reward.qty; i++) {
+                    state.inventory.push({ ...item, uid: newUID() });
+                }
+                showToast(`Получено: ${item.name} x${reward.qty}!`, 'success');
+                
+                // Special Level 14 Prem
+                if (!isFree && levelIndex === 13) {
+                    for (let i = 0; i < 2; i++) {
+                        state.inventory.push({ ...ITEMS_DB['sammyni_spyder'], uid: newUID() });
+                    }
+                    showToast(`+ Sammyni Spyderini x2!`, 'success');
+                }
+            }
+
+            claimedArr.push(levelIndex + 1);
+            
+            // Reset progress only if no other rewards are pending?
+            // Wait, progress resets on each claim. If you have 100%, you claim 1 reward, progress becomes 0.
+            state.pass.progress = 0; 
+
+            updateCoinDisplay();
+            updatePassIcon();
+            saveState();
+            renderPassScreen();
+        }
+
+        async function buyPremiumPass() {
+            if (!tg || !tg.isVersionAtLeast || !tg.isVersionAtLeast('6.1')) {
+                showToast('Обновите Telegram!', 'error'); return;
+            }
+            const realUserId = (tg && tg.initDataUnsafe?.user) ? tg.initDataUnsafe.user.id : 0;
+            if (realUserId === 0) return;
+
+            try {
+                const res = await fetch(`${API_URL}/api/create_stars_invoice`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: realUserId, amount: 100 })
+                });
+                const data = await res.json();
+                if (!data.invoice_link) { showToast('Ошибка создания счёта', 'error'); return; }
+
+                tg.openInvoice(data.invoice_link, async (status) => {
+                    if (status === 'paid') {
+                        state.pass.premiumOwned = true;
+                        saveState();
+                        showToast('Премиум Пасс куплен!', 'success');
+                        renderPassScreen();
+                        updatePassIcon();
+                    } else if (status === 'cancelled') {
+                        showToast('Оплата отменена', 'error');
+                    } else {
+                        showToast('Ошибка оплаты', 'error');
+                    }
+                });
+            } catch (e) {
+                showToast('Ошибка связи!', 'error');
+            }
+        }
 
         // ===== КЕЙСЫ =====
         let currentCaseId = null;
         let isCaseSpinning = false;
 
         function openCase(caseId) {
-            if (isCaseSpinning) { showToast('Подождите, кейс открывается!', 'error'); return; }
+            // Fix Bug 1: Block if not loaded or if spinning
+            if (!appLoaded || isCaseSpinning) { showToast('Подождите!', 'error'); return; }
             currentCaseId = caseId;
             const c = CASES_DB[caseId];
 
@@ -973,6 +1366,15 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
                 document.getElementById('tag-modal').classList.add('active'); return;
             }
 
+            if (caseId === 'repost') {
+                const now = Date.now();
+                if (now - state.lastRepostCase < c.cooldown) {
+                    const hoursLeft = Math.ceil((c.cooldown - (now - state.lastRepostCase)) / 3600000);
+                    showToast(`Кулдаун! Ждите ${hoursLeft} ч.`, 'error'); return;
+                }
+                document.getElementById('repost-modal').classList.add('active'); return;
+            }
+
             if (state.coins < c.price) { showToast('Мало монет!', 'error'); return; }
             startCaseVisual(caseId);
         }
@@ -986,6 +1388,16 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             let fullName = (user.first_name + ' ' + (user.last_name || '') + ' ' + (user.username || '')).toLowerCase();
             if (fullName.includes('brainrot_cosmobot')) { closeModal('tag-modal'); startCaseVisual('tag'); }
             else showToast('В вашем нике нет @Brainrot_Cosmobot!', 'error');
+        }
+
+        function shareRepost() {
+            const url = `https://t.me/share/url?url=${encodeURIComponent('https://t.me/Brainrot_Cosmobot')}&text=${encodeURIComponent('Играй со мной в Brainrot Cosmo!')}`;
+            tg.openTelegramLink(url);
+        }
+
+        function checkRepostAndOpen() {
+            closeModal('repost-modal');
+            startCaseVisual('repost');
         }
 
         function startCaseVisual(caseId) {
@@ -1031,9 +1443,14 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             
             if (currentCaseId === 'free') state.lastFreeCase = Date.now();
             else if (currentCaseId === 'tag') state.lastTagCase = Date.now();
+            else if (currentCaseId === 'repost') state.lastRepostCase = Date.now();
             else { state.coins -= c.price; }
 
             state.xp += 10;
+            // Pass Progress
+            state.pass.progress += 33.34; // 3 cases = 100%
+            updatePassIcon();
+            
             updateCoinDisplay();
             saveState();
 
@@ -1187,6 +1604,7 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
                         if (state.upgrader.targetItem && state.upgrader.targetItem.value <= getTotalMyValue()) {
                             state.upgrader.targetItem = null;
                         }
+                        updateUpgraderUI(); // Fix Bug 2: Update UI immediately
                         saveState();
                     };
                     grid.appendChild(el);
@@ -1223,8 +1641,21 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             const myVal = getTotalMyValue();
             const targetVal = state.upgrader.targetItem.value;
             currentWinChance = Math.min((myVal / targetVal) * 100, 100);
+            
             const greenDeg = (currentWinChance / 100) * 360;
-            document.getElementById('up-roulette-bg').style.background = `conic-gradient(from 0deg, var(--green) 0deg ${greenDeg}deg, var(--red) ${greenDeg}deg 360deg)`;
+            // Yellow is fixed at 180 to 205.2 (7% of 360 = 25.2)
+            const yellowStart = 180;
+            const yellowDeg = 25.2;
+            const yellowEnd = yellowStart + yellowDeg;
+
+            document.getElementById('up-roulette-bg').style.background = `conic-gradient(
+                from 0deg, 
+                var(--green) 0deg ${greenDeg}deg, 
+                var(--red) ${greenDeg}deg ${yellowStart}deg,
+                var(--yellow) ${yellowStart}deg ${yellowEnd}deg,
+                var(--red) ${yellowEnd}deg 360deg
+            )`;
+
             let chanceName = 'low chance', color = 'var(--red)';
             if (currentWinChance > 70) { chanceName = 'high chance'; color = 'var(--green)'; }
             else if (currentWinChance > 40) { chanceName = 'medium chance'; color = 'var(--yellow)'; }
@@ -1261,22 +1692,34 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             const targetItem = state.upgrader.targetItem;
 
             const hasYellow = Math.random() < 0.15;
-            const yellowPercent = hasYellow ? 2 : 0;
-            
+            const roll = Math.random() * 100;
+            let result = 'lose', targetPercentage = 0;
+
+            if (roll <= currentWinChance) {
+                result = 'win';
+                // Map roll to green zone (0 to greenDeg)
+                targetPercentage = roll;
+            } else if (hasYellow && roll <= currentWinChance + 2) { // 2% win chance for yellow
+                result = 'yellow';
+                // Map to yellow zone (180 to 205.2)
+                targetPercentage = 180 + (Math.random() * 25.2);
+            } else {
+                result = 'lose';
+                // Map to red zones
+                if (Math.random() < 0.5 && currentWinChance < 180) {
+                    // Red zone 1 (greenDeg to 180)
+                    targetPercentage = currentWinChance + Math.random() * (180 - currentWinChance);
+                } else {
+                    // Red zone 2 (205.2 to 360)
+                    targetPercentage = 205.2 + Math.random() * (360 - 205.2);
+                }
+            }
+
             if (hasYellow) {
                 wrapper.classList.add('yellow-active');
-                const greenDeg = (currentWinChance / 100) * 360;
-                const yellowDeg = (yellowPercent / 100) * 360;
-                bg.style.background = `conic-gradient(from 0deg, var(--green) 0deg ${greenDeg}deg, var(--yellow) ${greenDeg}deg ${greenDeg + yellowDeg}deg, var(--red) ${greenDeg + yellowDeg}deg 360deg)`;
             } else {
                 wrapper.classList.remove('yellow-active');
             }
-
-            const roll = Math.random() * 100;
-            let result = 'lose', targetPercentage = 0;
-            if (roll <= currentWinChance) { result = 'win'; targetPercentage = roll; }
-            else if (hasYellow && roll <= currentWinChance + yellowPercent) { result = 'yellow'; targetPercentage = roll; }
-            else { result = 'lose'; targetPercentage = roll; }
 
             const targetAngle = (targetPercentage / 100) * 360;
             const totalRotation = (360 * 5) + targetAngle;
@@ -1752,15 +2195,15 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             } catch (e) { showToast('Ошибка связи!', 'error'); }
         }
         async function clearCoins() {
-            const userId = document.getElementById('clear-coins-userid').value;
+            const nick = document.getElementById('clear-coins-nick').value.trim();
             if (!confirm('Вы уверены?')) return;
-            await fetch(`${API_URL}/api/admin_clear_coins`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ user_id: userId ? parseInt(userId) : 'all' }) });
+            await fetch(`${API_URL}/api/admin_clear_coins`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ nick: nick }) });
             showToast('Монеты очищены!', 'success');
         }
         async function clearInventory() {
-            const userId = document.getElementById('clear-inv-userid').value;
+            const nick = document.getElementById('clear-inv-nick').value.trim();
             if (!confirm('Вы уверены?')) return;
-            await fetch(`${API_URL}/api/admin_clear_inventory`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ user_id: userId ? parseInt(userId) : 'all' }) });
+            await fetch(`${API_URL}/api/admin_clear_inventory`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ nick: nick }) });
             showToast('Инвентарь очищен!', 'success');
         }
 
@@ -1778,55 +2221,64 @@ input[type="text"]:focus, input[type="number"]:focus{border-color:var(--accent);
             document.getElementById('img-case-tag').src = IMAGES.tagcase;
             document.getElementById('img-case-gear').src = IMAGES.gearcase;
             document.getElementById('img-case-admin').src = IMAGES.admincase;
+            document.getElementById('img-case-cerberus').src = IMAGES.cerberuscase;
+            document.getElementById('img-case-repost').src = IMAGES.repostcase;
             document.querySelectorAll('.coin-icon-img').forEach(img => img.src = IMAGES.coin);
 
-            if (tg) {
-                tg.expand(); tg.ready();
-            }
-            const user = tg?.initDataUnsafe?.user;
-            if (user) {
-                TG_USER_ID = user.id;
-                TG_USERNAME = user.username || '';
-                document.getElementById('user-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '') + (user.username ? ' (@' + user.username + ')' : '');
-                if (user.photo_url) document.getElementById('user-avatar').innerHTML = `<img src="${user.photo_url}">`;
-            }
+            tg.expand(); tg.ready();
+            const user = tg.initDataUnsafe.user;
+            TG_USER_ID = user.id;
+            TG_USERNAME = user.username || '';
+            document.getElementById('user-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '') + (user.username ? ' (@' + user.username + ')' : '');
+            if (user.photo_url) document.getElementById('user-avatar').innerHTML = `<img src="${user.photo_url}">`;
 
             loadLocalAdminState();
             await loadSettings(); 
             loadState();
             
-            if (TG_USER_ID) {
+            try {
+                const res = await fetch(`${API_URL}/api/state?user_id=${TG_USER_ID}`);
+                const data = await res.json();
+                state.lastFreeCase = Math.max(state.lastFreeCase, data.last_free_case || 0);
+                state.lastTagCase = Math.max(state.lastTagCase, data.last_tag_case || 0);
+                if (data.coins > state.coins) state.coins = data.coins;
+                if ((data.xp || 0) > state.xp) state.xp = data.xp || 0;
+                if (data.inventory && data.inventory.length >= state.inventory.length) {
+                    state.inventory = data.inventory;
+                }
+                updateCoinDisplay();
+                renderInventory();
+                updatePassIcon();
+                saveLocalOnly();
+            } catch(e) { console.error(e); }
+            
+            appLoaded = true; // Fix Bug 1
+
+            // Playtime tracker for Pass
+            setInterval(() => {
+                if (document.visibilityState === 'visible') {
+                    state.pass.progress += 0.167; // 10 mins = 100%
+                    if (state.pass.progress > 100) state.pass.progress = 100;
+                    updatePassIcon();
+                    saveLocalOnly();
+                }
+            }, 1000); // Every second gives 0.167%
+
+            setInterval(async () => {
+                if (Date.now() - lastSaveTime < 2500) return;
+                if (isCaseSpinning || state.upgrader.isSpinning || state.dice.isSpinning) return;
+                if (document.getElementById('case-modal').classList.contains('active')) return;
                 try {
                     const res = await fetch(`${API_URL}/api/state?user_id=${TG_USER_ID}`);
                     const data = await res.json();
-                    state.lastFreeCase = Math.max(state.lastFreeCase, data.last_free_case || 0);
-                    state.lastTagCase = Math.max(state.lastTagCase, data.last_tag_case || 0);
-                    if (data.coins > state.coins) state.coins = data.coins;
-                    if ((data.xp || 0) > state.xp) state.xp = data.xp || 0;
-                    if (data.inventory && data.inventory.length >= state.inventory.length) {
-                        state.inventory = data.inventory;
-                    }
-                    updateCoinDisplay();
-                    renderInventory();
-                    saveLocalOnly();
-                } catch(e) { console.error(e); }
-
-                setInterval(async () => {
-                    if (Date.now() - lastSaveTime < 2500) return;
-                    if (isCaseSpinning || state.upgrader.isSpinning || state.dice.isSpinning) return;
-                    if (document.getElementById('case-modal').classList.contains('active')) return;
-                    try {
-                        const res = await fetch(`${API_URL}/api/state?user_id=${TG_USER_ID}`);
-                        const data = await res.json();
-                        let changed = false;
-                        if (data.coins !== state.coins) { state.coins = data.coins; document.getElementById('coin-display').innerText = state.coins; changed = true; }
-                        if ((data.xp || 0) !== state.xp) { state.xp = data.xp || 0; document.getElementById('xp-display').innerText = state.xp; changed = true; }
-                        if ((data.last_free_case || 0) > state.lastFreeCase) state.lastFreeCase = data.last_free_case;
-                        if ((data.last_tag_case || 0) > state.lastTagCase) state.lastTagCase = data.last_tag_case;
-                        if (changed) saveLocalOnly();
-                    } catch (e) {}
-                }, 1000);
-            }
+                    let changed = false;
+                    if (data.coins !== state.coins) { state.coins = data.coins; document.getElementById('coin-display').innerText = state.coins; changed = true; }
+                    if ((data.xp || 0) !== state.xp) { state.xp = data.xp || 0; document.getElementById('xp-display').innerText = state.xp; changed = true; }
+                    if ((data.last_free_case || 0) > state.lastFreeCase) state.lastFreeCase = data.last_free_case;
+                    if ((data.last_tag_case || 0) > state.lastTagCase) state.lastTagCase = data.last_tag_case;
+                    if (changed) saveLocalOnly();
+                } catch (e) {}
+            }, 1000);
         }
 
         let confirmCallback = null;
