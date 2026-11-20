@@ -15,12 +15,11 @@ body::before{content:'';position:fixed;inset:-20%;z-index:0;pointer-events:none;
 body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:34px 34px;-webkit-mask-image:radial-gradient(ellipse at 50% 30%,#000 20%,transparent 75%);mask-image:radial-gradient(ellipse at 50% 30%,#000 20%,transparent 75%)}
 @keyframes aurora{from{transform:translate3d(-4%,-3%,0) rotate(0)}to{transform:translate3d(4%,3%,0) rotate(8deg)}}
 header,main,nav{width:100%;max-width:480px;flex-shrink:0;position:relative;z-index:1}
-header{height:50px;padding:0 10px;display:flex;justify-content:space-between;align-items:center;z-index:100;background:linear-gradient(180deg,rgba(20,14,40,.85),rgba(20,14,40,.35));backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-bottom:1px solid var(--gb)}
-.balance,.xp-balance{display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:30px;font-family:var(--U);font-weight:700;font-size:14px;border:1px solid transparent}
+header{height:50px;padding:0 10px;display:flex;justify-content:center;align-items:center;z-index:100;background:linear-gradient(180deg,rgba(20,14,40,.85),rgba(20,14,40,.35));backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-bottom:1px solid var(--gb)}
+.balance{display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:30px;font-family:var(--U);font-weight:700;font-size:14px;border:1px solid transparent}
 .balance{background:linear-gradient(#0d0919,#0d0919) padding-box,linear-gradient(120deg,var(--gold),var(--pink),var(--primary)) border-box;box-shadow:0 0 15px rgba(255,207,74,.18)}
-.xp-balance{background:linear-gradient(#0d0919,#0d0919) padding-box,linear-gradient(120deg,var(--accent),var(--primary)) border-box;box-shadow:0 0 15px rgba(41,240,255,.18)}
-.balance img,.xp-balance img{width:18px;height:18px;object-fit:contain}
-.balance img{filter:drop-shadow(0 0 5px var(--gold))}.xp-balance img{filter:drop-shadow(0 0 5px var(--accent))}
+.balance img{width:18px;height:18px;object-fit:contain}
+.balance img{filter:drop-shadow(0 0 5px var(--gold))}
 .bump{animation:bump .4s}@keyframes bump{50%{transform:scale(1.18)}}
 .add-coin-btn{width:22px;height:22px;border-radius:50%;border:none;color:#fff;font-size:15px;font-weight:900;line-height:20px;cursor:pointer;background:var(--grad);box-shadow:0 0 10px var(--pg);transition:.2s}
 .add-coin-btn:active{transform:scale(.8) rotate(90deg)}
@@ -125,6 +124,22 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 @keyframes spin{to{transform:rotate(360deg)}}
 .maintenance-title{font-family:var(--U);font-weight:900;font-size:24px;background:linear-gradient(90deg,var(--accent),var(--primary),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:15px}
 .maintenance-text{color:var(--mut);font-size:14px;line-height:1.6;max-width:320px}
+/* LOADER */
+#loader{position:fixed;inset:0;z-index:100000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;background:radial-gradient(circle at 50% 35%,#1a1230,#06040d 70%);transition:opacity .6s,visibility .6s;overflow:hidden}
+#loader.hide{opacity:0;visibility:hidden}
+#loader::before{content:'';position:absolute;inset:-20%;filter:blur(60px);background:radial-gradient(40% 35% at 20% 25%,rgba(155,92,255,.45),transparent 70%),radial-gradient(40% 35% at 80% 75%,rgba(255,61,166,.35),transparent 70%),radial-gradient(30% 30% at 80% 20%,rgba(41,240,255,.25),transparent 70%);animation:aurora 10s ease-in-out infinite alternate}
+#loader>*{position:relative}
+.ld-orb{width:132px;height:132px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.ld-orb::before{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--accent),var(--primary),var(--pink),var(--gold),var(--accent));-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 4px));mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 4px));animation:spin 2s linear infinite;filter:drop-shadow(0 0 12px var(--pg))}
+.ld-orb::after{content:'';position:absolute;inset:14px;border-radius:50%;background:radial-gradient(circle,rgba(255,207,74,.18),transparent 70%);animation:ldPulse 1.6s ease-in-out infinite}
+.ld-orb img{width:72px;height:72px;object-fit:contain;animation:ldPulse 1.6s ease-in-out infinite;filter:drop-shadow(0 0 14px var(--gold));z-index:1}
+@keyframes ldPulse{50%{transform:scale(1.12)}}
+.ld-title{font-family:var(--U);font-weight:900;font-size:22px;letter-spacing:2px;text-align:center;background:linear-gradient(90deg,var(--accent),var(--primary),var(--pink),var(--accent));background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:ldShine 3s linear infinite}
+@keyframes ldShine{to{background-position:200% center}}
+.ld-bar{width:72%;max-width:280px;height:10px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden;border:1px solid var(--gb)}
+.ld-fill{height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--primary),var(--pink));box-shadow:0 0 12px var(--pg);transition:width .25s}
+.ld-pct{font-family:var(--U);font-size:15px;color:var(--accent);text-shadow:0 0 10px var(--ag)}
+.ld-text{font-size:11px;color:var(--mut);font-weight:800;text-align:center;padding:0 20px}
 /* PASS */
 .pass-fullscreen{position:fixed;top:0;bottom:0;left:0;right:0;margin:0 auto;max-width:480px;width:100%;height:var(--tg-viewport-stable-height,100dvh);z-index:1500;background:#06040d;display:none;flex-direction:column;overflow:hidden;padding-top:env(safe-area-inset-top)}
 .pass-fullscreen.active{display:flex;animation:slideUp .4s cubic-bezier(.16,1,.3,1)}
@@ -194,9 +209,15 @@ input:focus{border-color:var(--accent)}
 </style>
 </head>
 <body>
+<div id="loader">
+  <div class="ld-orb"><img src="images/Золотая монета с мозгом.png" alt=""></div>
+  <div class="ld-title">BRAINROT<br>COSMO</div>
+  <div class="ld-bar"><div class="ld-fill" id="ld-bar"></div></div>
+  <div class="ld-pct" id="ld-pct">0%</div>
+  <div class="ld-text" id="ld-text">Загружаем картинки и звуки...</div>
+</div>
 <header>
   <div class="balance"><img id="header-coin-img" alt=""><span id="coin-display">0</span><button class="add-coin-btn" onclick="openDepositModal()">+</button></div>
-  <div class="xp-balance"><img id="header-xp-img" alt=""><span id="xp-display">0</span></div>
 </header>
 <div class="pass-btn-float" id="pass-btn" onclick="openPassScreen()"><img id="pass-icon-img" alt="Pass"></div>
 <main>
@@ -371,13 +392,12 @@ input:focus{border-color:var(--accent)}
 </div></div>
 
 <script>
-const ALLOWED_USER_ID = 8664148534;
 const tg = window.Telegram?.WebApp;
 const $ = id => document.getElementById(id);
 const API_URL = 'https://braincosmo111.onrender.com';
 
-if (!(tg && tg.initDataUnsafe?.user && tg.initDataUnsafe.user.id === ALLOWED_USER_ID)) {
-  document.body.innerHTML = `<div class="maintenance-screen"><div class="maintenance-icon">⚙️</div><div class="maintenance-title">Технические работы</div><div class="maintenance-text">Мы обновляем игру. Пожалуйста, зайдите позже.<br><br>Спасибо за понимание!</div></div>`;
+if (!(tg && tg.initDataUnsafe?.user)) {
+  document.body.innerHTML = `<div class="maintenance-screen"><div class="maintenance-icon">📱</div><div class="maintenance-title">Откройте в Telegram</div><div class="maintenance-text">Игра работает только внутри Telegram. Откройте её через бота.</div></div>`;
 } else window.addEventListener('load', initApp);
 
 // ===== ЗВУК =====
@@ -405,7 +425,7 @@ function openSettingsModal() {
 
 // ===== ДАННЫЕ =====
 const IMG = {
-  coin: 'Золотая монета с мозгом.png', xp: 'ca556cf9-13d8-4629-8b8e-b12bdab9f181.png',
+  coin: 'Золотая монета с мозгом.png',
   pass: '8d00a905-414f-4438-9c2a-ca194e6f2179.png', passReady: '74bf2406-6d49-4219-942c-34fce0d2333d.png'
 };
 const im = f => 'images/' + f;
@@ -470,7 +490,7 @@ const FREE_PASS = [['c1',1],['c3',1],['c5',1],['noobini',1],['c10',1],['money_ma
 const PREM_PASS = [['garama',1],['los67',1],['noobini',1],['rainbowslap',1],['galaxyslap',2],['c40',1],['c50',1],['c8',1],['waverider',1],['los67',2],['money_puggy',1],['galaxyslap',1],['rainbowslap',2],['alienslap',1],['los_puggies',1],['los67',2],['c17',1],['c18',1],['c19',1],['cash_or_card',1],['waverider',1],['money_puggy',2],['c23',1],['c30',1],['c5',1],['noobini',1],['yinyangslap',1],['c28',1],['c1',1],['cerberus',1]].map(([id, qty]) => ({ id, qty }));
 
 let state = {
-  coins: 0, xp: 0, inventory: [], isAdmin: false, lastFreeCase: 0, lastTagCase: 0, lastRepostCase: 0,
+  coins: 0, inventory: [], isAdmin: false, lastFreeCase: 0, lastTagCase: 0, lastRepostCase: 0,
   allowedWithdrawals: [], upgrader: { myItems: [], targetItem: null, isSpinning: false },
   dice: { betItem: null, selectedColor: null, isSpinning: false }, withdrawingItems: [],
   pass: { progress: 0, lastReset: new Date().toDateString(), freeClaimed: [], premiumClaimed: [], dailyClaims: 0, premiumOwned: false }
@@ -482,7 +502,7 @@ const isItemLocked = uid => state.upgrader.myItems.some(i => i.uid === uid) || (
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const jsq = s => encodeURIComponent(String(s ?? ''));
 
-function localData() { return JSON.stringify({ coins: state.coins, xp: state.xp, inventory: state.inventory, lastFreeCase: state.lastFreeCase, lastTagCase: state.lastTagCase, lastRepostCase: state.lastRepostCase, withdrawingItems: state.withdrawingItems, pass: state.pass }); }
+function localData() { return JSON.stringify({ coins: state.coins, inventory: state.inventory, lastFreeCase: state.lastFreeCase, lastTagCase: state.lastTagCase, lastRepostCase: state.lastRepostCase, withdrawingItems: state.withdrawingItems, pass: state.pass }); }
 function saveLocalOnly() { localStorage.setItem('brainrot_state_v20', localData()); }
 function loadState() {
   if (localStorage.getItem('brainrot_isAdmin') === 'true') state.isAdmin = true;
@@ -490,7 +510,7 @@ function loadState() {
     const s = localStorage.getItem('brainrot_state_v20');
     if (s) {
       const p = JSON.parse(s);
-      Object.assign(state, { coins: p.coins || 0, xp: p.xp || 0, inventory: p.inventory || [], lastFreeCase: p.lastFreeCase || 0, lastTagCase: p.lastTagCase || 0, lastRepostCase: p.lastRepostCase || 0, withdrawingItems: p.withdrawingItems || [] });
+      Object.assign(state, { coins: p.coins || 0, inventory: p.inventory || [], lastFreeCase: p.lastFreeCase || 0, lastTagCase: p.lastTagCase || 0, lastRepostCase: p.lastRepostCase || 0, withdrawingItems: p.withdrawingItems || [] });
       if (p.pass) state.pass = { ...state.pass, ...p.pass };
     }
   } catch (e) {}
@@ -502,7 +522,7 @@ function saveState() {
   lastSaveTime = Date.now(); saveLocalOnly();
   localStorage.setItem('brainrot_isAdmin', state.isAdmin);
   if (tg && tg.initDataUnsafe?.user) {
-    fetch(`${API_URL}/api/save`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user_id: tg.initDataUnsafe.user.id, tg_username: tg.initDataUnsafe.user.username || '', coins: state.coins, xp: state.xp, inventory: state.inventory, last_free_case: state.lastFreeCase, last_tag_case: state.lastTagCase }) }).catch(e => console.error(e));
+    fetch(`${API_URL}/api/save`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user_id: tg.initDataUnsafe.user.id, tg_username: tg.initDataUnsafe.user.username || '', coins: state.coins, inventory: state.inventory, last_free_case: state.lastFreeCase, last_tag_case: state.lastTagCase }) }).catch(e => console.error(e));
   }
 }
 async function loadSettings() { try { const d = await (await fetch(`${API_URL}/api/get_settings`)).json(); state.allowedWithdrawals = d.allowedWithdrawals || []; } catch (e) {} }
@@ -511,9 +531,8 @@ async function saveAdminSettings() { try { await fetch(`${API_URL}/api/admin_sav
 let toastT;
 function showToast(msg, type = 'info') { const t = $('toast'); t.innerText = msg; t.className = 'show ' + type; clearTimeout(toastT); toastT = setTimeout(() => t.className = '', 3000); }
 function updateCoinDisplay() {
-  const c = $('coin-display'), x = $('xp-display');
+  const c = $('coin-display');
   if (c.innerText != state.coins) { c.innerText = state.coins; c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump'); }
-  if (x.innerText != state.xp) { x.innerText = state.xp; x.classList.remove('bump'); void x.offsetWidth; x.classList.add('bump'); }
 }
 function switchTab(id, btn) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -646,7 +665,7 @@ function startCaseSpin() {
   else if (currentCaseId === 'tag') state.lastTagCase = Date.now();
   else if (currentCaseId === 'repost') state.lastRepostCase = Date.now();
   else state.coins -= c.price;
-  state.xp += 10; state.pass.progress = Math.min(100, state.pass.progress + 33.34);
+  state.pass.progress = Math.min(100, state.pass.progress + 33.34);
   updatePassIcon(); updateCoinDisplay(); saveState();
   const t = track.children[targetIdx], cw = document.querySelector('.roulette-container').offsetWidth;
   const off = t.offsetLeft + t.offsetWidth / 2 - cw / 2 + (Math.random() - .5) * 30;
@@ -781,9 +800,9 @@ function spinUpgrader() {
 function processUpgradeResult(result, bet, target) {
   state.upgrader.isSpinning = false;
   const uids = bet.map(i => i.uid); state.inventory = state.inventory.filter(i => !uids.includes(i.uid));
-  if (result === 'win') { playSuccess(); showToast('Успех! +20 XP', 'success'); state.xp += 20; state.inventory.push({ ...target, uid: newUID() }); }
-  else if (result === 'yellow') { playSuccess(); showToast('СУПЕР АПГРЕЙД x2! +20 XP', 'success'); state.xp += 20; state.inventory.push({ ...target, name: 'SUPER ' + target.name, value: target.value * 2, uid: newUID() }); }
-  else { showToast('Провал... +10 XP', 'error'); state.xp += 10; }
+  if (result === 'win') { playSuccess(); showToast('Успех!', 'success'); state.inventory.push({ ...target, uid: newUID() }); }
+  else if (result === 'yellow') { playSuccess(); showToast('СУПЕР АПГРЕЙД x2!', 'success'); state.inventory.push({ ...target, name: 'SUPER ' + target.name, value: target.value * 2, uid: newUID() }); }
+  else { showToast('Провал...', 'error'); }
   updateCoinDisplay(); state.upgrader.myItems = []; state.upgrader.targetItem = null;
   document.querySelectorAll('.chance-btn').forEach(b => { b.disabled = false; b.classList.remove('active'); });
   saveState(); updateUpgraderUI(); renderInventory();
@@ -893,7 +912,7 @@ async function submitStarsDeposit() {
     tg.openInvoice(d.invoice_link, st => {
       if (st === 'paid') {
         showToast('Оплата успешна! Монеты начислены.', 'success'); closeModal('deposit-modal');
-        setTimeout(async () => { try { const r = await (await fetch(`${API_URL}/api/state?user_id=${uid}`)).json(); state.coins = r.coins || 0; state.xp = r.xp || 0; updateCoinDisplay(); saveLocalOnly(); } catch (e) {} }, 1500);
+        setTimeout(async () => { try { const r = await (await fetch(`${API_URL}/api/state?user_id=${uid}`)).json(); state.coins = r.coins || 0; updateCoinDisplay(); saveLocalOnly(); } catch (e) {} }, 1500);
       } else showToast(st === 'cancelled' ? 'Оплата отменена' : 'Ошибка оплаты. Попробуйте ещё раз.', 'error');
     });
   } catch (e) { showToast('Ошибка связи с сервером!', 'error'); }
@@ -967,7 +986,7 @@ async function clearData(url, inputId, okMsg) {
     if (d.success) {
       showToast(okMsg, 'success');
       // обновляем клиента сразу, чтобы старые значения не ушли обратно на сервер
-      try { const s = await (await fetch(`${API_URL}/api/state?user_id=${TG_USER_ID}`)).json(); state.coins = s.coins || 0; state.xp = s.xp || 0; state.inventory = Array.isArray(s.inventory) ? s.inventory : state.inventory; state.withdrawingItems = state.withdrawingItems.filter(u => state.inventory.some(i => i.uid === u)); updateCoinDisplay(); renderInventory(); saveLocalOnly(); } catch (e) {}
+      try { const s = await (await fetch(`${API_URL}/api/state?user_id=${TG_USER_ID}`)).json(); state.coins = s.coins || 0; state.inventory = Array.isArray(s.inventory) ? s.inventory : state.inventory; state.withdrawingItems = state.withdrawingItems.filter(u => state.inventory.some(i => i.uid === u)); updateCoinDisplay(); renderInventory(); saveLocalOnly(); } catch (e) {}
     } else showToast(d.error || 'Игрок не найден', 'error');
   } catch (e) { showToast('Ошибка связи!', 'error'); }
 }
@@ -979,11 +998,38 @@ let confirmCb = null;
 function showConfirm(t, cb) { $('confirm-text').innerText = t; $('confirm-box').classList.add('active'); confirmCb = cb; }
 function confirmAction(yes) { $('confirm-box').classList.remove('active'); if (confirmCb) confirmCb(yes); confirmCb = null; }
 
+// ===== ЭКРАН ЗАГРУЗКИ =====
+const loadStart = performance.now();
+function setLoad(p, t) { $('ld-bar').style.width = p + '%'; $('ld-pct').innerText = Math.round(p) + '%'; if (t) $('ld-text').innerText = t; }
+function preloadAssets() {
+  const imgs = [...new Set([...Object.values(ITEMS_DB).map(i => i.img), ...Object.values(CASES_DB).map(c => im(c.img)), im(IMG.coin), im(IMG.pass), im(IMG.passReady)])];
+  const auds = [...Object.values(SFX), 'jonasblakewood-background-music-618629.mp3'];
+  const total = imgs.length + auds.length; let done = 0;
+  const step = () => { done++; setLoad(done / total * 92, `Загрузка ${done} / ${total}`); };
+  const tasks = [
+    ...imgs.map(src => new Promise(res => { const i = new Image(); i.onload = i.onerror = () => { step(); res(); }; i.src = encodeURI(src); })),
+    ...auds.map(src => new Promise(res => {
+      const a = new Audio(); let f = false;
+      const fin = () => { if (f) return; f = true; step(); res(); };
+      a.preload = 'auto'; a.addEventListener('canplaythrough', fin, { once: true }); a.addEventListener('error', fin, { once: true });
+      setTimeout(fin, 6000); a.src = encodeURI(src); a.load();
+    }))
+  ];
+  return Promise.race([Promise.all(tasks), new Promise(r => setTimeout(r, 20000))]);
+}
+function hideLoader() {
+  setLoad(100, 'Готово!');
+  const wait = Math.max(0, 1000 - (performance.now() - loadStart));
+  setTimeout(() => { $('loader').classList.add('hide'); setTimeout(() => $('loader').remove(), 700); }, wait + 250);
+}
+
 // ===== ИНИЦИАЛИЗАЦИЯ =====
 async function initApp() {
-  $('header-coin-img').src = encodeURI(im(IMG.coin)); $('header-xp-img').src = encodeURI(im(IMG.xp)); $('pass-icon-img').src = encodeURI(im(IMG.pass));
-  renderCases();
   tg.expand(); tg.ready();
+  await preloadAssets();
+  setLoad(94, 'Синхронизация с сервером...');
+  $('header-coin-img').src = encodeURI(im(IMG.coin)); $('pass-icon-img').src = encodeURI(im(IMG.pass));
+  renderCases();
   const user = tg.initDataUnsafe.user; TG_USER_ID = user.id; TG_USERNAME = user.username || '';
   $('user-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '') + (user.username ? ' (@' + user.username + ')' : '');
   if (user.photo_url) $('user-avatar').innerHTML = `<img src="${esc(user.photo_url)}" alt="">`;
@@ -992,12 +1038,12 @@ async function initApp() {
     const d = await (await fetch(`${API_URL}/api/state?user_id=${TG_USER_ID}`)).json();
     state.lastFreeCase = Math.max(state.lastFreeCase, d.last_free_case || 0);
     state.lastTagCase = Math.max(state.lastTagCase, d.last_tag_case || 0);
-    state.coins = d.coins || 0; state.xp = d.xp || 0;
+    state.coins = d.coins || 0;
     if (Array.isArray(d.inventory)) state.inventory = d.inventory;
     state.withdrawingItems = state.withdrawingItems.filter(u => state.inventory.some(i => i.uid === u));
     updateCoinDisplay(); renderInventory(); updatePassIcon(); saveLocalOnly();
   } catch (e) { console.error(e); }
-  appLoaded = true;
+  appLoaded = true; hideLoader();
 
   setInterval(() => { // прогресс пасса за время в игре: 10 минут = 100%
     if (document.visibilityState === 'visible' && state.pass.progress < 100) { state.pass.progress = Math.min(100, state.pass.progress + 0.167); updatePassIcon(); saveLocalOnly(); }
@@ -1009,7 +1055,6 @@ async function initApp() {
     try {
       const d = await (await fetch(`${API_URL}/api/state?user_id=${TG_USER_ID}`)).json(); let ch = false;
       if (d.coins !== state.coins) { state.coins = d.coins; ch = true; }
-      if ((d.xp || 0) !== state.xp) { state.xp = d.xp || 0; ch = true; }
       if ((d.last_free_case || 0) > state.lastFreeCase) state.lastFreeCase = d.last_free_case;
       if ((d.last_tag_case || 0) > state.lastTagCase) state.lastTagCase = d.last_tag_case;
       if (Array.isArray(d.inventory) && d.inventory.map(i => i.uid).join(',') !== state.inventory.map(i => i.uid).join(',')) {
