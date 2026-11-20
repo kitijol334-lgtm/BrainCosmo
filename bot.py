@@ -550,6 +550,6 @@ def stars_stats(message):
         bot.reply_to(message, f"Ошибка: {e}")
 
 if __name__ == '__main__':
-    threading.Thread(target=bot.infinity_polling, daemon=True).start()
+    threading.Thread(target=lambda: bot.infinity_polling(timeout=30, long_polling_timeout=20, skip_pending=True), daemon=True).start()
     port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port)
