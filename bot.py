@@ -11,7 +11,7 @@ import psycopg2
 # ==========================================
 # НАСТРОЙКИ
 # ==========================================
-BOT_TOKEN = '9147236041:AAGAm0N_FMiD-h6U8SlUooY2kEdJ8AZPJm8'
+BOT_TOKEN = '9147236041:AAEcJCKj0XLpZhWKVh0dPV1Qs7_lf37KLhw'
 ADMIN_ID = 8664148534
 WEBAPP_URL = 'https://braincosmo111.onrender.com'
 DATABASE_URL = os.environ.get('DATABASE_URL')
@@ -62,8 +62,6 @@ def init_db():
     )''')
     cursor.execute("INSERT INTO settings (key, value) VALUES ('allowedWithdrawals', '[]') ON CONFLICT DO NOTHING")
 
-    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS xp BIGINT DEFAULT 0")
-
     cursor.execute('''CREATE TABLE IF NOT EXISTS stars_payments (
         id SERIAL PRIMARY KEY, user_id BIGINT, amount BIGINT,
         charge_id TEXT, status TEXT DEFAULT 'paid', created_at BIGINT
@@ -110,21 +108,20 @@ def get_state():
 
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT coins, xp, inventory, last_free_case, last_tag_case FROM users WHERE user_id = %s", (user_id,))
+    cursor.execute("SELECT coins, inventory, last_free_case, last_tag_case FROM users WHERE user_id = %s", (user_id,))
     user = cursor.fetchone()
 
     if not user:
         cursor.execute("INSERT INTO users (user_id) VALUES (%s) ON CONFLICT (user_id) DO NOTHING", (user_id,))
         conn.commit()
-        user = (0, 0, '[]', 0, 0)
+        user = (0, '[]', 0, 0)
 
     conn.close()
     return jsonify({
         'coins': user[0] or 0,
-        'xp': user[1] or 0,
-        'inventory': json.loads(user[2] or '[]'),
-        'last_free_case': user[3] or 0,
-        'last_tag_case': user[4] or 0
+        'inventory': json.loads(user[1] or '[]'),
+        'last_free_case': user[2] or 0,
+        'last_tag_case': user[3] or 0
     })
 
 @app.route('/api/save', methods=['POST'])
@@ -137,8 +134,8 @@ def save_state():
     cursor = conn.cursor()
     cursor.execute("INSERT INTO users (user_id) VALUES (%s) ON CONFLICT (user_id) DO NOTHING", (user_id,))
     cursor.execute(
-        "UPDATE users SET coins = %s, xp = %s, inventory = %s, last_free_case = %s, last_tag_case = %s WHERE user_id = %s",
-        (data.get('coins', 0), data.get('xp', 0), json.dumps(data.get('inventory', [])),
+        "UPDATE users SET coins = %s, inventory = %s, last_free_case = %s, last_tag_case = %s WHERE user_id = %s",
+        (data.get('coins', 0), json.dumps(data.get('inventory', [])),
          data.get('last_free_case', 0), data.get('last_tag_case', 0), user_id))
     conn.commit()
     conn.close()
