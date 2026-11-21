@@ -67,6 +67,12 @@ def init_db():
         charge_id TEXT, status TEXT DEFAULT 'paid', created_at BIGINT
     )''')
 
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS pass_data TEXT DEFAULT '{}'")
+    cursor.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS tg_username TEXT")
+    cursor.execute('''CREATE TABLE IF NOT EXISTS bans (
+        user_id BIGINT PRIMARY KEY, reason TEXT, until BIGINT, created_at BIGINT
+    )''')
+
     conn.commit()
     conn.close()
     print("✅ База данных Postgres успешно инициализирована.")
@@ -100,28 +106,53 @@ def serve_root_audio(filename):
 # ==========================================
 # API ДЛЯ ИГРЫ
 # ==========================================
+def get_ban(cursor, user_id):
+    """Возвращает {'reason', 'left'} если бан активен, иначе None."""
+    try:
+        cursor.execute("SELECT reason, until FROM bans WHERE user_id = %s", (int(user_id),))
+    except Exception:
+        return None
+    r = cursor.fetchone()
+    if not r:
+        return None
+    left = int(r[1]) - int(time.time())
+    if left <= 0:
+        return None
+    return {'reason': r[0] or '', 'left': left}
+
 @app.route('/api/state', methods=['GET'])
 def get_state():
     user_id = request.args.get('user_id')
+    username = (request.args.get('username') or '').strip()
     if not user_id:
         return jsonify({'error': 'No user_id'}), 400
 
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT coins, inventory, last_free_case, last_tag_case FROM users WHERE user_id = %s", (user_id,))
+    cursor.execute("SELECT coins, inventory, last_free_case, last_tag_case, pass_data FROM users WHERE user_id = %s", (user_id,))
     user = cursor.fetchone()
 
     if not user:
         cursor.execute("INSERT INTO users (user_id) VALUES (%s) ON CONFLICT (user_id) DO NOTHING", (user_id,))
-        conn.commit()
-        user = (0, '[]', 0, 0)
+        user = (0, '[]', 0, 0, '{}')
+    if username:
+        cursor.execute("UPDATE users SET tg_username = %s WHERE user_id = %s", (username, user_id))
 
+    ban = get_ban(cursor, user_id)
+    conn.commit()
     conn.close()
+
+    try:
+        pass_data = json.loads(user[4] or '{}')
+    except Exception:
+        pass_data = {}
     return jsonify({
         'coins': user[0] or 0,
         'inventory': json.loads(user[1] or '[]'),
         'last_free_case': user[2] or 0,
-        'last_tag_case': user[3] or 0
+        'last_tag_case': user[3] or 0,
+        'pass': pass_data,
+        'ban': ban
     })
 
 @app.route('/api/save', methods=['POST'])
@@ -132,11 +163,18 @@ def save_state():
         return jsonify({'error': 'No user_id'}), 400
     conn = get_db()
     cursor = conn.cursor()
+    if get_ban(cursor, user_id):
+        conn.close()
+        return jsonify({'error': 'banned'}), 403
     cursor.execute("INSERT INTO users (user_id) VALUES (%s) ON CONFLICT (user_id) DO NOTHING", (user_id,))
     cursor.execute(
         "UPDATE users SET coins = %s, inventory = %s, last_free_case = %s, last_tag_case = %s WHERE user_id = %s",
         (data.get('coins', 0), json.dumps(data.get('inventory', [])),
          data.get('last_free_case', 0), data.get('last_tag_case', 0), user_id))
+    if data.get('tg_username'):
+        cursor.execute("UPDATE users SET tg_username = %s WHERE user_id = %s", (data.get('tg_username'), user_id))
+    if isinstance(data.get('pass'), dict):
+        cursor.execute("UPDATE users SET pass_data = %s WHERE user_id = %s", (json.dumps(data['pass']), user_id))
     conn.commit()
     conn.close()
     return jsonify({'success': True})
@@ -146,6 +184,9 @@ def api_deposit():
     data = request.json
     conn = get_db()
     cursor = conn.cursor()
+    if get_ban(cursor, data['user_id']):
+        conn.close()
+        return jsonify({'error': 'banned'}), 403
     cursor.execute("INSERT INTO deposits (user_id, tg_username, nick) VALUES (%s, %s, %s)",
                    (data['user_id'], data.get('tg_username', ''), data['nick']))
     conn.commit()
@@ -157,6 +198,9 @@ def api_withdraw():
     data = request.json
     conn = get_db()
     cursor = conn.cursor()
+    if get_ban(cursor, data['user_id']):
+        conn.close()
+        return jsonify({'error': 'banned'}), 403
     cursor.execute("INSERT INTO withdrawals (user_id, tg_username, nick, items) VALUES (%s, %s, %s, %s)",
                    (data['user_id'], data.get('tg_username', ''), data['nick'], json.dumps(data['items'])))
     conn.commit()
@@ -174,6 +218,13 @@ def create_stars_invoice():
 
     if not user_id or not amount:
         return jsonify({'error': 'user_id и amount обязательны'}), 400
+
+    try:
+        _c = get_db(); _cur = _c.cursor(); _banned = get_ban(_cur, user_id); _c.close()
+        if _banned:
+            return jsonify({'error': 'banned'}), 403
+    except Exception:
+        pass
 
     try:
         amount = int(amount)
@@ -337,9 +388,17 @@ def admin_accept_withdraw():
 def admin_complete_withdraw():
     wd_id = request.json.get('wd_id')
     conn = get_db(); cursor = conn.cursor()
-    cursor.execute("SELECT user_id FROM withdrawals WHERE id = %s", (wd_id,))
+    cursor.execute("SELECT user_id, items, status FROM withdrawals WHERE id = %s", (wd_id,))
     res = cursor.fetchone()
-    cursor.execute("UPDATE withdrawals SET status = 'completed' WHERE id = %s", (wd_id,))
+    if res and res[2] != 'completed':
+        cursor.execute("UPDATE withdrawals SET status = 'completed' WHERE id = %s", (wd_id,))
+        # выданные предметы убираем из инвентаря игрока
+        cursor.execute("SELECT inventory FROM users WHERE user_id = %s", (res[0],))
+        u = cursor.fetchone()
+        if u:
+            uids = {it.get('uid') for it in json.loads(res[1] or '[]')}
+            inv = [i for i in json.loads(u[0] or '[]') if i.get('uid') not in uids]
+            cursor.execute("UPDATE users SET inventory = %s WHERE user_id = %s", (json.dumps(inv), res[0]))
     conn.commit(); conn.close()
 
     if res:
@@ -391,11 +450,19 @@ def admin_reject_withdraw():
 # ОЧИСТКА МОНЕТ / ИНВЕНТАРЯ (ИСПРАВЛЕНО)
 # ==========================================
 def find_user_id(cursor, nick):
-    """Ищет игрока по нику в игре или по @username Telegram."""
+    """Ищет игрока по ID, @username Telegram или нику в игре."""
     nick = nick.strip().lstrip('@')
-    for q in ("SELECT user_id FROM deposits WHERE nick = %s OR tg_username = %s ORDER BY id DESC LIMIT 1",
-              "SELECT user_id FROM withdrawals WHERE nick = %s OR tg_username = %s ORDER BY id DESC LIMIT 1"):
-        cursor.execute(q, (nick, nick))
+    if not nick:
+        return None
+    if nick.isdigit():
+        cursor.execute("SELECT user_id FROM users WHERE user_id = %s", (int(nick),))
+        r = cursor.fetchone()
+        if r:
+            return r[0]
+    for q in ("SELECT user_id FROM users WHERE LOWER(tg_username) = LOWER(%s) LIMIT 1",
+              "SELECT user_id FROM deposits WHERE nick = %s OR LOWER(tg_username) = LOWER(%s) ORDER BY id DESC LIMIT 1",
+              "SELECT user_id FROM withdrawals WHERE nick = %s OR LOWER(tg_username) = LOWER(%s) ORDER BY id DESC LIMIT 1"):
+        cursor.execute(q, (nick,) if q.count('%s') == 1 else (nick, nick))
         r = cursor.fetchone()
         if r:
             return r[0]
@@ -406,12 +473,17 @@ def _clear(column, value):
     conn = get_db(); cursor = conn.cursor()
     if not nick:
         cursor.execute(f"UPDATE users SET {column} = %s", (value,))
+        if column == 'inventory':
+            # предметы очищены, значит активные заявки на вывод отменяются
+            cursor.execute("UPDATE withdrawals SET status = 'rejected' WHERE status IN ('pending', 'accepted')")
     else:
         uid = find_user_id(cursor, nick)
         if uid is None:
             conn.close()
             return jsonify({'success': False, 'error': 'Игрок не найден'})
         cursor.execute(f"UPDATE users SET {column} = %s WHERE user_id = %s", (value, uid))
+        if column == 'inventory':
+            cursor.execute("UPDATE withdrawals SET status = 'rejected' WHERE user_id = %s AND status IN ('pending', 'accepted')", (uid,))
     conn.commit(); conn.close()
     return jsonify({'success': True})
 
@@ -422,6 +494,60 @@ def admin_clear_coins():
 @app.route('/api/admin_clear_inventory', methods=['POST'])
 def admin_clear_inventory():
     return _clear('inventory', '[]')
+
+# ==========================================
+# БАНЫ
+# ==========================================
+@app.route('/api/admin_ban', methods=['POST'])
+def admin_ban():
+    data = request.json or {}
+    nick = (data.get('nick') or '').strip()
+    reason = (data.get('reason') or '').strip() or 'Не указана'
+    try:
+        days = float(data.get('days'))
+    except Exception:
+        return jsonify({'success': False, 'error': 'Неверный срок'})
+    if days <= 0 or not nick:
+        return jsonify({'success': False, 'error': 'Заполните ник и срок'})
+
+    conn = get_db(); cursor = conn.cursor()
+    uid = find_user_id(cursor, nick)
+    if uid is None:
+        conn.close()
+        return jsonify({'success': False, 'error': 'Игрок не найден'})
+    now = int(time.time())
+    until = now + int(days * 86400)
+    cursor.execute(
+        "INSERT INTO bans (user_id, reason, until, created_at) VALUES (%s, %s, %s, %s) "
+        "ON CONFLICT (user_id) DO UPDATE SET reason = EXCLUDED.reason, until = EXCLUDED.until, created_at = EXCLUDED.created_at",
+        (uid, reason, until, now))
+    conn.commit(); conn.close()
+    try:
+        bot.send_message(uid, f"🚫 Вы были забанены на BrainCosmo!\nПричина: {reason}")
+    except Exception as e:
+        print(f"Ошибка: {e}")
+    return jsonify({'success': True})
+
+@app.route('/api/admin_get_bans', methods=['GET'])
+def admin_get_bans():
+    conn = get_db(); cursor = conn.cursor()
+    now = int(time.time())
+    cursor.execute("""
+        SELECT b.user_id, u.tg_username, b.reason, b.until
+        FROM bans b LEFT JOIN users u ON u.user_id = b.user_id
+        WHERE b.until > %s ORDER BY b.until DESC
+    """, (now,))
+    bans = [{'user_id': r[0], 'tg_username': r[1], 'reason': r[2], 'left': int(r[3]) - now} for r in cursor.fetchall()]
+    conn.close()
+    return jsonify({'bans': bans})
+
+@app.route('/api/admin_unban', methods=['POST'])
+def admin_unban():
+    uid = (request.json or {}).get('user_id')
+    conn = get_db(); cursor = conn.cursor()
+    cursor.execute("DELETE FROM bans WHERE user_id = %s", (uid,))
+    conn.commit(); conn.close()
+    return jsonify({'success': True})
 
 # ==========================================
 # TELEGRAM STARS — PRE-CHECKOUT И ОПЛАТА
