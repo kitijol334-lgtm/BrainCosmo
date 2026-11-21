@@ -124,6 +124,20 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 @keyframes spin{to{transform:rotate(360deg)}}
 .maintenance-title{font-family:var(--U);font-weight:900;font-size:24px;background:linear-gradient(90deg,var(--accent),var(--primary),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:15px}
 .maintenance-text{color:var(--mut);font-size:14px;line-height:1.6;max-width:320px}
+/* BAN */
+#ban-screen{position:fixed;inset:0;z-index:100001;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:radial-gradient(circle at 50% 30%,#2a0a16,#06040d 70%);overflow:hidden}
+#ban-screen.show{display:flex;animation:slideUp .5s both}
+#ban-screen::before{content:'';position:absolute;inset:-20%;filter:blur(60px);background:radial-gradient(40% 35% at 25% 25%,rgba(255,68,102,.4),transparent 70%),radial-gradient(40% 35% at 75% 80%,rgba(155,92,255,.3),transparent 70%);animation:aurora 10s ease-in-out infinite alternate}
+#ban-screen>*{position:relative}
+.ban-icon{font-size:72px;animation:ldPulse 1.6s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(255,68,102,.8))}
+.ban-title{font-family:var(--U);font-weight:900;font-size:19px;line-height:1.3;background:linear-gradient(90deg,#ff4466,#ff3da6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ban-label{font-size:11px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-top:6px}
+.ban-reason{max-width:320px;padding:10px 14px;border-radius:12px;background:rgba(255,68,102,.1);border:1px solid rgba(255,68,102,.4);font-size:14px;font-weight:800;word-break:break-word;user-select:text}
+.ban-timer{display:flex;align-items:flex-start;gap:6px}
+.ban-box{min-width:62px;padding:10px 6px 6px;border-radius:12px;background:rgba(0,0,0,.45);border:1px solid var(--gb);display:flex;flex-direction:column;align-items:center;gap:4px}
+.ban-box b{font-family:var(--U);font-size:24px;text-shadow:0 0 12px rgba(255,68,102,.7)}
+.ban-box span{font-size:8px;font-weight:800;color:var(--mut)}
+.ban-sep{font-family:var(--U);font-size:24px;padding-top:10px;color:var(--red)}
 /* LOADER */
 #loader{position:fixed;inset:0;z-index:100000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;background:radial-gradient(circle at 50% 35%,#1a1230,#06040d 70%);transition:opacity .6s,visibility .6s;overflow:hidden}
 #loader.hide{opacity:0;visibility:hidden}
@@ -209,6 +223,19 @@ input:focus{border-color:var(--accent)}
 </style>
 </head>
 <body>
+<div id="ban-screen">
+  <div class="ban-icon">🚫</div>
+  <div class="ban-title">Вы были забанены на BrainCosmo!</div>
+  <div class="ban-label">Причина:</div>
+  <div class="ban-reason" id="ban-reason">-</div>
+  <div class="ban-label">До конца бана:</div>
+  <div class="ban-timer">
+    <div class="ban-box"><b id="bt-d">0</b><span>дней</span></div><div class="ban-sep">:</div>
+    <div class="ban-box"><b id="bt-h">00</b><span>часов</span></div><div class="ban-sep">:</div>
+    <div class="ban-box"><b id="bt-m">00</b><span>минут</span></div><div class="ban-sep">:</div>
+    <div class="ban-box"><b id="bt-s">00</b><span>секунд</span></div>
+  </div>
+</div>
 <div id="loader">
   <div class="ld-orb"><img src="images/Золотая монета с мозгом.png" alt=""></div>
   <div class="ld-title">BRAINROT<br>COSMO</div>
@@ -368,6 +395,7 @@ input:focus{border-color:var(--accent)}
     <button class="admin-tab" onclick="switchAdminTab('promo2',this)">Промокоды 2</button>
     <button class="admin-tab" onclick="switchAdminTab('clear_coins',this)">Очистка монет</button>
     <button class="admin-tab" onclick="switchAdminTab('clear_inv',this)">Очистка инв.</button>
+    <button class="admin-tab" onclick="switchAdminTab('bans',this)">Баны</button>
   </div>
   <div class="admin-content-wrapper">
     <div id="admin-withdraw1" class="admin-content active"><p style="margin-bottom:6px;font-size:11px;color:var(--mut)">Разрешенные предметы:</p><div class="inventory-grid" id="admin-allowed-grid"></div></div>
@@ -379,6 +407,13 @@ input:focus{border-color:var(--accent)}
     </div>
     <div id="admin-promo2" class="admin-content"><div id="admin-promo2-list"></div></div>
     <div id="admin-clear_coins" class="admin-content"><input type="text" id="clear-coins-nick" placeholder="Ник игрока / @username (пусто = все)"><button class="action-btn" style="background:#cc0000" onclick="clearCoins()">Очистить монеты</button></div>
+    <div id="admin-bans" class="admin-content">
+      <input type="text" id="ban-nick" placeholder="Ник игрока / @username / ID">
+      <input type="number" id="ban-days" placeholder="На сколько дней" min="0.01" step="any">
+      <input type="text" id="ban-reason-input" placeholder="Причина">
+      <button class="action-btn" style="background:#cc0000" onclick="banUser()">Забанить</button>
+      <div id="admin-bans-list" style="margin-top:10px"></div>
+    </div>
     <div id="admin-clear_inv" class="admin-content"><input type="text" id="clear-inv-nick" placeholder="Ник игрока / @username (пусто = все)"><button class="action-btn" style="background:#cc0000" onclick="clearInventory()">Очистить инвентарь</button></div>
   </div>
 </div></div>
@@ -445,7 +480,8 @@ const ITEMS_DB = {};
  ['caylusaurus','Caylusaurus','Caylusaurus.webp',120,'rare'],['steakini','Steakini Fattini','Steakini_Fattini.webp',90,'rare'],
  ['sammyni_f','Sammyni Fattini','Sammyni_Fattini.webp',90,'rare'],['sammyni_truck','Sammyni Truckini','Sammyni_Truckini.webp',170,'epic'],
  ['sammyni_spyder','Sammyni Spyderini','Sammyni_Spyderini.webp',10,'common'],['fragrama','Fragrama and Chocrama','Fragrama.webp',150,'epic'],
- ['cerberus','Cerberus','Cerberus.webp',167,'epic']
+ ['cerberus','Cerberus','Cerberus.webp',167,'epic'],
+ ['bumbatron','Bumbatron','Bumbatron.webp',800,'epic']
 ].forEach(([id, name, f, value, rarity]) => ITEMS_DB[id] = { id, name, img: im(f), value, type: 'brainrot', rarity });
 [1,3,5,8,10,12,15,17,18,19,23,25,27,28,30,40,50,55].forEach(v => {
   const w = (v % 10 >= 2 && v % 10 <= 4 && (v < 10 || v > 20)) ? 'Монеты' : 'Монет';
@@ -464,6 +500,7 @@ const CASES_DB = {
   allin:{title:'All-in-Case',price:35,img:'66b8c75c-d4a1-48cd-8f31-553283001d29.png',d:[['c5',99.5],['strawberry',.5]]},
   admin:{title:'AdminCase',price:90,img:'2cc1d8bf-a999-4f07-99f2-04ed94bf1a51.png',d:[['caylusaurus',15],['steakini',20],['sammyni_f',10],['sammyni_truck',.0001],['sammyni_spyder',54.9999]]},
   cerberus:{title:'CerberusCase',price:167,img:'79508dbc-57c4-4bc2-9787-260945e6c16d.png',d:[['garama',65],['fragrama',20],['cerberus',15],['meowl',.0001]]},
+  dragon:{title:'DragonCase',price:1200,img:'a30a5f1c-8f20-4d2f-9e43-8dfa0caf3734.png',d:[['fragrama',35],['cerberus',40],['bumbatron',10],['dragon',10],['hydra',5],['skibidi',0]]},
   og:{title:'OgCase',price:200000,img:'6e887037-85ec-428e-882e-e2dcbf05945a.png',d:[['headless',25],['skibidi',25],['meowl',25],['strawberry',25]]}
 };
 const CATS = [
@@ -471,7 +508,7 @@ const CATS = [
   ['Дешевые','cat-cheap',[['noobini','#29f0ff'],['money','#00cc44'],['garama','#ffcf4a'],['gear','#a020f0']],0],
   ['All-In','cat-allin',[['allin','#ff3da6']],0],
   ['Нормальные','cat-normal',[['admin','#ff9900'],['cerberus','#ff3333']],1],
-  ['Лучшие','cat-best',[['og','#ff3333']],1]
+  ['Лучшие','cat-best',[['dragon','#ffb800'],['og','#ff3333']],1]
 ];
 function renderCases() {
   const w = $('cases-wrapper'); let h = '';
@@ -495,7 +532,7 @@ let state = {
   dice: { betItem: null, selectedColor: null, isSpinning: false }, withdrawingItems: [],
   pass: { progress: 0, lastReset: new Date().toDateString(), freeClaimed: [], premiumClaimed: [], dailyClaims: 0, premiumOwned: false }
 };
-let TG_USER_ID = null, TG_USERNAME = '', lastSaveTime = 0, appLoaded = false;
+let TG_USER_ID = null, TG_USERNAME = '', lastSaveTime = 0, appLoaded = false, hiddenCoins = 0, pendingDropUid = null;
 const newUID = () => Date.now() + Math.random().toString(36).substr(2, 9);
 const getTotalMyValue = () => state.upgrader.myItems.reduce((s, i) => s + i.value, 0);
 const isItemLocked = uid => state.upgrader.myItems.some(i => i.uid === uid) || (state.dice.betItem && state.dice.betItem.uid === uid);
@@ -504,6 +541,9 @@ const jsq = s => encodeURIComponent(String(s ?? ''));
 
 function localData() { return JSON.stringify({ coins: state.coins, inventory: state.inventory, lastFreeCase: state.lastFreeCase, lastTagCase: state.lastTagCase, lastRepostCase: state.lastRepostCase, withdrawingItems: state.withdrawingItems, pass: state.pass }); }
 function saveLocalOnly() { localStorage.setItem('brainrot_state_v20', localData()); }
+const stripPending = () => state.inventory.forEach(i => { delete i.pending; });
+const passScore = p => (p && Array.isArray(p.freeClaimed)) ? p.freeClaimed.length * 2 + (p.premiumClaimed || []).length * 2 + (p.premiumOwned ? 1 : 0) : -1;
+function fixPassDay() { const t = new Date().toDateString(); if (state.pass.lastReset !== t) { state.pass.dailyClaims = 0; state.pass.lastReset = t; } }
 function loadState() {
   if (localStorage.getItem('brainrot_isAdmin') === 'true') state.isAdmin = true;
   try {
@@ -514,15 +554,14 @@ function loadState() {
       if (p.pass) state.pass = { ...state.pass, ...p.pass };
     }
   } catch (e) {}
-  const today = new Date().toDateString();
-  if (state.pass.lastReset !== today) { state.pass.dailyClaims = 0; state.pass.lastReset = today; }
+  stripPending(); fixPassDay();
   updateCoinDisplay(); renderInventory(); updatePassIcon();
 }
 function saveState() {
   lastSaveTime = Date.now(); saveLocalOnly();
   localStorage.setItem('brainrot_isAdmin', state.isAdmin);
   if (tg && tg.initDataUnsafe?.user) {
-    fetch(`${API_URL}/api/save`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user_id: tg.initDataUnsafe.user.id, tg_username: tg.initDataUnsafe.user.username || '', coins: state.coins, inventory: state.inventory, last_free_case: state.lastFreeCase, last_tag_case: state.lastTagCase }) }).catch(e => console.error(e));
+    fetch(`${API_URL}/api/save`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user_id: tg.initDataUnsafe.user.id, tg_username: tg.initDataUnsafe.user.username || '', coins: state.coins, inventory: state.inventory, last_free_case: state.lastFreeCase, last_tag_case: state.lastTagCase, pass: state.pass }) }).catch(e => console.error(e));
   }
 }
 async function loadSettings() { try { const d = await (await fetch(`${API_URL}/api/get_settings`)).json(); state.allowedWithdrawals = d.allowedWithdrawals || []; } catch (e) {} }
@@ -531,8 +570,8 @@ async function saveAdminSettings() { try { await fetch(`${API_URL}/api/admin_sav
 let toastT;
 function showToast(msg, type = 'info') { const t = $('toast'); t.innerText = msg; t.className = 'show ' + type; clearTimeout(toastT); toastT = setTimeout(() => t.className = '', 3000); }
 function updateCoinDisplay() {
-  const c = $('coin-display');
-  if (c.innerText != state.coins) { c.innerText = state.coins; c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump'); }
+  const c = $('coin-display'), v = state.coins - hiddenCoins;
+  if (c.innerText != v) { c.innerText = v; c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump'); }
 }
 function switchTab(id, btn) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -658,6 +697,7 @@ function startCaseVisual(id) {
 }
 function startCaseSpin() {
   if (isCaseSpinning) return;
+  if (CASES_DB[currentCaseId].price > state.coins) { showToast('Мало монет!', 'error'); return; }
   isCaseSpinning = true; playSpin();
   $('case-open-btn').disabled = true;
   const c = CASES_DB[currentCaseId], track = $('case-track');
@@ -666,6 +706,10 @@ function startCaseSpin() {
   else if (currentCaseId === 'repost') state.lastRepostCase = Date.now();
   else state.coins -= c.price;
   state.pass.progress = Math.min(100, state.pass.progress + 33.34);
+  // приз выдаётся сразу (скрыт до конца анимации), чтобы закрытие приложения ничего не отменяло
+  const prize = ITEMS_DB[wonId]; hiddenCoins = 0; pendingDropUid = null;
+  if (prize.type === 'coin') { state.coins += prize.value; hiddenCoins = prize.value; }
+  else { pendingDropUid = newUID(); state.inventory.push({ ...prize, uid: pendingDropUid, pending: true }); }
   updatePassIcon(); updateCoinDisplay(); saveState();
   const t = track.children[targetIdx], cw = document.querySelector('.roulette-container').offsetWidth;
   const off = t.offsetLeft + t.offsetWidth / 2 - cw / 2 + (Math.random() - .5) * 30;
@@ -674,17 +718,18 @@ function startCaseSpin() {
   track.style.transition = `transform ${time}s cubic-bezier(0.1,0.9,0.1,1)`; track.style.transform = `translateX(-${off}px)`;
   setTimeout(() => {
     isCaseSpinning = false; $('case-open-btn').style.display = 'none';
-    const w = ITEMS_DB[wonId]; processDrop(w); playSuccess();
+    const w = ITEMS_DB[wonId]; finishDrop(w); playSuccess();
     const img = $('case-result-img'); img.src = encodeURI(w.img);
     img.style.filter = w.rarity === 'legendary' ? 'drop-shadow(0 0 20px gold)' : w.rarity === 'epic' ? 'drop-shadow(0 0 15px purple)' : 'drop-shadow(0 0 8px rgba(255,255,255,.5))';
     img.classList.remove('result-anim'); void img.offsetWidth; img.classList.add('result-anim');
     $('case-result-name').innerText = w.name; $('case-result').style.display = 'block';
   }, time * 1000 + 100);
 }
-function processDrop(item) {
-  if (item.type === 'coin') { state.coins += item.value; updateCoinDisplay(); showToast(`Выпало ${item.value} монет!`, 'success'); }
-  else { state.inventory.push({ ...item, uid: newUID() }); showToast(`Выпал ${item.name}!`, 'success'); }
-  saveState();
+function finishDrop(item) {
+  hiddenCoins = 0;
+  if (item.type === 'coin') showToast(`Выпало ${item.value} монет!`, 'success');
+  else { const r = state.inventory.find(i => i.uid === pendingDropUid); if (r) delete r.pending; showToast(`Выпал ${item.name}!`, 'success'); }
+  pendingDropUid = null; updateCoinDisplay(); saveState();
 }
 
 // ===== АПГРЕЙДЕР =====
@@ -738,7 +783,7 @@ function openSelectInventoryModal(mode) {
     });
   } else {
     state.inventory.forEach(item => {
-      if (item.type !== 'brainrot' || state.withdrawingItems.includes(item.uid)) return;
+      if (item.type !== 'brainrot' || item.pending || state.withdrawingItems.includes(item.uid)) return;
       if (mode === 'dice_bet') {
         if (state.upgrader.myItems.some(i => i.uid === item.uid)) return;
         const el = mk(item, state.dice.betItem?.uid === item.uid);
@@ -793,16 +838,26 @@ function spinUpgrader() {
   if (yellowOn && Math.random() < .02) { result = 'yellow'; angle = randAngle(YS + 1, YE - 1, () => true); }
   else if (Math.random() * 100 < currentWinChance) { result = 'win'; angle = randAngle(.3, Math.max(g - .3, .4), notY); }
   else { result = 'lose'; angle = randAngle(Math.min(g + .3, 359), 359.7, notY); }
+  // исход уже известен: ставка списывается, приз выдаётся (скрыт) прямо сейчас и сразу сохраняется на сервере
+  const uids = bet.map(i => i.uid); state.inventory = state.inventory.filter(i => !uids.includes(i.uid));
+  let rewardUid = null;
+  if (result !== 'lose') {
+    rewardUid = newUID();
+    const r = { ...target, uid: rewardUid, pending: true };
+    if (result === 'yellow') { r.name = 'SUPER ' + target.name; r.value = target.value * 2; }
+    state.inventory.push(r);
+  }
+  saveState();
   arrow.style.transition = 'none'; arrow.style.transform = 'rotate(0deg)'; void arrow.offsetWidth;
   requestAnimationFrame(() => { arrow.style.transition = 'transform 5s cubic-bezier(0.1,0.8,0.1,1)'; arrow.style.transform = `rotate(${360 * 5 + angle}deg)`; });
-  setTimeout(() => { wrap.classList.remove('spinning', 'yellow-active'); yellowOn = false; processUpgradeResult(result, bet, target); }, 5150);
+  setTimeout(() => { wrap.classList.remove('spinning', 'yellow-active'); yellowOn = false; processUpgradeResult(result, rewardUid); }, 5150);
 }
-function processUpgradeResult(result, bet, target) {
+function processUpgradeResult(result, rewardUid) {
   state.upgrader.isSpinning = false;
-  const uids = bet.map(i => i.uid); state.inventory = state.inventory.filter(i => !uids.includes(i.uid));
-  if (result === 'win') { playSuccess(); showToast('Успех!', 'success'); state.inventory.push({ ...target, uid: newUID() }); }
-  else if (result === 'yellow') { playSuccess(); showToast('СУПЕР АПГРЕЙД x2!', 'success'); state.inventory.push({ ...target, name: 'SUPER ' + target.name, value: target.value * 2, uid: newUID() }); }
-  else { showToast('Провал...', 'error'); }
+  const r = rewardUid && state.inventory.find(i => i.uid === rewardUid); if (r) delete r.pending;
+  if (result === 'win') { playSuccess(); showToast('Успех!', 'success'); }
+  else if (result === 'yellow') { playSuccess(); showToast('СУПЕР АПГРЕЙД x2!', 'success'); }
+  else showToast('Провал...', 'error');
   updateCoinDisplay(); state.upgrader.myItems = []; state.upgrader.targetItem = null;
   document.querySelectorAll('.chance-btn').forEach(b => { b.disabled = false; b.classList.remove('active'); });
   saveState(); updateUpgraderUI(); renderInventory();
@@ -829,12 +884,17 @@ function spinColorDice() {
     else { let c; do { c = colors[Math.floor(Math.random() * 5)]; } while (c === D.selectedColor); res.push(c); }
   }
   res.sort(() => Math.random() - .5);
+  // исход уже известен: применяем сразу и сохраняем, закрытие приложения ничего не отменит
+  let copyUid = null;
+  if (hits === 1 || hits === 4) { copyUid = newUID(); state.inventory.push({ ...bet, uid: copyUid, pending: true }); }
+  else state.inventory = state.inventory.filter(i => i.uid !== bet.uid);
+  saveState();
   [3000, 4500, 6000, 7000].forEach((t, i) => setTimeout(() => { els[i].classList.remove('rolling'); els[i].style.background = hex[res[i]]; els[i].innerText = ''; }, t));
-  setTimeout(() => { D.isSpinning = false; processDiceResult(hits, bet); }, 7200);
+  setTimeout(() => { D.isSpinning = false; processDiceResult(hits, copyUid); }, 7200);
 }
-function processDiceResult(hits, bet) {
-  if (hits === 1 || hits === 4) { playSuccess(); showToast(`Победа! Попаданий: ${hits}. Брейнрот продублирован!`, 'success'); state.inventory.push({ ...bet, uid: newUID() }); }
-  else { showToast(`Проигрыш... Попаданий: ${hits}. Ставка потеряна.`, 'error'); state.inventory = state.inventory.filter(i => i.uid !== bet.uid); }
+function processDiceResult(hits, copyUid) {
+  if (copyUid) { const r = state.inventory.find(i => i.uid === copyUid); if (r) delete r.pending; playSuccess(); showToast(`Победа! Попаданий: ${hits}. Брейнрот продублирован!`, 'success'); }
+  else showToast(`Проигрыш... Попаданий: ${hits}. Ставка потеряна.`, 'error');
   state.dice.betItem = null; state.dice.selectedColor = null; document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
   saveState(); updateDiceUI(); renderInventory();
 }
@@ -843,8 +903,9 @@ function processDiceResult(hits, bet) {
 let actionMode = 'none', selectedItems = [];
 function renderInventory() {
   const grid = $('inventory-grid'); if (!grid) return; grid.innerHTML = '';
-  if (!state.inventory.length) { grid.innerHTML = '<p style="color:var(--mut);grid-column:1/-1;text-align:center;margin-top:15px;font-size:12px">Пусто...</p>'; return; }
-  state.inventory.forEach(item => {
+  const inv = state.inventory.filter(i => !i.pending);
+  if (!inv.length) { grid.innerHTML = '<p style="color:var(--mut);grid-column:1/-1;text-align:center;margin-top:15px;font-size:12px">Пусто...</p>'; return; }
+  inv.forEach(item => {
     const el = document.createElement('div'), locked = isItemLocked(item.uid), wd = state.withdrawingItems.includes(item.uid);
     el.className = 'inv-item' + (selectedItems.includes(item.uid) ? ' selected' : '') + (locked || wd ? ' locked' : '');
     el.innerHTML = `<img src="${encodeURI(item.img)}" alt=""><div class="inv-name">${esc(item.name)}</div><div class="inv-price">${item.value}</div>`;
@@ -926,7 +987,7 @@ function checkAdminPass() {
 }
 function switchAdminTab(id, btn) {
   document.querySelectorAll('.admin-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
-  $('admin-' + id).classList.add('active'); btn.classList.add('active'); if (id === 'promo2') renderPromo2();
+  $('admin-' + id).classList.add('active'); btn.classList.add('active'); if (id === 'promo2') renderPromo2(); if (id === 'bans') renderBans();
 }
 const post = (url, body) => fetch(`${API_URL}${url}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
 function reqHTML(r, extra) {
@@ -990,6 +1051,28 @@ async function clearData(url, inputId, okMsg) {
     } else showToast(d.error || 'Игрок не найден', 'error');
   } catch (e) { showToast('Ошибка связи!', 'error'); }
 }
+async function banUser() {
+  const nick = $('ban-nick').value.trim(), days = parseFloat($('ban-days').value), reason = $('ban-reason-input').value.trim();
+  if (!nick || !(days > 0) || !reason) { showToast('Заполните ник, дни и причину!', 'error'); return; }
+  try {
+    const d = await (await post('/api/admin_ban', { nick, days, reason })).json();
+    if (d.success) { showToast('Игрок забанен!', 'success'); ['ban-nick', 'ban-days', 'ban-reason-input'].forEach(i => $(i).value = ''); renderBans(); }
+    else showToast(d.error || 'Игрок не найден', 'error');
+  } catch (e) { showToast('Ошибка связи!', 'error'); }
+}
+async function renderBans() {
+  const l = $('admin-bans-list'); l.innerHTML = '<p style="color:var(--mut);text-align:center;font-size:11px">Загрузка...</p>';
+  try {
+    const d = await (await fetch(`${API_URL}/api/admin_get_bans`)).json(); l.innerHTML = '';
+    if (!d.bans.length) { l.innerHTML = '<p style="color:var(--mut);text-align:center;font-size:11px">Активных банов нет</p>'; return; }
+    d.bans.forEach(b => {
+      const el = document.createElement('div'); el.className = 'request-item';
+      el.innerHTML = `<div><b>Игрок:</b> ${b.tg_username ? '@' + esc(b.tg_username) : b.user_id}</div><div><b>Причина:</b> ${esc(b.reason)}</div><div><b>Осталось:</b> <span style="color:var(--accent)">${fmtLeft(b.left)}</span></div><div class="actions"><button class="btn-accept" onclick="unbanUser(${b.user_id})">Разбанить</button></div>`;
+      l.appendChild(el);
+    });
+  } catch (e) { l.innerHTML = '<p style="color:var(--red);text-align:center;font-size:11px">Ошибка загрузки</p>'; }
+}
+async function unbanUser(id) { await post('/api/admin_unban', { user_id: id }); showToast('Игрок разбанен', 'success'); renderBans(); }
 const clearCoins = () => clearData('/api/admin_clear_coins', 'clear-coins-nick', 'Монеты очищены!');
 const clearInventory = () => clearData('/api/admin_clear_inventory', 'clear-inv-nick', 'Инвентарь очищен!');
 
@@ -998,9 +1081,28 @@ let confirmCb = null;
 function showConfirm(t, cb) { $('confirm-text').innerText = t; $('confirm-box').classList.add('active'); confirmCb = cb; }
 function confirmAction(yes) { $('confirm-box').classList.remove('active'); if (confirmCb) confirmCb(yes); confirmCb = null; }
 
+// ===== БАН =====
+let banned = false, banInt = null;
+const pad2 = n => String(n).padStart(2, '0');
+const fmtLeft = s => Math.floor(s / 86400) + ':' + pad2(Math.floor(s % 86400 / 3600)) + ':' + pad2(Math.floor(s % 3600 / 60)) + ':' + pad2(s % 60);
+function showBan(b) {
+  if (banned) return; banned = true;
+  $('ban-reason').innerText = b.reason || 'Не указана';
+  const end = performance.now() + b.left * 1000;
+  const tick = () => {
+    const left = Math.max(0, Math.ceil((end - performance.now()) / 1000));
+    $('bt-d').innerText = Math.floor(left / 86400); $('bt-h').innerText = pad2(Math.floor(left % 86400 / 3600));
+    $('bt-m').innerText = pad2(Math.floor(left % 3600 / 60)); $('bt-s').innerText = pad2(left % 60);
+    if (left <= 0) { clearInterval(banInt); location.reload(); }
+  };
+  tick(); banInt = setInterval(tick, 500);
+  document.querySelectorAll('.modal-overlay,.pass-fullscreen,.confirm-box').forEach(e => e.classList.remove('active'));
+  $('ban-screen').classList.add('show');
+}
+
 // ===== ЭКРАН ЗАГРУЗКИ =====
 const loadStart = performance.now();
-function setLoad(p, t) { $('ld-bar').style.width = p + '%'; $('ld-pct').innerText = Math.round(p) + '%'; if (t) $('ld-text').innerText = t; }
+function setLoad(p, t) { const b = $('ld-bar'); if (!b) return; b.style.width = p + '%'; $('ld-pct').innerText = Math.round(p) + '%'; if (t) $('ld-text').innerText = t; }
 function preloadAssets() {
   const imgs = [...new Set([...Object.values(ITEMS_DB).map(i => i.img), ...Object.values(CASES_DB).map(c => im(c.img)), im(IMG.coin), im(IMG.pass), im(IMG.passReady)])];
   const auds = [...Object.values(SFX), 'jonasblakewood-background-music-618629.mp3'];
@@ -1020,7 +1122,7 @@ function preloadAssets() {
 function hideLoader() {
   setLoad(100, 'Готово!');
   const wait = Math.max(0, 1000 - (performance.now() - loadStart));
-  setTimeout(() => { $('loader').classList.add('hide'); setTimeout(() => $('loader').remove(), 700); }, wait + 250);
+  setTimeout(() => { const l = $('loader'); if (!l) return; l.classList.add('hide'); setTimeout(() => l.remove(), 700); }, wait + 250);
 }
 
 // ===== ИНИЦИАЛИЗАЦИЯ =====
@@ -1035,11 +1137,15 @@ async function initApp() {
   if (user.photo_url) $('user-avatar').innerHTML = `<img src="${esc(user.photo_url)}" alt="">`;
   await loadSettings(); loadState();
   try {
-    const d = await (await fetch(`${API_URL}/api/state?user_id=${TG_USER_ID}`)).json();
+    const d = await (await fetch(`${API_URL}/api/state?user_id=${TG_USER_ID}&username=${encodeURIComponent(TG_USERNAME)}`)).json();
+    if (d.ban) { showBan(d.ban); hideLoader(); return; }
     state.lastFreeCase = Math.max(state.lastFreeCase, d.last_free_case || 0);
     state.lastTagCase = Math.max(state.lastTagCase, d.last_tag_case || 0);
     state.coins = d.coins || 0;
     if (Array.isArray(d.inventory)) state.inventory = d.inventory;
+    stripPending();
+    if (d.pass && passScore(d.pass) > passScore(state.pass)) state.pass = { ...state.pass, ...d.pass };
+    fixPassDay();
     state.withdrawingItems = state.withdrawingItems.filter(u => state.inventory.some(i => i.uid === u));
     updateCoinDisplay(); renderInventory(); updatePassIcon(); saveLocalOnly();
   } catch (e) { console.error(e); }
@@ -1050,15 +1156,16 @@ async function initApp() {
   }, 1000);
 
   setInterval(async () => {
-    if (Date.now() - lastSaveTime < 2500) return;
+    if (banned || Date.now() - lastSaveTime < 2500) return;
     if (isCaseSpinning || state.upgrader.isSpinning || state.dice.isSpinning || $('case-modal').classList.contains('active')) return;
     try {
       const d = await (await fetch(`${API_URL}/api/state?user_id=${TG_USER_ID}`)).json(); let ch = false;
+      if (d.ban) { showBan(d.ban); return; }
       if (d.coins !== state.coins) { state.coins = d.coins; ch = true; }
       if ((d.last_free_case || 0) > state.lastFreeCase) state.lastFreeCase = d.last_free_case;
       if ((d.last_tag_case || 0) > state.lastTagCase) state.lastTagCase = d.last_tag_case;
       if (Array.isArray(d.inventory) && d.inventory.map(i => i.uid).join(',') !== state.inventory.map(i => i.uid).join(',')) {
-        state.inventory = d.inventory; state.withdrawingItems = state.withdrawingItems.filter(u => state.inventory.some(i => i.uid === u));
+        state.inventory = d.inventory; stripPending(); state.withdrawingItems = state.withdrawingItems.filter(u => state.inventory.some(i => i.uid === u));
         state.upgrader.myItems = state.upgrader.myItems.filter(it => state.inventory.some(i => i.uid === it.uid));
         if (state.dice.betItem && !state.inventory.some(i => i.uid === state.dice.betItem.uid)) state.dice.betItem = null;
         ch = true; renderInventory();
